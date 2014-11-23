@@ -83,7 +83,7 @@ public class TileMap {
 						count == 34) {
 						tileFrictionType = Tile.ICE;
 					}
-					if (count == 21) {
+					if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
 						type = Tile.BLOCKED;
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
