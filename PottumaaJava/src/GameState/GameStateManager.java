@@ -1,0 +1,87 @@
+package GameState;
+
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+
+public class GameStateManager {
+	
+	private GameState[] gameStates;
+	private int currentState;
+	
+	public static final int NUMGAMESTATES = 2;
+	public static final int MENUSTATE = 0;
+	public static final int LEVEL1STATE = 1;
+	
+	public GameStateManager() {
+		
+		gameStates = new GameState[NUMGAMESTATES];
+		
+//			currentState = LEVEL1STATE;
+			currentState = MENUSTATE;
+		
+		loadState(currentState);
+	}
+	
+	private void loadState(int state) {
+		if(state == MENUSTATE)
+			gameStates[state] = new MenuState(this);
+		if(state == LEVEL1STATE)
+			gameStates[state] = new Level1State(this);
+	}
+	
+	private void unloadState(int state) {
+		gameStates[state] = null;
+	}
+	
+	public void setState(int state) {
+		unloadState(currentState);
+		currentState = state;
+		loadState(currentState);
+	}
+	
+	public void update() {
+		try {
+			if(gameStates[currentState] == null) return;
+			
+			gameStates[currentState].update();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void draw(Graphics2D g) {
+		try {
+			if(gameStates[currentState] == null) return;
+			
+			gameStates[currentState].draw(g);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void keyPressed(int k) {
+		if(gameStates[currentState] == null) return;
+		
+		gameStates[currentState].keyPressed(k);
+		
+		if(k == KeyEvent.VK_ESCAPE) System.exit(0);;
+	}
+	
+	public void keyReleased(int k) {
+		if(gameStates[currentState] == null) return;
+		
+		gameStates[currentState].keyReleased(k);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
