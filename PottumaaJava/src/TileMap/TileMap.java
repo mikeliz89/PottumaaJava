@@ -60,8 +60,6 @@ public class TileMap {
 			numTilesX = tileset.getWidth() / tileSize;
 			numTilesY = tileset.getHeight() / tileSize;
 			
-//			System.out.println(numTilesX);
-//			System.out.println(numTilesY);
 			tiles = new Tile[numTilesY][numTilesX];
 			
 			int count = 0;
@@ -88,8 +86,6 @@ public class TileMap {
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
 					tiles[row][col] = newTile;
-//					System.out.println(newTile);
-//					System.out.println(count);
 					
 					count ++;
 				}
