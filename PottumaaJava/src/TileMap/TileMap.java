@@ -88,8 +88,8 @@ public class TileMap {
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
 					tiles[row][col] = newTile;
-					System.out.println(newTile);
-					System.out.println(count);
+//					System.out.println(newTile);
+//					System.out.println(count);
 					
 					count ++;
 				}

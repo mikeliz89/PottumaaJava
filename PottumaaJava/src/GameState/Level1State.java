@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 public class Level1State extends GameState {
 	
-	private TileMap tileMap;
+	private TileMap tileMapGround;
+	private TileMap tileMapObstacles;
 //	private Background bg;
 	
 	private Player player;
@@ -33,17 +34,26 @@ public class Level1State extends GameState {
 	
 	public void init() {
 		
-		tileMap = new TileMap(30);
+		// tiles: ground
+		tileMapGround = new TileMap(30);
 
-		tileMap.loadTiles("/Tilesets/grasstileset3.png");
-		tileMap.loadMap("/Maps/map1.csv");
+		tileMapGround.loadTiles("/Tilesets/grasstileset3.png");
+		tileMapGround.loadMap("/Maps/map1.csv");
 
-		tileMap.setPosition(0, 0);
-		tileMap.setTween(0.11);
+		tileMapGround.setPosition(0, 0);
+		tileMapGround.setTween(0.11);
+		
+		// tiles: obstacles
+		tileMapObstacles = new TileMap(30);
+		tileMapObstacles.loadTiles("/Tilesets/obstacles.png");
+		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
+		
+		tileMapObstacles.setPosition(0, 0);
+		tileMapObstacles.setTween(0.11);
 		
 //		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
 		
-		player = new Player(tileMap);
+		player = new Player(tileMapGround);
 		player.setPosition(40, 100);
 		
 		populateEnemies();
@@ -70,7 +80,7 @@ public class Level1State extends GameState {
 			new Point(250, 100),
 		};
 		for(int i = 0; i < sluggerPoints.length; i++) {
-			s = new Slugger(tileMap);
+			s = new Slugger(tileMapGround);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
 			enemies.add(s);
 		}
@@ -81,10 +91,17 @@ public class Level1State extends GameState {
 		
 		// update player
 		player.update();
-		tileMap.setPosition(
+		
+		// tilemap ground follows the player
+		tileMapGround.setPosition(
 			GamePanel.WIDTH / 2 - player.getx(),
 			GamePanel.HEIGHT / 2 - player.gety()
 		);
+		
+		tileMapObstacles.setPosition(
+				GamePanel.WIDTH / 2 - player.getx(),
+				GamePanel.HEIGHT / 2 - player.gety()
+			);
 		
 		// set background
 //		bg.setPosition(tileMap.getx(), tileMap.gety());
@@ -120,8 +137,11 @@ public class Level1State extends GameState {
 		// draw bg
 //		bg.draw(g);
 		
-		// draw tilemap
-		tileMap.draw(g);
+		// draw tilemap: ground
+		tileMapGround.draw(g);
+		
+		// draw tilemap: obstacles
+		tileMapObstacles.draw(g);
 		
 		// draw player
 		player.draw(g);
@@ -134,7 +154,7 @@ public class Level1State extends GameState {
 		// draw explosions
 		for(int i = 0; i < explosions.size(); i++) {
 			explosions.get(i).setMapPosition(
-				(int)tileMap.getx(), (int)tileMap.gety());
+				(int)tileMapGround.getx(), (int)tileMapGround.gety());
 			explosions.get(i).draw(g);
 		}
 		
