@@ -30,6 +30,8 @@ public class TileMap {
 	private int width;
 	private int height;
 	
+	private int type;
+	
 	// tileset
 	private BufferedImage tileset;
 	private int numTilesX;
@@ -42,6 +44,9 @@ public class TileMap {
 	private int numRowsToDraw;
 	private int numColsToDraw;
 	
+	public static final int GROUND = 0;
+	public static final int OBSTACLE = 1;
+	
 	public TileMap(int tileSize) {
 		
 		this.tileSize = tileSize;
@@ -50,7 +55,7 @@ public class TileMap {
 		tween = 0.07;
 	}
 	
-	public void loadTiles(String s) {
+	public void loadTiles(String s, boolean allBlocked) {
 		
 		try {
 
@@ -75,14 +80,22 @@ public class TileMap {
 						);
 					int tileFrictionType = Tile.NORMAL;
 					int type = Tile.NORMAL;
-					if(
-						count == 32 ||
-						count == 33 ||
-						count == 34) {
-						tileFrictionType = Tile.ICE;
-					}
-					if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
-						type = Tile.BLOCKED;
+					
+					if(allBlocked == true) {
+						if(count != 0) {
+							type = Tile.BLOCKED;
+						}
+					} 
+					else {
+						if(
+							count == 32 ||
+							count == 33 ||
+							count == 34) {
+							tileFrictionType = Tile.ICE;
+						}
+						if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
+							type = Tile.BLOCKED;
+						}
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
 					tiles[row][col] = newTile;
@@ -115,8 +128,6 @@ public class TileMap {
 			
 			numCols = Integer.parseInt(firstRowValue.substring(0, firstRowValue.indexOf(';'))); 
 			numRows = Integer.parseInt(secondRowValue.substring(0, secondRowValue.indexOf(';')));
-//			System.out.println(numCols);
-//			System.out.println(numRows);
 			
 			map = new int[numRows][numCols];
 			width = numCols * tileSize;
@@ -151,25 +162,29 @@ public class TileMap {
 	public BufferedImage getTileSet() { return tileset; }
 	public Tile[][] getTiles() { return tiles; }
 	
-	public int getType(int row, int col) {
-//		System.out.println("row " + row);
-//		System.out.println("col " + col);
+	public int getType() { return this.type; }
+	
+	public int getTileType(int row, int col) {
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
 		return tiles[r][c].getType();
 	}
 	
-	public int getFrictionType(int row, int col) {
-//		System.out.println("row " + row);
-//		System.out.println("col " + col);
+	public int getTileFrictionType(int row, int col) {
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
 		return tiles[r][c].getFrictionType();
 	}
 	
+	public void setTileSize(int tileSize) {
+		this.tileSize = tileSize;
+	}
+	
 	public void setTween(double d) { tween = d; }
+	
+	public void setType(int type) { this.type = type; }
 	
 	public void setPosition(double x, double y) {
 		

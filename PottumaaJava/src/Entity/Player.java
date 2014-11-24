@@ -54,33 +54,27 @@ public class Player extends MapObject {
 	
 	private HashMap<String, AudioPlayer> sfx;
 	
-	private TileMap tm;
 	
-	public Player(TileMap tm) {
-		
-		super(tm);
-		
-		this.tm = tm;
-		
+	public Player(ArrayList<TileMap> tileMaps) {
+		this.tileMaps = tileMaps;
 		width = 30;
 		height = 30;
 		cwidth = 20;
 		cheight = 20;
 		
-		moveSpeed = 0.3;
-		maxSpeed = originalMaxSpeed = 1.6;
+		moveSpeed = 0.1;
+		maxSpeed = originalMaxSpeed = 0.6;
 		stopSpeed = originalStopSpeed = 0.4; //grass
-//		stopSpeed = 0.01; //ice
-//		fallSpeed = 0.15;
 		fallSpeed = 0.10;
 		maxFallSpeed = 4.0;
 		jumpStart = -4.8;
 		stopJumpSpeed = 0.3;
+		chargeSpeed = 0.4;
 		
 		facingRight = true;
 		
 		health = maxHealth = 5;
-		fire = maxFire = 25000;
+		fire = maxFire = 2500;
 		
 		fireCost = 200;
 		fireBallDamage = 5;
@@ -142,6 +136,7 @@ public class Player extends MapObject {
 		sfx = new HashMap<String, AudioPlayer>();
 		sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
 		sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
+		sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
 		
 	}
 	
@@ -159,21 +154,23 @@ public class Player extends MapObject {
 	public void setGliding(boolean b) { 
 		gliding = b;
 	}
-	
-	public void setCharging(boolean b) {
-		charging = b;
-	}
-	
-	public void checkICE() {
+	private void checkIce() {
 
-		// On ice player goes faster and breaks slower
-		if(tm.getFrictionType(bottomTile, leftTile) == Tile.ICE
-				|| tileMap.getFrictionType(bottomTile, rightTile) == Tile.ICE) {
-			this.stopSpeed = originalStopSpeed / 100;
-			this.maxSpeed = originalMaxSpeed * 1.2;
-		} else {
-			this.stopSpeed = originalStopSpeed;
-			this.maxSpeed = originalMaxSpeed;
+		//check all grounds for ice
+		for(int i = 0; i < tileMaps.size(); i++) {
+			
+			// On ice player goes faster and breaks slower
+			TileMap tileMapGround = tileMaps.get(i);
+			if(tileMapGround.getType() == TileMap.GROUND) {
+				if(tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.ICE
+						|| tileMapGround.getTileFrictionType(bottomTile, rightTile) == Tile.ICE) {
+					this.stopSpeed = originalStopSpeed / 100; //TODO: take these values to the tile class..
+					this.maxSpeed = originalMaxSpeed * 1.2; //TODO: take these values to the tile class..
+				} else {
+					this.stopSpeed = originalStopSpeed;
+					this.maxSpeed = originalMaxSpeed;
+				}
+			}
 		}
 	}
 	
@@ -226,15 +223,6 @@ public class Player extends MapObject {
 		
 	}
 	
-	private void checkCharging() {
-		if(charging) {
-			this.maxSpeed *= 2.0;
-		} 
-		else {
-			this.maxSpeed = this.originalMaxSpeed;
-		}
-	}
-	
 	public void hit(int damage) {
 		if(flinching) return;
 		health -= damage;
@@ -246,7 +234,7 @@ public class Player extends MapObject {
 	
 	private void getNextPosition() {
 		
-		checkICE();
+		checkIce();
 		checkCharging();
 		
 		// movement
@@ -294,22 +282,7 @@ public class Player extends MapObject {
 			}
 		}
 		else {
-//			Tile[][] tiles = tm.getTiles();
-//			BufferedImage tileset = tm.getTileSet();
-//			int numTilesX = tileset.getWidth() / tileSize;
-//			int numTilesY = tileset.getHeight() / tileSize;
-//				for(int row = 0 ; row < numTilesY; row++) {
-//					for(int col = 0; col < numTilesX; col++) {
-//						System.out.println(tm.getType(row, col));
-//						if(tiles[row][col].getFrictionType() == Tile.ICE) {
-//							this.setStopSpeed(stopSpeed * 0.05); 
-//						} else {
-//							this.setStopSpeed(stopSpeed);
-//						}
-//						System.out.println(tiles[row][col].getFrictionType());
-//					}
-//				}
-			
+
 			// left and right
 			if(dx > 0) {
 				dx -= stopSpeed;
@@ -358,7 +331,11 @@ public class Player extends MapObject {
 		
 		// update position
 		getNextPosition();
-		checkTileMapCollision();
+		
+		for(int i = 0; i < tileMaps.size(); i++) {
+			TileMap tm = tileMaps.get(i);
+			checkTileMapCollision(tm);
+		}
 		setPosition(xtemp, ytemp);
 		
 		// check attack has stopped
@@ -375,7 +352,7 @@ public class Player extends MapObject {
 		if(firing && currentAction != FIREBALL) {
 			if(fire > fireCost) {
 				fire -= fireCost;
-				FireBall fb = new FireBall(tileMap, facingRight);
+				FireBall fb = new FireBall(tileMaps, facingRight);
 				fb.setPosition(x, y);
 				fireBalls.add(fb);
 			}
@@ -411,6 +388,7 @@ public class Player extends MapObject {
 		}
 		else if(firing) {
 			if(currentAction != FIREBALL) {
+				sfx.get("fireball").play();
 				currentAction = FIREBALL;
 				animation.setFrames(sprites.get(FIREBALL));
 				animation.setDelay(100);

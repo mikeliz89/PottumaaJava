@@ -4,6 +4,8 @@ import TileMap.TileMap;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
 public class FireBall extends MapObject {
@@ -13,13 +15,13 @@ public class FireBall extends MapObject {
 	private BufferedImage[] sprites;
 	private BufferedImage[] hitSprites;
 	
-	public FireBall(TileMap tm, boolean right) {
+	public FireBall(ArrayList<TileMap> tileMaps, boolean right) {
 		
-		super(tm);
+		this.tileMaps = tileMaps;
 		
 		facingRight = right;
 		
-		moveSpeed = 3.8;
+		moveSpeed = 2.0;
 		if(right) dx = moveSpeed;
 		else dx = -moveSpeed;
 		
@@ -80,7 +82,10 @@ public class FireBall extends MapObject {
 	
 	public void update() {
 		
-		checkTileMapCollision();
+		for(int i = 0; i < tileMaps.size(); i++) {
+			TileMap tm = tileMaps.get(i);
+			checkTileMapCollision(tm);
+		}
 		setPosition(xtemp, ytemp);
 		
 		if(dx == 0 && !hit) {

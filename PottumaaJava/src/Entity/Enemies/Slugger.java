@@ -7,14 +7,15 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 
 import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 public class Slugger extends Enemy {
 	
 	private BufferedImage[] sprites;
 	
-	public Slugger(TileMap tm) {
+	public Slugger(ArrayList<TileMap> tileMaps) {
 		
-		super(tm);
+		super(tileMaps);
 		
 		moveSpeed = 0.3;
 		maxSpeed = originalMaxSpeed = 0.3;
@@ -90,7 +91,11 @@ public class Slugger extends Enemy {
 		
 		// update position
 		getNextPosition();
-		checkTileMapCollision();
+//		checkTileMapCollision();
+		for(int i = 0; i < tileMaps.size(); i++) {
+			TileMap tm = tileMaps.get(i);
+			checkTileMapCollision(tm);
+		}
 		setPosition(xtemp, ytemp);
 		
 		// check flinching

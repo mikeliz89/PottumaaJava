@@ -12,8 +12,8 @@ public class Enemy extends MapObject {
 	protected boolean flinching;
 	protected long flinchTimer;
 	
-	public Enemy(TileMap tm) {
-		super(tm);
+	public Enemy(java.util.ArrayList<TileMap> tileMaps) {
+		this.tileMaps = tileMaps;
 	}
 	
 	public boolean isDead() { return dead; }

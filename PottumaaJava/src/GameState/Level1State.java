@@ -12,8 +12,7 @@ import java.util.ArrayList;
 
 public class Level1State extends GameState {
 	
-	private TileMap tileMapGround;
-	private TileMap tileMapObstacles;
+	private ArrayList<TileMap> tileMaps;
 //	private Background bg;
 	
 	private Player player;
@@ -34,29 +33,33 @@ public class Level1State extends GameState {
 	
 	public void init() {
 		
+		tileMaps = new ArrayList<TileMap>();
+		
 		// tiles: ground
-		tileMapGround = new TileMap(30);
-
-		tileMapGround.loadTiles("/Tilesets/grasstileset3.png");
+		TileMap tileMapGround = new TileMap(30);
+		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
 		tileMapGround.loadMap("/Maps/map1.csv");
-
 		tileMapGround.setPosition(0, 0);
+		tileMapGround.setType(TileMap.GROUND);
 		tileMapGround.setTween(0.11);
 		
 		// tiles: obstacles
-		tileMapObstacles = new TileMap(30);
-		tileMapObstacles.loadTiles("/Tilesets/obstacles.png");
+		TileMap tileMapObstacles = new TileMap(30);
+		tileMapObstacles.loadTiles("/Tilesets/obstacles.png", true);
 		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
-		
 		tileMapObstacles.setPosition(0, 0);
+		tileMapObstacles.setType(TileMap.OBSTACLE);
 		tileMapObstacles.setTween(0.11);
 		
 //		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
 		
-		player = new Player(tileMapGround);
+		tileMaps.add(tileMapGround);
+		tileMaps.add(tileMapObstacles);
+		
+		player = new Player(tileMaps);
 		player.setPosition(40, 100);
 		
-		populateEnemies();
+		populateEnemies(tileMaps);
 		
 		explosions = new ArrayList<Explosion>();
 		
@@ -69,18 +72,20 @@ public class Level1State extends GameState {
 		
 	}
 	
-	private void populateEnemies() {
+	private void populateEnemies(ArrayList<TileMap> tileMaps) {
 		
 		enemies = new ArrayList<Enemy>();
 		
 		Slugger s;
 		Point[] sluggerPoints = new Point[] {
-			new Point(200, 100),
-			new Point(230, 100),
+			new Point(130, 50),
+			new Point(330, 100),
 			new Point(250, 100),
+			new Point(700, 100),
+			new Point(100, 500),
 		};
 		for(int i = 0; i < sluggerPoints.length; i++) {
-			s = new Slugger(tileMapGround);
+			s = new Slugger(tileMaps);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
 			enemies.add(s);
 		}
@@ -92,16 +97,14 @@ public class Level1State extends GameState {
 		// update player
 		player.update();
 		
-		// tilemap ground follows the player
-		tileMapGround.setPosition(
-			GamePanel.WIDTH / 2 - player.getx(),
-			GamePanel.HEIGHT / 2 - player.gety()
-		);
-		
-		tileMapObstacles.setPosition(
-				GamePanel.WIDTH / 2 - player.getx(),
-				GamePanel.HEIGHT / 2 - player.gety()
+		for(int i = 0; i < tileMaps.size(); i++) {
+			
+			TileMap tm = tileMaps.get(i);
+			tm.setPosition(
+					GamePanel.WIDTH / 2 - player.getx(),
+					GamePanel.HEIGHT / 2 - player.gety()
 			);
+		}
 		
 		// set background
 //		bg.setPosition(tileMap.getx(), tileMap.gety());
@@ -137,11 +140,11 @@ public class Level1State extends GameState {
 		// draw bg
 //		bg.draw(g);
 		
-		// draw tilemap: ground
-		tileMapGround.draw(g);
-		
-		// draw tilemap: obstacles
-		tileMapObstacles.draw(g);
+		// draw tileMaps
+		for(int i = 0; i < tileMaps.size(); i++) {
+			TileMap tm = tileMaps.get(i);
+			tm.draw(g);
+		}
 		
 		// draw player
 		player.draw(g);
@@ -154,7 +157,7 @@ public class Level1State extends GameState {
 		// draw explosions
 		for(int i = 0; i < explosions.size(); i++) {
 			explosions.get(i).setMapPosition(
-				(int)tileMapGround.getx(), (int)tileMapGround.gety());
+				(int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
 			explosions.get(i).draw(g);
 		}
 		
