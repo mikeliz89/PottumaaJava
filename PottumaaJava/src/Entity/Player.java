@@ -2,6 +2,7 @@ package Entity;
 
 import TileMap.*;
 import Audio.AudioPlayer;
+import GameState.GameStateManager;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,6 @@ public class Player extends MapObject {
 	private static final int SCRATCHING = 6;
 	
 	private HashMap<String, AudioPlayer> sfx;
-	
 	
 	public Player(ArrayList<TileMap> tileMaps) {
 		this.tileMaps = tileMaps;
@@ -172,6 +172,19 @@ public class Player extends MapObject {
 				}
 			}
 		}
+	}
+	
+	public void checkLevelPoints(Tile levelPoint, GameStateManager gsm) {
+	
+		if(x > levelPoint.x && 
+				x < levelPoint.x + levelPoint.getImage().getWidth() &&
+				y > levelPoint.y &&
+				y < levelPoint.y + levelPoint.getImage().getHeight()) {
+			gsm.setState(gsm.LEVEL2STATE);
+		}
+//		if(intersects(e)) {
+//			hit(e.getDamage());
+//		}
 	}
 	
 	public void checkAttack(ArrayList<Enemy> enemies) {

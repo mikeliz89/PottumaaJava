@@ -153,16 +153,17 @@ public class TileMap {
 		
 	}
 	
-	public int getTileSize() { return tileSize; }
+	
 	public double getx() { return x; }
 	public double gety() { return y; }
+	public double getTween() { return tween; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	public int getTileSize() { return tileSize; }
+	public int getType() { return this.type; }
 	
 	public BufferedImage getTileSet() { return tileset; }
 	public Tile[][] getTiles() { return tiles; }
-	
-	public int getType() { return this.type; }
 	
 	public int getTileType(int row, int col) {
 		int rc = map[row][col];

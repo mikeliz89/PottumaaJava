@@ -8,12 +8,9 @@ import Audio.AudioPlayer;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-public class Level1State extends GameState {
+public class Level2State extends GameState {
 	
 	private ArrayList<TileMap> tileMaps;
 //	private Background bg;
@@ -29,9 +26,7 @@ public class Level1State extends GameState {
 	
 	private ArrayList<Integer> keysPressed;
 	
-	private Tile level2Point;
-	
-	public Level1State(GameStateManager gsm) {
+	public Level2State(GameStateManager gsm) {
 		this.gsm = gsm;
 		init();
 	}
@@ -43,7 +38,7 @@ public class Level1State extends GameState {
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(30);
 		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
-		tileMapGround.loadMap("/Maps/map1.csv");
+		tileMapGround.loadMap("/Maps/map2.csv");
 		tileMapGround.setPosition(0, 0);
 		tileMapGround.setType(TileMap.GROUND);
 		tileMapGround.setTween(0.11);
@@ -57,35 +52,12 @@ public class Level1State extends GameState {
 		tileMapObstacles.setTween(0.11);
 		
 //		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
-		try { 
-			BufferedImage tileset = ImageIO.read(
-				getClass().getResourceAsStream("/Tiles/arrows.png")
-			);
-			
-			//up arrow
-			BufferedImage sub =  tileset.getSubimage(0, 0, 30, 30);
-			
-			//right arrow
-//			BufferedImage sub =  tileset.getSubimage(30, 0, 30, 30);
-			
-			//down arrow
-//			BufferedImage sub =  tileset.getSubimage(60, 0, 30, 30);
-			
-			//left arrow
-//			BufferedImage sub =  tileset.getSubimage(90, 0, 30, 30);
-			
-			level2Point = new Tile(sub, 0, 0);
-//			level2Point.setDimensions(30, 30);
-		} 
-		catch(Exception e) {
-			e.printStackTrace();
-		}
 		
 		tileMaps.add(tileMapGround);
-		tileMaps.add(tileMapObstacles);
+//		tileMaps.add(tileMapObstacles);
 		
 		player = new Player(tileMaps);
-		player.setPosition(40, 100);
+		player.setPosition(40, 400);
 		
 		populateEnemies(tileMaps);
 		
@@ -115,7 +87,7 @@ public class Level1State extends GameState {
 		for(int i = 0; i < sluggerPoints.length; i++) {
 			s = new Slugger(tileMaps);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
-			enemies.add(s);
+//			enemies.add(s);
 		}
 		
 	}
@@ -128,22 +100,16 @@ public class Level1State extends GameState {
 		for(int i = 0; i < tileMaps.size(); i++) {
 			
 			TileMap tm = tileMaps.get(i);
-			
-			//todo: fix this! ei toimi, ilmeisesti positio pitää setata paremmin ja vaikuttaako esim tuo tween-arvo?
-			level2Point.setPosition( tm.getx() + 830,  tm.gety() + 570);
-			
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
 			);
-			
 		}
 		
 		// set background
 //		bg.setPosition(tileMap.getx(), tileMap.gety());
 		
 		// attack enemies
-		player.checkLevelPoints(level2Point, gsm);
 		player.checkAttack(enemies);
 		
 		// update all enemies
@@ -180,8 +146,6 @@ public class Level1State extends GameState {
 			tm.draw(g);
 		}
 		
-		level2Point.draw(g);
-		
 		// draw player
 		player.draw(g);
 		
@@ -198,7 +162,7 @@ public class Level1State extends GameState {
 		}
 		
 		// draw hud
-		hud.draw(g);
+//		hud.draw(g);
 		
 	}
 	
