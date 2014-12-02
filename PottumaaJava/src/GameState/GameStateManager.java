@@ -17,8 +17,8 @@ public class GameStateManager {
 		
 		gameStates = new GameState[NUMGAMESTATES];
 		
-			currentState = LEVEL1STATE;
-//			currentState = MENUSTATE;
+//		currentState = LEVEL1STATE;
+		currentState = MENUSTATE;
 		
 		loadState(currentState);
 	}
@@ -27,10 +27,12 @@ public class GameStateManager {
 		if(state == MENUSTATE) {
 			gameStates[state] = new MenuState(this);
 		}
-		if(state == LEVEL1STATE)
+		if(state == LEVEL1STATE) {
 			gameStates[state] = new Level1State(this);
-		if(state == LEVEL2STATE)
+		}
+		if(state == LEVEL2STATE) { 
 			gameStates[state] = new Level2State(this);
+		}
 	}
 	
 	private void unloadState(int state) {
@@ -70,7 +72,7 @@ public class GameStateManager {
 		
 		gameStates[currentState].keyPressed(k);
 		
-		if(k == KeyEvent.VK_ESCAPE) System.exit(0);;
+		if(k == KeyEvent.VK_ESCAPE) System.exit(0);
 	}
 	
 	public void keyReleased(int k) {

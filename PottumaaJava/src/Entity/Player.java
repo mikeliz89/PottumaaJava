@@ -3,6 +3,7 @@ package Entity;
 import TileMap.*;
 import Audio.AudioPlayer;
 import GameState.GameStateManager;
+import Main.GamePanel;
 
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public class Player extends MapObject {
 		maxFallSpeed = 4.0;
 		jumpStart = -4.8;
 		stopJumpSpeed = 0.3;
-		chargeSpeed = 0.4;
+		chargeSpeed = 2.4;
 		
 		facingRight = true;
 		
@@ -174,13 +175,18 @@ public class Player extends MapObject {
 		}
 	}
 	
-	public void checkLevelPoints(Tile levelPoint, GameStateManager gsm) {
+	public void checkLevelPoints(MapPoint levelPoint, GameStateManager gsm) {
 	
-		if(x > levelPoint.x && 
-				x < levelPoint.x + levelPoint.getImage().getWidth() &&
-				y > levelPoint.y &&
-				y < levelPoint.y + levelPoint.getImage().getHeight()) {
-			gsm.setState(gsm.LEVEL2STATE);
+//		System.out.println("player x " + x);
+//		System.out.println("player y " + y);
+//		System.out.println("x " + levelPoint.getx());
+//		System.out.println("y " + levelPoint.gety());
+		
+		if(x > levelPoint.getx() && 
+				x < levelPoint.getx() + levelPoint.getImage().getWidth() &&
+				y > levelPoint.gety() &&
+				y < levelPoint.gety() + levelPoint.getImage().getHeight()) {
+			gsm.setState(levelPoint.getGotoLevel());
 		}
 //		if(intersects(e)) {
 //			hit(e.getDamage());
@@ -390,7 +396,7 @@ public class Player extends MapObject {
 		}
 		
 		// set animation
-		if(scratching) {
+		if(scratching) { //scratch
 			if(currentAction != SCRATCHING) {
 				sfx.get("scratch").play();
 				currentAction = SCRATCHING;
@@ -399,7 +405,7 @@ public class Player extends MapObject {
 				width = 60;
 			}
 		}
-		else if(firing) {
+		else if(firing) { //shooting
 			if(currentAction != FIREBALL) {
 				sfx.get("fireball").play();
 				currentAction = FIREBALL;
@@ -408,31 +414,24 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		else if(dy > 0) {
-			if(gliding) {
-				if(currentAction != GLIDING) {
-					currentAction = GLIDING;
-					animation.setFrames(sprites.get(WALKING));
-					animation.setDelay(100);
-					width = 30;
-				}
-			}
-			else if(currentAction != FALLING) {
-				currentAction = FALLING;
+		else if(dy > 0) { //going down
+			System.out.println("going down");
+			if(currentAction != WALKING) {
+				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
 				animation.setDelay(100);
 				width = 30;
 			}
 		}
-		else if(dy < 0) {
-			if(currentAction != JUMPING) {
-				currentAction = JUMPING;
+		else if(dy < 0) { //going up
+			if(currentAction != WALKING) {
+				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
-				animation.setDelay(-1);
+				animation.setDelay(100);
 				width = 30;
 			}
 		}
-		else if(left || right) {
+		else if(left || right) { // left or right
 			if(currentAction != WALKING) {
 				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
@@ -440,7 +439,7 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		else {
+		else { //Everything else
 			if(currentAction != IDLE) {
 				currentAction = IDLE;
 				animation.setFrames(sprites.get(IDLE));
@@ -476,6 +475,16 @@ public class Player extends MapObject {
 				return;
 			}
 		}
+		Font titleFont = new Font(
+				"Century Gothic",
+				Font.PLAIN,
+				12);
+		g.setColor(Color.BLACK);
+		g.setFont(titleFont);
+		g.drawString("X: " + this.x, 400, 13);
+		g.drawString("Y: " + this.y, 400, 28);
+		g.drawString("MoveSpd: " + this.maxSpeed, 600, 13);
+		g.drawString("StopSpd: " + this.stopSpeed, 600, 28);
 		
 		super.draw(g);
 		

@@ -22,6 +22,7 @@ public class Level1State extends GameState {
 	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Explosion> explosions;
+	private ArrayList<MapPoint> mapPoints;
 	
 	private HUD hud;
 	
@@ -29,7 +30,10 @@ public class Level1State extends GameState {
 	
 	private ArrayList<Integer> keysPressed;
 	
-	private Tile level2Point;
+//	private Tile level2Point;
+//	private Tile level3Point;
+	
+	private double tileMapTween = 0.11;
 	
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -38,51 +42,11 @@ public class Level1State extends GameState {
 	
 	public void init() {
 		
-		tileMaps = new ArrayList<TileMap>();
-		
-		// tiles: ground
-		TileMap tileMapGround = new TileMap(30);
-		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
-		tileMapGround.loadMap("/Maps/map1.csv");
-		tileMapGround.setPosition(0, 0);
-		tileMapGround.setType(TileMap.GROUND);
-		tileMapGround.setTween(0.11);
-		
-		// tiles: obstacles
-		TileMap tileMapObstacles = new TileMap(30);
-		tileMapObstacles.loadTiles("/Tilesets/obstacles.png", true);
-		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
-		tileMapObstacles.setPosition(0, 0);
-		tileMapObstacles.setType(TileMap.OBSTACLE);
-		tileMapObstacles.setTween(0.11);
+		populateTileMaps();
 		
 //		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
-		try { 
-			BufferedImage tileset = ImageIO.read(
-				getClass().getResourceAsStream("/Tiles/arrows.png")
-			);
-			
-			//up arrow
-			BufferedImage sub =  tileset.getSubimage(0, 0, 30, 30);
-			
-			//right arrow
-//			BufferedImage sub =  tileset.getSubimage(30, 0, 30, 30);
-			
-			//down arrow
-//			BufferedImage sub =  tileset.getSubimage(60, 0, 30, 30);
-			
-			//left arrow
-//			BufferedImage sub =  tileset.getSubimage(90, 0, 30, 30);
-			
-			level2Point = new Tile(sub, 0, 0);
-//			level2Point.setDimensions(30, 30);
-		} 
-		catch(Exception e) {
-			e.printStackTrace();
-		}
 		
-		tileMaps.add(tileMapGround);
-		tileMaps.add(tileMapObstacles);
+		populateMapPoints();
 		
 		player = new Player(tileMaps);
 		player.setPosition(40, 100);
@@ -98,6 +62,56 @@ public class Level1State extends GameState {
 		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
 //			bgMusic.play();
 		
+	}
+	
+	private void populateTileMaps() { 
+		tileMaps = new ArrayList<TileMap>();
+		
+		// tiles: ground
+		TileMap tileMapGround = new TileMap(30);
+		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
+		tileMapGround.loadMap("/Maps/map1.csv");
+		tileMapGround.setPosition(0, 0);
+		tileMapGround.setType(TileMap.GROUND);
+		tileMapGround.setTween(tileMapTween);
+		
+		// tiles: obstacles
+		TileMap tileMapObstacles = new TileMap(30);
+		tileMapObstacles.loadTiles("/Tilesets/obstacles.png", true);
+		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
+		tileMapObstacles.setPosition(0, 0);
+		tileMapObstacles.setType(TileMap.OBSTACLE);
+		tileMapObstacles.setTween(tileMapTween);
+		
+		tileMaps.add(tileMapGround);
+		tileMaps.add(tileMapObstacles);
+	}
+	
+	private void populateMapPoints() {
+		mapPoints = new ArrayList<MapPoint>();
+		try { 
+			BufferedImage tileset = ImageIO.read(
+				getClass().getResourceAsStream("/Tiles/arrows.png")
+			);
+			
+			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
+			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
+			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
+			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
+			
+			MapPoint level2Point = new MapPoint(rightArrow);
+			level2Point.setPosition(885, 585);
+			level2Point.setGotoLevel(GameStateManager.LEVEL2STATE);
+			MapPoint level3Point = new MapPoint(downArrow);
+			level3Point.setPosition(250, 250);
+			level3Point.setGotoLevel(GameStateManager.MENUSTATE);
+			
+			mapPoints.add(level2Point);
+			mapPoints.add(level3Point);
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void populateEnemies(ArrayList<TileMap> tileMaps) {
@@ -124,26 +138,24 @@ public class Level1State extends GameState {
 		
 		// update player
 		player.update();
+		for(int i = 0; i < mapPoints.size(); i++) { 
+			player.checkLevelPoints(mapPoints.get(i), gsm);
+		}
 		
 		for(int i = 0; i < tileMaps.size(); i++) {
 			
 			TileMap tm = tileMaps.get(i);
 			
-			//todo: fix this! ei toimi, ilmeisesti positio pitää setata paremmin ja vaikuttaako esim tuo tween-arvo?
-			level2Point.setPosition( tm.getx() + 830,  tm.gety() + 570);
-			
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
 			);
-			
 		}
 		
 		// set background
 //		bg.setPosition(tileMap.getx(), tileMap.gety());
 		
 		// attack enemies
-		player.checkLevelPoints(level2Point, gsm);
 		player.checkAttack(enemies);
 		
 		// update all enemies
@@ -180,7 +192,13 @@ public class Level1State extends GameState {
 			tm.draw(g);
 		}
 		
-		level2Point.draw(g);
+		// draw mapPoints
+		for(int i = 0; i < mapPoints.size(); i++) { 
+			MapPoint mp = mapPoints.get(i);
+			//use only tileMap[0](ground tiles)
+			mp.setMapPosition((int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
+			mp.draw(g);
+		}
 		
 		// draw player
 		player.draw(g);
@@ -207,6 +225,7 @@ public class Level1State extends GameState {
 			keysPressed.add(k);
 		}
 		
+		//have to press running before can charge
 		if(keysPressed.contains(KeyEvent.VK_LEFT) == true ||
 				keysPressed.contains(KeyEvent.VK_RIGHT) == true ||
 				keysPressed.contains(KeyEvent.VK_UP) == true || 
@@ -240,7 +259,6 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_SHIFT) {
 			player.setCharging(false);
 		}
-		
 		if(k == KeyEvent.VK_LEFT) {
 			player.setLeft(false);
 		}

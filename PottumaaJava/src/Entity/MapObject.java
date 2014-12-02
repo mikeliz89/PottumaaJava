@@ -188,10 +188,12 @@ public abstract class MapObject {
 	
 	protected void checkCharging() {
 		if(charging) {
-			this.maxSpeed = this.maxSpeed + chargeSpeed;
+			this.setStopSpeed(this.stopSpeed / 3);
+			this.setMaxSpeed(this.maxSpeed + chargeSpeed);
 		} 
 		else {
-			this.maxSpeed = this.originalMaxSpeed;
+			this.setMaxSpeed(this.originalMaxSpeed);
+//			this.setStopSpeed(originalStopSpeed);
 		}
 	}
 
@@ -200,6 +202,10 @@ public abstract class MapObject {
 	
 	public void setCharging(boolean b) {
 		charging = b;
+	}
+	
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
 	}
 	
 	public void setStopSpeed(double stopSpeed) {

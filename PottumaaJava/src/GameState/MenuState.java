@@ -1,6 +1,7 @@
 package GameState;
 
 import Audio.AudioPlayer;
+import Main.GamePanel;
 import TileMap.Background;
 
 import java.awt.*;
@@ -69,7 +70,7 @@ public class MenuState extends GameState {
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("Magic Land", 85, 70);
+		g.drawString("Magic Land", GamePanel.WIDTH / 3, GamePanel.HEIGHT / 3);
 		
 		// draw menu options
 		g.setFont(font);
