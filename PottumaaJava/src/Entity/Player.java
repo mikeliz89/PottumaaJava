@@ -89,7 +89,7 @@ public class Player extends MapObject {
 			
 			BufferedImage spritesheet = ImageIO.read(
 				getClass().getResourceAsStream(
-					"/Sprites/Player/playersprites.gif"
+					"/Sprites/Player/playersprites.png"
 				)
 			);
 			
@@ -485,6 +485,11 @@ public class Player extends MapObject {
 		g.drawString("Y: " + this.y, 400, 28);
 		g.drawString("MoveSpd: " + this.maxSpeed, 600, 13);
 		g.drawString("StopSpd: " + this.stopSpeed, 600, 28);
+		g.setColor(Color.BLUE);
+		g.drawRect((int)(x + xmap - width / 2),
+				(int)(y + ymap - height / 2),
+				width,
+				height);
 		
 		super.draw(g);
 		

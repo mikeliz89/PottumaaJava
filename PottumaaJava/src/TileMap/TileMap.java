@@ -235,6 +235,10 @@ public class TileMap {
 					null
 				);
 				
+				//collision rectangles revealed
+				g.setColor(Color.WHITE);
+				g.drawRect((int)x + col * tileSize, (int)y + row * tileSize, tileSize, tileSize);
+				
 			}
 			
 		}
