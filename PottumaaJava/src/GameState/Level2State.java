@@ -74,7 +74,7 @@ public class Level2State extends GameState {
 			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
 			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
 			
-			MapPoint level1Point = new MapPoint(rightArrow);
+			MapPoint level1Point = new MapPoint(leftArrow);
 			level1Point.setPosition(leftArrow.getWidth() / 2, 585);
 			level1Point.setGotoLevel(GameStateManager.LEVEL1STATE);
 			
