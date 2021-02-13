@@ -122,7 +122,7 @@ public class Level2State extends GameState {
 			//little bit tougher enemy in level 2
 			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH+3);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
-//			enemies.add(s);
+			enemies.add(s);
 		}
 		
 	}
@@ -174,44 +174,64 @@ public class Level2State extends GameState {
 	}
 	
 	public void draw(Graphics2D g) {
-		
-		// draw bg
-//		bg.draw(g);
-		
-		// draw tileMaps
+
+		DrawBackground(g);
+
+		DrawTileMaps(g);
+
+		DrawMapPoints(g);
+
+		DrawPlayer(g);
+
+		DrawEnemies(g);
+
+		DrawExplosions(g);
+
+		DrawHUD(g);
+	}
+
+	private void DrawBackground(Graphics2D g) {
+		//bg.draw(g);
+	}
+
+	private void DrawHUD(Graphics2D g) {
+		hud.draw(g);
+	}
+
+	private void DrawTileMaps(Graphics2D g) {
 		for(int i = 0; i < tileMaps.size(); i++) {
 			TileMap tm = tileMaps.get(i);
 			tm.draw(g);
 		}
-		
-		// draw mapPoints
-		for(int i = 0; i < mapPoints.size(); i++) { 
+	}
+
+	private void DrawMapPoints(Graphics2D g) {
+		for(int i = 0; i < mapPoints.size(); i++) {
 			MapPoint mp = mapPoints.get(i);
 			//use only tileMap[0](ground tiles)
 			mp.setMapPosition((int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
 			mp.draw(g);
 		}
-		
-		// draw player
-		player.draw(g);
-		
-		// draw enemies
-		for(int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).draw(g);
-		}
-		
-		// draw explosions
+	}
+
+	private void DrawExplosions(Graphics2D g) {
 		for(int i = 0; i < explosions.size(); i++) {
 			explosions.get(i).setMapPosition(
 				(int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
 			explosions.get(i).draw(g);
 		}
-		
-		// draw hud
-		hud.draw(g);
-		
 	}
-	
+
+	private void DrawEnemies(Graphics2D g) {
+		for(int i = 0; i < enemies.size(); i++) {
+			enemies.get(i).draw(g);
+		}
+	}
+
+	private void DrawPlayer(Graphics2D g) {
+		player.draw(g);
+	}
+
 	public void keyPressed(int k) {
 		if(keysPressed.contains(k) == false) {
 			keysPressed.add(k);
