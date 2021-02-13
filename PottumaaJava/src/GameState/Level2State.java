@@ -119,10 +119,10 @@ public class Level2State extends GameState {
 			new Point(700, 100),
 			new Point(100, 500),
 		};
-		for(int i = 0; i < sluggerPoints.length; i++) {
+		for (Point sluggerPoint : sluggerPoints) {
 			//little bit tougher enemy in level 2
-			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH+3);
-			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
+			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH + 3);
+			s.setPosition(sluggerPoint.x, sluggerPoint.y);
 			enemies.add(s);
 		}
 		
@@ -132,13 +132,12 @@ public class Level2State extends GameState {
 		
 		// update player
 		player.update();
-		for(int i = 0; i < mapPoints.size(); i++) { 
-			player.checkLevelPoints(mapPoints.get(i), gsm);
+		for (MapPoint mapPoint : mapPoints) {
+			player.checkLevelPoints(mapPoint, gsm);
 		}
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			
-			TileMap tm = tileMaps.get(i);
+
+		for (TileMap tm : tileMaps) {
+
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
@@ -200,26 +199,24 @@ public class Level2State extends GameState {
 	}
 
 	private void DrawTileMaps(Graphics2D g) {
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tm = tileMaps.get(i);
+		for (TileMap tm : tileMaps) {
 			tm.draw(g);
 		}
 	}
 
 	private void DrawMapPoints(Graphics2D g) {
-		for(int i = 0; i < mapPoints.size(); i++) {
-			MapPoint mp = mapPoints.get(i);
+		for (MapPoint mp : mapPoints) {
 			//use only tileMap[0](ground tiles)
-			mp.setMapPosition((int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
+			mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
 			mp.draw(g);
 		}
 	}
 
 	private void DrawExplosions(Graphics2D g) {
-		for(int i = 0; i < explosions.size(); i++) {
-			explosions.get(i).setMapPosition(
-				(int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
-			explosions.get(i).draw(g);
+		for (Explosion explosion : explosions) {
+			explosion.setMapPosition(
+					(int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
+			explosion.draw(g);
 		}
 	}
 

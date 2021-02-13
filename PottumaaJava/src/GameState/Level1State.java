@@ -31,11 +31,8 @@ public class Level1State extends GameState {
 	
 	private ArrayList<Integer> keysPressed;
 	
-//	private Tile level2Point;
-//	private Tile level3Point;
-	
 	private double tileMapTween = 0.11;
-	
+
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
 		init();
@@ -127,9 +124,9 @@ public class Level1State extends GameState {
 			new Point(700, 100),
 			new Point(100, 500),
 		};
-		for(int i = 0; i < sluggerPoints.length; i++) {
+		for (Point sluggerPoint : sluggerPoints) {
 			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH);
-			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
+			s.setPosition(sluggerPoint.x, sluggerPoint.y);
 			enemies.add(s);
 		}
 		
@@ -139,14 +136,12 @@ public class Level1State extends GameState {
 		
 		// update player
 		player.update();
-		for(int i = 0; i < mapPoints.size(); i++) { 
-			player.checkLevelPoints(mapPoints.get(i), gsm);
+		for (MapPoint mapPoint : mapPoints) {
+			player.checkLevelPoints(mapPoint, gsm);
 		}
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			
-			TileMap tm = tileMaps.get(i);
-			
+
+		for (TileMap tm : tileMaps) {
+
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
@@ -204,16 +199,16 @@ public class Level1State extends GameState {
 	}
 
 	private void DrawExplosions(Graphics2D g) {
-		for(int i = 0; i < explosions.size(); i++) {
-			explosions.get(i).setMapPosition(
-				(int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
-			explosions.get(i).draw(g);
+		for (Explosion explosion : explosions) {
+			explosion.setMapPosition(
+					(int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
+			explosion.draw(g);
 		}
 	}
 
 	private void DrawEnemies(Graphics2D g) {
-		for(int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).draw(g);
+		for (Enemy enemy : enemies) {
+			enemy.draw(g);
 		}
 	}
 
@@ -222,10 +217,9 @@ public class Level1State extends GameState {
 	}
 
 	private void DrawMapPoints(Graphics2D g) {
-		for(int i = 0; i < mapPoints.size(); i++) {
-			MapPoint mp = mapPoints.get(i);
+		for (MapPoint mp : mapPoints) {
 			//use only tileMap[0](ground tiles)
-			mp.setMapPosition((int)tileMaps.get(0).getx(), (int)tileMaps.get(0).gety());
+			mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
 			mp.draw(g);
 		}
 	}
@@ -235,8 +229,7 @@ public class Level1State extends GameState {
 	}
 
 	private void DrawTileMaps(Graphics2D g) {
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tm = tileMaps.get(i);
+		for (TileMap tm : tileMaps) {
 			tm.draw(g);
 		}
 	}

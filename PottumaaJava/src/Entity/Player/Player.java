@@ -161,12 +161,11 @@ public class Player extends MapObject {
 	private void checkIce() {
 
 		//check all grounds for ice
-		for(int i = 0; i < tileMaps.size(); i++) {
-			
+		for (TileMap tileMapGround : tileMaps) {
+
 			// On ice player goes faster and breaks slower
-			TileMap tileMapGround = tileMaps.get(i);
-			if(tileMapGround.getType() == TileMap.GROUND) {
-				if(tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.ICE
+			if (tileMapGround.getType() == TileMap.GROUND) {
+				if (tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.ICE
 						|| tileMapGround.getTileFrictionType(bottomTile, rightTile) == Tile.ICE) {
 					this.stopSpeed = originalStopSpeed / 100; //TODO: take these values to the tile class..
 					this.maxSpeed = originalMaxSpeed * 1.2; //TODO: take these values to the tile class..
@@ -199,48 +198,45 @@ public class Player extends MapObject {
 	public void checkAttack(ArrayList<Enemy> enemies) {
 		
 		// loop through enemies
-		for(int i = 0; i < enemies.size(); i++) {
-			
-			Enemy e = enemies.get(i);
-			
+		for (Enemy e : enemies) {
+
 			// scratch attack
-			if(scratching) {
-				if(facingRight) {
-					if(
-						e.getx() > x &&
-						e.getx() < x + scratchRange && 
-						e.gety() > y - height / 2 &&
-						e.gety() < y + height / 2
+			if (scratching) {
+				if (facingRight) {
+					if (
+							e.getx() > x &&
+									e.getx() < x + scratchRange &&
+									e.gety() > y - height / 2 &&
+									e.gety() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
-				}
-				else {
-					if(
-						e.getx() < x &&
-						e.getx() > x - scratchRange &&
-						e.gety() > y - height / 2 &&
-						e.gety() < y + height / 2
+				} else {
+					if (
+							e.getx() < x &&
+									e.getx() > x - scratchRange &&
+									e.gety() > y - height / 2 &&
+									e.gety() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
 				}
 			}
-			
+
 			// fireballs
-			for(int j = 0; j < fireBalls.size(); j++) {
-				if(fireBalls.get(j).intersects(e)) {
+			for (FireBall fireBall : fireBalls) {
+				if (fireBall.intersects(e)) {
 					e.hit(fireBallDamage);
-					fireBalls.get(j).setHit();
+					fireBall.setHit();
 					break;
 				}
 			}
-			
+
 			// check enemy collision
-			if(intersects(e)) {
+			if (intersects(e)) {
 				hit(e.getDamage());
 			}
-			
+
 		}
 		
 	}
