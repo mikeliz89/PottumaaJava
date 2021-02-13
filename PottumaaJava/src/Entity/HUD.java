@@ -1,5 +1,7 @@
 package Entity;
 
+import Entity.Player.Player;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;

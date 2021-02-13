@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Player.Player;
 import Main.GamePanel;
 import TileMap.*;
 import Entity.*;
@@ -85,7 +86,7 @@ public class Level2State extends GameState {
 	}
 	
 	private void populateTileMaps() {
-		tileMaps = new ArrayList<TileMap>();
+		tileMaps = new ArrayList<>();
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(30);
@@ -108,7 +109,7 @@ public class Level2State extends GameState {
 	
 	private void populateEnemies(ArrayList<TileMap> tileMaps) {
 		
-		enemies = new ArrayList<Enemy>();
+		enemies = new ArrayList<>();
 		
 		Slugger s;
 		Point[] sluggerPoints = new Point[] {
