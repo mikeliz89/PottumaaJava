@@ -50,9 +50,9 @@ public class Level2State extends GameState {
 		
 		populateEnemies(tileMaps);
 		
-		explosions = new ArrayList<Explosion>();
+		explosions = new ArrayList<>();
 		
-		keysPressed = new ArrayList<Integer>();
+		keysPressed = new ArrayList<>();
 		
 		hud = new HUD(player);
 		
