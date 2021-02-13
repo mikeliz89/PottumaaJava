@@ -13,9 +13,9 @@ public class Slugger extends Enemy {
 	
 	private BufferedImage[] sprites;
 	
-	public Slugger(ArrayList<TileMap> tileMaps) {
+	public Slugger(ArrayList<TileMap> tileMaps, int maxHealth) {
 		
-		super(tileMaps);
+		super(tileMaps, maxHealth);
 		
 		moveSpeed = 0.3;
 		maxSpeed = originalMaxSpeed = 0.3;
@@ -27,8 +27,7 @@ public class Slugger extends Enemy {
 		height = 30;
 		cwidth = 20;
 		cheight = 20;
-		
-		health = maxHealth = 2;
+
 		damage = 1;
 		
 		// load sprites

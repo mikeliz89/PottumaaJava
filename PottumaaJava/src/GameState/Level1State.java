@@ -60,7 +60,7 @@ public class Level1State extends GameState {
 		hud = new HUD(player);
 		
 		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
-//			bgMusic.play();
+			bgMusic.play();
 		
 	}
 	
@@ -127,7 +127,7 @@ public class Level1State extends GameState {
 			new Point(100, 500),
 		};
 		for(int i = 0; i < sluggerPoints.length; i++) {
-			s = new Slugger(tileMaps);
+			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
 			enemies.add(s);
 		}

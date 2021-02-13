@@ -119,7 +119,8 @@ public class Level2State extends GameState {
 			new Point(100, 500),
 		};
 		for(int i = 0; i < sluggerPoints.length; i++) {
-			s = new Slugger(tileMaps);
+			//little bit tougher enemy in level 2
+			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH+3);
 			s.setPosition(sluggerPoints[i].x, sluggerPoints[i].y);
 //			enemies.add(s);
 		}

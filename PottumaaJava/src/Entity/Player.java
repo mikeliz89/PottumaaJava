@@ -1,16 +1,15 @@
 package Entity;
 
-import TileMap.*;
 import Audio.AudioPlayer;
 import GameState.GameStateManager;
-import Main.GamePanel;
-
-import java.util.ArrayList;
+import TileMap.MapPoint;
+import TileMap.Tile;
+import TileMap.TileMap;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player extends MapObject {
@@ -89,7 +88,7 @@ public class Player extends MapObject {
 			
 			BufferedImage spritesheet = ImageIO.read(
 				getClass().getResourceAsStream(
-					"/Sprites/Player/playersprites.png"
+					"/Sprites/Player/playersprites.gif"
 				)
 			);
 			
@@ -415,7 +414,7 @@ public class Player extends MapObject {
 			}
 		}
 		else if(dy > 0) { //going down
-			System.out.println("going down");
+			//System.out.println("going down");
 			if(currentAction != WALKING) {
 				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
