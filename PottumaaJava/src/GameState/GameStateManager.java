@@ -8,16 +8,17 @@ public class GameStateManager {
 	private GameState[] gameStates;
 	private int currentState;
 	
-	public static final int NUMGAMESTATES = 3;
+	public static final int NUMGAMESTATES = 4;
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
+	public static final int HELPSTATE = 3;
 	
 	public GameStateManager() {
 		
 		gameStates = new GameState[NUMGAMESTATES];
-		
-//		currentState = LEVEL1STATE;
+
+		//Ensin menu
 		currentState = MENUSTATE;
 		
 		loadState(currentState);
@@ -32,6 +33,9 @@ public class GameStateManager {
 		}
 		if(state == LEVEL2STATE) { 
 			gameStates[state] = new Level2State(this);
+		}
+		if(state == HELPSTATE) {
+			gameStates[state] = new HelpState(this);
 		}
 	}
 	

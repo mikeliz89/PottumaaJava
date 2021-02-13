@@ -1,7 +1,6 @@
 package TileMap;
 
 import Main.GamePanel;
-
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
@@ -21,7 +20,7 @@ public class Background {
 		
 		try {
 			image = ImageIO.read(
-				getClass().getResourceAsStream(s)
+					getClass().getResourceAsStream(s)
 			);
 			moveScale = ms;
 		}
@@ -61,9 +60,9 @@ public class Background {
 			y = 0;
 		}
 		g.drawImage(image, (int)x, (int)y, null);
-//		if(GameState.isDebug == false) {
-//			System.out.println(x);
-//		}
+
+		Debug();
+
 		if(x < 0) {
 			g.drawImage(
 				image,
@@ -97,6 +96,12 @@ public class Background {
 					null
 				);
 		}
+	}
+
+	private void Debug() {
+		//		if(GameState.isDebug == false) {
+		//			System.out.println(x);
+		//		}
 	}
 	
 }
