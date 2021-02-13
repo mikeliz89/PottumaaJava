@@ -166,19 +166,47 @@ public class TileMap {
 	public Tile[][] getTiles() { return tiles; }
 	
 	public int getTileType(int row, int col) {
+
+		row = makeRowValueSafe(row);
+		col = makeColumnValueSafe(col);
+
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
+		System.out.println((r));
+		System.out.println((c));
 		return tiles[r][c].getType();
 	}
 	
 	public int getTileFrictionType(int row, int col) {
+
+		row = makeRowValueSafe(row);
+		col = makeColumnValueSafe(col);
+
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
 		return tiles[r][c].getFrictionType();
 	}
-	
+
+	private int makeColumnValueSafe(int col) {
+		if(col >= numCols)
+			col = numCols -1;
+
+		if(col <= 0)
+			col = 0;
+		return col;
+	}
+
+	private int makeRowValueSafe(int row) {
+		if(row <= 0)
+			row = 0;
+
+		if(row >= numRows)
+			row = numRows -1;
+		return row;
+	}
+
 	public void setTileSize(int tileSize) {
 		this.tileSize = tileSize;
 	}
