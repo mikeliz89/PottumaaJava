@@ -29,23 +29,14 @@ public class GameStateManager {
 	}
 	
 	private void loadState(int state) {
-		if(state == MENUSTATE) {
-			gameStates[state] = new MenuState(this);
-		}
-		if(state == LEVEL1STATE) {
-			gameStates[state] = new Level1State(this);
-		}
-		if(state == LEVEL2STATE) { 
-			gameStates[state] = new Level2State(this);
-		}
-		if(state == HELPSTATE) {
-			gameStates[state] = new HelpState(this);
-		}
-		if(state == OPTIONSSTATE) {
-			gameStates[state] = new OptionsState(this);
-		}
-		if(state == MAPEDITORSTATE) {
-			gameStates[state] = new MapEditorState(this);
+		switch (state) {
+			case MENUSTATE -> gameStates[state] = new MenuState(this);
+			case LEVEL1STATE -> gameStates[state] = new Level1State(this);
+			case LEVEL2STATE -> gameStates[state] = new Level2State(this);
+			case HELPSTATE -> gameStates[state] = new HelpState(this);
+			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
+			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
+			default -> throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
 	
@@ -86,7 +77,7 @@ public class GameStateManager {
 		
 		gameStates[currentState].keyPressed(k);
 		
-		if(k == KeyEvent.VK_ESCAPE) System.exit(0);
+		if(k == KeyEvent.VK_ESCAPE) setState(MENUSTATE);
 
 		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
 	}
