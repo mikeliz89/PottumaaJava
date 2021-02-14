@@ -96,21 +96,16 @@ public class Level1State extends GameState {
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
 			);
-			
-			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
+
 			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
-			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
-			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
+			//BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
+			//BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
+			//BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
 			
 			MapPoint level2Point = new MapPoint(rightArrow);
 			level2Point.setPosition(885, 585);
 			level2Point.setGotoLevel(GameStateManager.LEVEL2STATE);
-			MapPoint level3Point = new MapPoint(downArrow);
-			level3Point.setPosition(250, 250);
-			level3Point.setGotoLevel(GameStateManager.MENUSTATE);
-			
 			mapPoints.add(level2Point);
-			mapPoints.add(level3Point);
 		} 
 		catch(Exception e) {
 			e.printStackTrace();
