@@ -55,7 +55,7 @@ public class Level1State extends GameState {
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(30);
-		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
+		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
 		tileMapGround.loadMap("/Maps/map1.csv");
 		tileMapGround.setPosition(0, 0);
 		tileMapGround.setType(TileMap.GROUND);

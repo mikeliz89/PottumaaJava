@@ -12,7 +12,7 @@ public class GameOptions {
 	 OPTIONSSTATE = 4;
 	 MAPEDITORSTATE = 5;
     */
-    public static int FIRSTSTATE = 5;
+    public static int FIRSTSTATE = 1;
 
     public static void ToggleDebugMode() {
         ISDEBUGMODE = !ISDEBUGMODE;

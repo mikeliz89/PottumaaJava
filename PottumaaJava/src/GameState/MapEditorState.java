@@ -33,7 +33,7 @@ public class MapEditorState extends GameState {
 	
 	public void init() {
 
-		loadTiles("/Tilesets/grasstileset3.png");
+		loadTiles("/Tilesets/grasstileset.png");
 		keysPressed = new ArrayList<>();
 	}
 
@@ -83,7 +83,7 @@ public class MapEditorState extends GameState {
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(tileSize);
-		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
+		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
 		tileMapGround.loadMap("/Maps/map1.csv");
 		tileMapGround.setPosition(0, 0);
 		tileMapGround.setType(TileMap.GROUND);
