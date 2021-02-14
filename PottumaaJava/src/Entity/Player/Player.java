@@ -460,20 +460,19 @@ public class Player extends MapObject {
 	public void draw(Graphics2D g) {
 		
 		setMapPosition();
+
+		DrawFireBalls(g);
+
+		//Player is not drawn when flinching etc.
+		if (DrawPlayer()) return;
+
+		DrawDebugArea(g);
+
+		super.draw(g);
 		
-		// draw fireballs
-		for(int i = 0; i < fireBalls.size(); i++) {
-			fireBalls.get(i).draw(g);
-		}
-		
-		// draw player
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed / 100 % 2 == 0) {
-				return;
-			}
-		}
+	}
+
+	private void DrawDebugArea(Graphics2D g) {
 		Font titleFont = new Font(
 				"Century Gothic",
 				Font.PLAIN,
@@ -482,18 +481,32 @@ public class Player extends MapObject {
 		g.setFont(titleFont);
 		g.drawString("X: " + this.x, 400, 13);
 		g.drawString("Y: " + this.y, 400, 28);
-		g.drawString("MoveSpd: " + this.maxSpeed, 600, 13);
-		g.drawString("StopSpd: " + this.stopSpeed, 600, 28);
+		g.drawString("MaxSpeed: " + this.maxSpeed, 600, 13);
+		g.drawString("StopSpeed: " + this.stopSpeed, 600, 28);
 		g.setColor(Color.BLUE);
 		g.drawRect((int)(x + xmap - width / 2),
 				(int)(y + ymap - height / 2),
 				width,
 				height);
-		
-		super.draw(g);
-		
 	}
-	
+
+	private boolean DrawPlayer() {
+		if(flinching) {
+			long elapsed =
+				(System.nanoTime() - flinchTimer) / 1000000;
+			if(elapsed / 100 % 2 == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void DrawFireBalls(Graphics2D g) {
+		for(int i = 0; i < fireBalls.size(); i++) {
+			fireBalls.get(i).draw(g);
+		}
+	}
+
 }
 
 

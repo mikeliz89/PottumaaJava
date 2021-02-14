@@ -33,19 +33,26 @@ public class HUD {
 		g.drawImage(image, 0, 10, null);
 		g.setFont(font);
 		g.setColor(Color.WHITE);
-		g.drawString(
-			player.getHealth() + "/" + player.getMaxHealth(),
-			30,
-			25
-		);
+		DrawHealthPoints(g);
+		DrawManaPoints(g);
+	}
+
+	private void DrawManaPoints(Graphics2D g) {
 		g.drawString(
 			player.getFire() / 100 + "/" + player.getMaxFire() / 100,
 			30,
 			45
 		);
-		
 	}
-	
+
+	private void DrawHealthPoints(Graphics2D g) {
+		g.drawString(
+			player.getHealth() + "/" + player.getMaxHealth(),
+			30,
+			25
+		);
+	}
+
 }
 
 
