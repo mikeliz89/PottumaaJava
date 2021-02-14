@@ -143,8 +143,9 @@ public class MapEditorState extends GameState {
 
 	private void DrawTexts(Graphics2D g) {
 		g.setColor(Color.BLUE);
-		g.drawString("Press Enter to select", helpTextsLocationX, helpTextsLocationY + 60);
-		g.drawString("Press S to save map", helpTextsLocationX, helpTextsLocationY + 80);
+		g.drawString("Press Enter to select", helpTextsLocationX, helpTextsLocationY + 80);
+		g.drawString("Press S to save map", helpTextsLocationX, helpTextsLocationY + 100);
+		g.drawString("Press Backspace to exit to menu", helpTextsLocationX, helpTextsLocationY + 120);
 	}
 
 	private void DrawTileSets(Graphics2D g) {
