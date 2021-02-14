@@ -24,7 +24,18 @@ public class MrPotatoGuy extends NPC {
 
         damage = 100;
 
-        // load sprites
+        loadSprites();
+
+        animation = new Animation();
+        animation.setFrames(sprites);
+        animation.setDelay(300);
+
+        right = true;
+        facingRight = true;
+
+    }
+
+    private void loadSprites() {
         try {
 
             BufferedImage spritesheet = ImageIO.read(
@@ -47,14 +58,6 @@ public class MrPotatoGuy extends NPC {
         catch(Exception e) {
             e.printStackTrace();
         }
-
-        animation = new Animation();
-        animation.setFrames(sprites);
-        animation.setDelay(300);
-
-        right = true;
-        facingRight = true;
-
     }
 
     public void update() {

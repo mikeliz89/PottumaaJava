@@ -123,57 +123,51 @@ public abstract class MapObject {
 		
 		xtemp = x;
 		ytemp = y;
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tileMap = tileMaps.get(i);
-		
+
+		for (TileMap tileMap : tileMaps) {
 			calculateCorners(x, ydest, tileMap);
-			if(dy < 0) {
-				if(topLeft || topRight) {
+			if (dy < 0) {
+				if (topLeft || topRight) {
 					dy = 0;
 					ytemp = currRow * tm.getTileSize() + cheight / 2;
-				}
-				else {
+				} else {
 					ytemp += dy;
 				}
 			}
-			if(dy > 0) {
-				if(bottomLeft || bottomRight) {
-	
+			if (dy > 0) {
+				if (bottomLeft || bottomRight) {
+
 					dy = 0;
 					falling = false;
 					ytemp = (currRow + 1) * tm.getTileSize() - cheight / 2;
-				}
-				else {
+				} else {
 					ytemp += dy;
 				}
 			}
-			
+
 			calculateCorners(xdest, y, tileMap);
-			if(dx < 0) {
-				if(topLeft || bottomLeft) {
+			if (dx < 0) {
+				if (topLeft || bottomLeft) {
 					dx = 0;
 					xtemp = currCol * tm.getTileSize() + cwidth / 2;
-				}
-				else {
+				} else {
 					xtemp += dx;
 				}
 			}
-			if(dx > 0) {
-				if(topRight || bottomRight) {
+			if (dx > 0) {
+				if (topRight || bottomRight) {
 					dx = 0;
 					xtemp = (currCol + 1) * tm.getTileSize() - cwidth / 2;
-				}
-				else {
+				} else {
 					xtemp += dx;
 				}
 			}
-		
-			if(!falling) {
+
+			if (!falling) {
 				calculateCorners(x, ydest + 1, tileMap);
-				if(!bottomLeft && !bottomRight) {
-	//				falling = true;
-				}
+				//if (!bottomLeft && !bottomRight) {
+					//				falling = true;
+				//}
 			}
 		}
 		
@@ -222,9 +216,8 @@ public abstract class MapObject {
 	}
 	
 	public void setMapPosition() {
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tileMap = tileMaps.get(i);
+
+		for (TileMap tileMap : tileMaps) {
 			xmap = tileMap.getx();
 			ymap = tileMap.gety();
 		}
@@ -244,6 +237,12 @@ public abstract class MapObject {
 	}
 	
 	public void draw(java.awt.Graphics2D g) {
+
+		//todo: onko tämä turha tarkistus?
+		if(!animation.hasFrames()) {
+			return;
+		}
+
 		if(facingRight) {
 			g.drawImage(
 				animation.getImage(),

@@ -1,6 +1,7 @@
 package GameState;
 
 import Entity.NPCs.MrPotatoGuy;
+import Entity.Obstacles.House;
 import Entity.Player.Player;
 import Main.GameOptions;
 import Main.GamePanel;
@@ -29,6 +30,8 @@ public class Level1State extends GameState {
 	private ArrayList<Integer> keysPressed;
 	private double tileMapTween = 0.11;
 
+	private House playerHome;
+
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
 		init();
@@ -45,6 +48,7 @@ public class Level1State extends GameState {
 		
 		populateEnemies();
 		populateNPCs();
+		populateObstacles();
 		
 		explosions = new ArrayList<>();
 		keysPressed = new ArrayList<>();
@@ -106,6 +110,11 @@ public class Level1State extends GameState {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void populateObstacles() {
+		playerHome = new House(tileMaps);
+		playerHome.setPosition(500, 260);
 	}
 	
 	private void populateEnemies() {
@@ -169,8 +178,7 @@ public class Level1State extends GameState {
 	}
 
 	private void UpdateNPCs() {
-		for(int i = 0; i < NPCs.size(); i++) {
-			NPC npc = NPCs.get(i);
+		for (NPC npc : NPCs) {
 			npc.update();
 		}
 	}
@@ -204,6 +212,8 @@ public class Level1State extends GameState {
 
 		DrawMapPoints(g);
 
+		DrawObstacles(g);
+
 		DrawNPCs(g);
 
 		DrawPlayer(g);
@@ -213,6 +223,10 @@ public class Level1State extends GameState {
 		DrawExplosions(g);
 
 		DrawHUD(g);
+	}
+
+	private void DrawObstacles(Graphics2D g) {
+		playerHome.draw(g);
 	}
 
 	private void DrawHUD(Graphics2D g) {

@@ -29,16 +29,27 @@ public class Slugger extends Enemy {
 		cheight = 20;
 
 		damage = 1;
+
+		loadSprites();
+
+		animation = new Animation();
+		animation.setFrames(sprites);
+		animation.setDelay(300);
 		
-		// load sprites
+		right = true;
+		facingRight = true;
+		
+	}
+
+	private void loadSprites() {
 		try {
-			
+
 			BufferedImage spritesheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Enemies/slugger.gif"
 				)
 			);
-			
+
 			sprites = new BufferedImage[3];
 			for(int i = 0; i < sprites.length; i++) {
 				sprites[i] = spritesheet.getSubimage(
@@ -48,21 +59,13 @@ public class Slugger extends Enemy {
 					height
 				);
 			}
-			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		animation = new Animation();
-		animation.setFrames(sprites);
-		animation.setDelay(300);
-		
-		right = true;
-		facingRight = true;
-		
 	}
-	
+
 	private void getNextPosition() {
 		
 		// movement
@@ -90,9 +93,8 @@ public class Slugger extends Enemy {
 		
 		// update position
 		getNextPosition();
-//		checkTileMapCollision();
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tm = tileMaps.get(i);
+
+		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
 		}
 		setPosition(xtemp, ytemp);

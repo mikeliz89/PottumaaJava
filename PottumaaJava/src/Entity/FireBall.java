@@ -29,16 +29,19 @@ public class FireBall extends MapObject {
 		height = 30;
 		cwidth = 14;
 		cheight = 14;
-		
-		// load sprites
+
+		loadSprites();
+	}
+
+	private void loadSprites() {
 		try {
-			
+
 			BufferedImage spritesheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Player/fireball.gif"
 				)
 			);
-			
+
 			sprites = new BufferedImage[4];
 			for(int i = 0; i < sprites.length; i++) {
 				sprites[i] = spritesheet.getSubimage(
@@ -48,7 +51,7 @@ public class FireBall extends MapObject {
 					height
 				);
 			}
-			
+
 			hitSprites = new BufferedImage[3];
 			for(int i = 0; i < hitSprites.length; i++) {
 				hitSprites[i] = spritesheet.getSubimage(
@@ -58,18 +61,17 @@ public class FireBall extends MapObject {
 					height
 				);
 			}
-			
+
 			animation = new Animation();
 			animation.setFrames(sprites);
 			animation.setDelay(70);
-			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	
+
 	public void setHit() {
 		if(hit) return;
 		hit = true;
@@ -81,9 +83,8 @@ public class FireBall extends MapObject {
 	public boolean shouldRemove() { return remove; }
 	
 	public void update() {
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tm = tileMaps.get(i);
+
+		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
 		}
 		setPosition(xtemp, ytemp);

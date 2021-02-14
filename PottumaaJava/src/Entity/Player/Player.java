@@ -83,28 +83,38 @@ public class Player extends MapObject {
 		
 		fireCost = 200;
 		fireBallDamage = 5;
-		fireBalls = new ArrayList<FireBall>();
+		fireBalls = new ArrayList<>();
 		
 		scratchDamage = 8;
 		scratchRange = 40;
-		
-		// load sprites
+
+		loadSprites();
+
+		animation = new Animation();
+		currentAction = IDLE;
+		animation.setFrames(sprites.get(IDLE));
+		animation.setDelay(400);
+
+		setSoundEffects();
+	}
+
+	private void loadSprites() {
 		try {
-			
+
 			BufferedImage spritesheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Player/playersprites.gif"
 				)
 			);
-			
-			sprites = new ArrayList<BufferedImage[]>();
+
+			sprites = new ArrayList<>();
 			for(int i = 0; i < 7; i++) {
-				
+
 				BufferedImage[] bi =
 					new BufferedImage[numFrames[i]];
-				
+
 				for(int j = 0; j < numFrames[i]; j++) {
-					
+
 					if(i != SCRATCHING) {
 						bi[j] = spritesheet.getSubimage(
 								j * width,
@@ -121,28 +131,21 @@ public class Player extends MapObject {
 								height
 						);
 					}
-					
+
 				}
-				
+
 				sprites.add(bi);
-				
+
 			}
-			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		animation = new Animation();
-		currentAction = IDLE;
-		animation.setFrames(sprites.get(IDLE));
-		animation.setDelay(400);
-
-		setSoundEffects();
 	}
 
 	private void setSoundEffects() {
-		sfx = new HashMap<String, AudioPlayer>();
+		sfx = new HashMap<>();
 		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
 		//sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
 		//sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
