@@ -21,7 +21,7 @@ public class MapEditorState extends GameState {
 
 	// tileset
 	private BufferedImage tileset;
-	private Tile[][] tiles;
+	private Tile[] tiles;
 
 	//selection
 	private int currentSelection = 0;
@@ -43,7 +43,7 @@ public class MapEditorState extends GameState {
 					getClass().getResourceAsStream(s)
 			);
 
-			tiles = new Tile[2][2];
+			tiles = new Tile[2];
 
 			numTilesX = tileset.getWidth() / tileSize;
 			numTilesY = tileset.getHeight() / tileSize;
@@ -59,7 +59,7 @@ public class MapEditorState extends GameState {
 							tileSize
 					);
 			Tile newTile = new Tile(subimage, 1, 1);
-			tiles[0][0] = newTile;
+			tiles[0] = newTile;
 
 			column = 0;
 			row = 1;
@@ -71,7 +71,7 @@ public class MapEditorState extends GameState {
 							tileSize
 					);
 			Tile newTile2 = new Tile(subimage, 1, 1);
-			tiles[1][0] = newTile2;
+			tiles[1] = newTile2;
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -132,10 +132,10 @@ public class MapEditorState extends GameState {
 		}
 
 		//null check
-		if(tiles[currentSelection][0] == null)
+		if(tiles[currentSelection] == null)
 			return;
 
-		g.drawImage(tiles[currentSelection][0].getImage(),
+		g.drawImage(tiles[currentSelection].getImage(),
 				x, y, null);
 		g.setColor(Color.WHITE);
 		g.drawRect(x,y, tileSize,tileSize);
@@ -150,16 +150,15 @@ public class MapEditorState extends GameState {
 
 	private void DrawTileSets(Graphics2D g) {
 		int rowIndex = 0;
-		int columnIndex = 0;
 		g.drawImage(
-				tiles[rowIndex][columnIndex].getImage(),
+				tiles[rowIndex].getImage(),
 				0,
 				0,
 				null
 		);
 
 		g.drawImage(
-				tiles[rowIndex+1][columnIndex].getImage(),
+				tiles[rowIndex+1].getImage(),
 				0,
 				tileSize,
 				null
