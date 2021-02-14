@@ -1,10 +1,7 @@
 package Entity.Player;
 
 import Audio.AudioPlayer;
-import Entity.Animation;
-import Entity.Enemy;
-import Entity.FireBall;
-import Entity.MapObject;
+import Entity.*;
 import GameState.GameStateManager;
 import Main.GameOptions;
 import TileMap.MapPoint;
@@ -59,6 +56,8 @@ public class Player extends MapObject {
 	private static final int SCRATCHING = 6;
 	
 	private HashMap<String, AudioPlayer> sfx;
+
+	private Wallet wallet;
 	
 	public Player(ArrayList<TileMap> tileMaps) {
 		this.tileMaps = tileMaps;
@@ -95,7 +94,29 @@ public class Player extends MapObject {
 		animation.setFrames(sprites.get(IDLE));
 		animation.setDelay(400);
 
+		createWallet();
+
 		setSoundEffects();
+	}
+
+	private void createWallet() {
+		wallet = new Wallet(PlayerSettings.PLAYER_START_MONEY_AMOUNT);
+	}
+
+	public int getMoneyInWallet() {
+		return wallet.GetMoneyAmount();
+	}
+
+	public void addMoney(int money) {
+		wallet.AddMoney(money);
+	}
+
+	public boolean hasLowHealth () {
+		if(health <= 2 && maxHealth >= 5)
+			return true;
+		else if(health == 1 && maxHealth < 5)
+			return true;
+		return false;
 	}
 
 	private void loadSprites() {

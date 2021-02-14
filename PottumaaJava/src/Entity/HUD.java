@@ -141,33 +141,53 @@ public class HUD {
 		g.setFont(font);
 		g.drawString("Inventory", shape.x + 10, shape.y + 20);
 
+		//Näytä gold määrä
+		g.setColor(Color.ORANGE);
+		g.drawString("Gold: " + player.getMoneyInWallet(), shape.x + 10, shape.y + 40);
+
+		g.setColor(Color.WHITE);
 		g.drawString("Character stats", shape.x + 320, shape.y + 20);
 	}
 
 	private void DrawImage(Graphics2D g) {
 		g.drawImage(image, 0, 10, null);
 	}
+	private final int textsXCoordinate = 25;
 
 	private void DrawTexts(Graphics2D g) {
 		g.setFont(font);
 		g.setColor(Color.WHITE);
 
+		DrawMoneyAmount(g);
 		DrawHealthPoints(g);
 		DrawManaPoints(g);
 	}
 
+	private void DrawMoneyAmount(Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.drawString(player.getMoneyInWallet() + " g",
+				textsXCoordinate,
+				65
+		);
+	}
+
 	private void DrawManaPoints(Graphics2D g) {
+		g.setColor(Color.BLACK);
 		g.drawString(
 			player.getFire() / 100 + "/" + player.getMaxFire() / 100,
-			30,
+				textsXCoordinate,
 			45
 		);
 	}
 
 	private void DrawHealthPoints(Graphics2D g) {
+		if(player.hasLowHealth())
+			g.setColor(Color.RED);
+		else
+			g.setColor(Color.BLACK);
 		g.drawString(
 			player.getHealth() + "/" + player.getMaxHealth(),
-			30,
+				textsXCoordinate,
 			25
 		);
 	}

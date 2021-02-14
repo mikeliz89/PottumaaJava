@@ -9,7 +9,7 @@ public abstract class Enemy extends MapObject {
 	
 	private int health;
 	private int maxHealth;
-
+	protected int moneyGainedWhenKilled;
 	protected boolean dead;
 	protected int damage;
 	protected boolean flinching;
@@ -60,6 +60,10 @@ public abstract class Enemy extends MapObject {
 
 	private void playSoundEffect(String soundEffectName) {
 		sfx.get(soundEffectName).play();
+	}
+
+	public int getMoneyGainedWhenKilled() {
+		return moneyGainedWhenKilled;
 	}
 
 }

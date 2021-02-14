@@ -151,6 +151,7 @@ public class Level2State extends GameState {
 			Enemy e = enemies.get(i);
 			e.update();
 			if(e.isDead()) {
+				player.addMoney(e.getMoneyGainedWhenKilled());
 				enemies.remove(i);
 				i--;
 				explosions.add(

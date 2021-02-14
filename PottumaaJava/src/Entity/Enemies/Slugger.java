@@ -42,6 +42,8 @@ public class Slugger extends Enemy {
 		right = true;
 		facingRight = true;
 
+		moneyGainedWhenKilled = 1;
+
 		setSoundEffects();
 	}
 
