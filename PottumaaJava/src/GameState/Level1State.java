@@ -282,7 +282,7 @@ public class Level1State extends GameState {
 		//have to press running before can charge
 		if(keysPressed.contains(KeyEvent.VK_LEFT) == true ||
 				keysPressed.contains(KeyEvent.VK_RIGHT) == true ||
-				keysPressed.contains(KeyEvent.VK_UP) == true || 
+				keysPressed.contains(KeyEvent.VK_UP) == true ||
 				keysPressed.contains(KeyEvent.VK_DOWN) == true) {
 			if(keysPressed.contains(KeyEvent.VK_SHIFT)) {
 				player.setCharging(true);
@@ -308,6 +308,9 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_F) player.setFiring();
 
 		if(k == KeyEvent.VK_I) hud.ToggleInventory();
+		if(k == KeyEvent.VK_M) hud.ToggleMap();
+		if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
+
 	}
 	
 	public void keyReleased(int k) {
