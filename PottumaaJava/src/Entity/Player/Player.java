@@ -137,12 +137,15 @@ public class Player extends MapObject {
 		currentAction = IDLE;
 		animation.setFrames(sprites.get(IDLE));
 		animation.setDelay(400);
-		
+
+		setSoundEffects();
+	}
+
+	private void setSoundEffects() {
 		sfx = new HashMap<String, AudioPlayer>();
-		sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
-		sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
-		sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
-		
+		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
+		//sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
+		//sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
 	}
 	
 	public int getHealth() { return health; }
@@ -326,7 +329,7 @@ public class Player extends MapObject {
 		
 		// jumping
 		if(jumping && !falling) {
-			sfx.get("jump").play();
+			playSoundEffect("jump");
 			dy = jumpStart;
 			falling = true;	
 		}
@@ -344,6 +347,11 @@ public class Player extends MapObject {
 			
 		}
 		
+	}
+
+	private void playSoundEffect(String soundEffectName) {
+		//todo: Korjaa ääniefektien soittaminen
+		//sfx.get(soundEffectName).play();
 	}
 	
 	public void update() {
@@ -397,7 +405,7 @@ public class Player extends MapObject {
 		// set animation
 		if(scratching) { //scratch
 			if(currentAction != SCRATCHING) {
-				sfx.get("scratch").play();
+				playSoundEffect("scratch");
 				currentAction = SCRATCHING;
 				animation.setFrames(sprites.get(SCRATCHING));
 				animation.setDelay(50);
@@ -406,7 +414,7 @@ public class Player extends MapObject {
 		}
 		else if(firing) { //shooting
 			if(currentAction != FIREBALL) {
-				sfx.get("fireball").play();
+				playSoundEffect("fireball");
 				currentAction = FIREBALL;
 				animation.setFrames(sprites.get(FIREBALL));
 				animation.setDelay(100);
