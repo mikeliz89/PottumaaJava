@@ -363,16 +363,39 @@ public class Player extends MapObject {
 			checkTileMapCollision(tm);
 		}
 		setPosition(xtemp, ytemp);
-		
-		// check attack has stopped
+
+		checkAttackHasStopped();
+
+		fireBallAttack();
+
+		updateFireBalls();
+
+		// check done flinching
+		if(flinching) {
+			long elapsed =
+				(System.nanoTime() - flinchTimer) / 1000000;
+			if(elapsed > 1000) {
+				flinching = false;
+			}
+		}
+
+		setAnimation();
+
+		animation.update();
+
+		updateDirection();
+	}
+
+	private void checkAttackHasStopped() {
 		if(currentAction == SCRATCHING) {
 			if(animation.hasPlayedOnce()) scratching = false;
 		}
 		if(currentAction == FIREBALL) {
 			if(animation.hasPlayedOnce()) firing = false;
 		}
-		
-		// fireball attack
+	}
+
+	private void fireBallAttack() {
 		fire += 1;
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL) {
@@ -383,26 +406,9 @@ public class Player extends MapObject {
 				fireBalls.add(fb);
 			}
 		}
-		
-		// update fireballs
-		for(int i = 0; i < fireBalls.size(); i++) {
-			fireBalls.get(i).update();
-			if(fireBalls.get(i).shouldRemove()) {
-				fireBalls.remove(i);
-				i--;
-			}
-		}
-		
-		// check done flinching
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed > 1000) {
-				flinching = false;
-			}
-		}
-		
-		// set animation
+	}
+
+	private void setAnimation() {
 		if(scratching) { //scratch
 			if(currentAction != SCRATCHING) {
 				playSoundEffect("scratch");
@@ -454,17 +460,25 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		
-		animation.update();
-		
-		// set direction
+	}
+
+	private void updateFireBalls() {
+		for(int i = 0; i < fireBalls.size(); i++) {
+			fireBalls.get(i).update();
+			if(fireBalls.get(i).shouldRemove()) {
+				fireBalls.remove(i);
+				i--;
+			}
+		}
+	}
+
+	private void updateDirection() {
 		if(currentAction != SCRATCHING && currentAction != FIREBALL) {
 			if(right) facingRight = true;
 			if(left) facingRight = false;
 		}
-		
 	}
-	
+
 	public void draw(Graphics2D g) {
 		
 		setMapPosition();
