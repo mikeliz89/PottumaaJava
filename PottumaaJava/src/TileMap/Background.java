@@ -99,9 +99,7 @@ public class Background {
 	}
 
 	private void Debug() {
-		//		if(GameState.isDebug == false) {
-		//			System.out.println(x);
-		//		}
+
 	}
 	
 }

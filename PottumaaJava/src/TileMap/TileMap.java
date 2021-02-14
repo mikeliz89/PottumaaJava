@@ -167,15 +167,11 @@ public class TileMap {
 	public Tile[][] getTiles() { return tiles; }
 	
 	public int getTileType(int row, int col) {
-
 		row = makeRowValueSafe(row);
 		col = makeColumnValueSafe(col);
-
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
-		System.out.println((r));
-		System.out.println((c));
 		return tiles[r][c].getType();
 	}
 	
