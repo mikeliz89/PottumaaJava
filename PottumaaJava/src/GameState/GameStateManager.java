@@ -27,11 +27,31 @@ public class GameStateManager {
 		
 		loadState(currentState);
 	}
-	
+
 	private void loadState(int state) {
+		loadState(state, -1);
+	}
+	
+	private void loadState(int state, int previousState) {
+
 		switch (state) {
-			case MENUSTATE -> gameStates[state] = new MenuState(this);
-			case LEVEL1STATE -> gameStates[state] = new Level1State(this);
+			case MENUSTATE -> {
+				gameStates[state] = new MenuState(this);
+			}
+			case LEVEL1STATE -> {
+
+				var playerStartingPointX = 0;
+				var playerStartingPointY = 0;
+				if(previousState == MENUSTATE) {
+					playerStartingPointX = 40;
+					playerStartingPointY = 100;
+				}
+				if(previousState == LEVEL2STATE) {
+					playerStartingPointX = 880;
+					playerStartingPointY = 585;
+				}
+				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
+			}
 			case LEVEL2STATE -> gameStates[state] = new Level2State(this);
 			case HELPSTATE -> gameStates[state] = new HelpState(this);
 			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
@@ -47,8 +67,9 @@ public class GameStateManager {
 	
 	public void setState(int state) {
 		unloadState(currentState);
+		int previousState = currentState;
 		currentState = state;
-		loadState(currentState);
+		loadState(currentState, previousState);
 	}
 	
 	public void update() {

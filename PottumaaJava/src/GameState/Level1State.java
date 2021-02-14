@@ -29,22 +29,25 @@ public class Level1State extends GameState {
 	private HUD hud;
 	private AudioPlayer bgMusic;
 	private ArrayList<Integer> keysPressed;
-
 	private House playerHome;
 
-	public Level1State(GameStateManager gsm) {
+	public Level1State(GameStateManager gsm, int PlayerStartingPositionX, int PlayerStartingPositionY) {
 		this.gsm = gsm;
-		init();
+		init(PlayerStartingPositionX, PlayerStartingPositionY);
+	}
+
+	public void init() {
+
 	}
 	
-	public void init() {
+	public void init(int PlayerStartingPositionX, int PlayerStartingPositionY) {
 		
 		populateTileMaps();
 		
 		populateMapPoints();
 		
 		player = new Player(tileMaps);
-		player.setPosition(40, 100);
+		player.setPosition(PlayerStartingPositionX, PlayerStartingPositionY);
 		
 		populateEnemies();
 		populateNPCs();
