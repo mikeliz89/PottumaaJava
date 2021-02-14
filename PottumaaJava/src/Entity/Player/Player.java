@@ -146,9 +146,10 @@ public class Player extends MapObject {
 
 	private void setSoundEffects() {
 		sfx = new HashMap<>();
-		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
-		//sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
-		//sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
+		sfx.put("jump", new AudioPlayer("/SFX/jump.wav"));
+		sfx.put("scratch", new AudioPlayer("/SFX/scratch.wav"));
+		sfx.put("fireball", new AudioPlayer("/SFX/fireball.wav"));
+		sfx.put("playerGetsHit", new AudioPlayer("/SFX/playerGetsHit.wav"));
 	}
 	
 	public int getHealth() { return health; }
@@ -255,6 +256,8 @@ public class Player extends MapObject {
 		if(health == 0) dead = true;
 		flinching = true;
 		flinchTimer = System.nanoTime();
+
+		playSoundEffect("playerGetsHit");
 	}
 	
 	private void getNextPosition() {
@@ -353,8 +356,7 @@ public class Player extends MapObject {
 	}
 
 	private void playSoundEffect(String soundEffectName) {
-		//todo: Korjaa ääniefektien soittaminen
-		//sfx.get(soundEffectName).play();
+		sfx.get(soundEffectName).play();
 	}
 	
 	public void update() {

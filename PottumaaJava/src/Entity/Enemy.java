@@ -1,6 +1,9 @@
 package Entity;
 
+import Audio.AudioPlayer;
 import TileMap.TileMap;
+
+import java.util.HashMap;
 
 public abstract class Enemy extends MapObject {
 	
@@ -11,11 +14,15 @@ public abstract class Enemy extends MapObject {
 	protected int damage;
 	protected boolean flinching;
 	protected long flinchTimer;
+
+	private HashMap<String, AudioPlayer> sfx;
 	
 	public Enemy(java.util.ArrayList<TileMap> tileMaps, int maxHealth) {
 		this.tileMaps = tileMaps;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
+
+		setSoundEffects();
 	}
 	
 	public boolean isDead() { return dead; }
@@ -26,7 +33,7 @@ public abstract class Enemy extends MapObject {
 		if(dead || flinching) return;
 		health -= damage;
 		if(health < 0) health = 0;
-		if(health == 0) dead = true;
+		if(health == 0) Die();
 		flinching = true;
 		flinchTimer = System.nanoTime();
 	}
@@ -40,7 +47,21 @@ public abstract class Enemy extends MapObject {
 	}
 	
 	public void update() {}
-	
+
+	private void Die() {
+		dead = true;
+		playSoundEffect("deathCry");
+	}
+
+	private void setSoundEffects() {
+		sfx = new HashMap<>();
+		sfx.put("deathCry", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
+	}
+
+	private void playSoundEffect(String soundEffectName) {
+		sfx.get(soundEffectName).play();
+	}
+
 }
 
 
