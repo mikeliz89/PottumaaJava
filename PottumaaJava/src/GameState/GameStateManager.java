@@ -8,11 +8,12 @@ public class GameStateManager {
 	private GameState[] gameStates;
 	private int currentState;
 
-	public static final int NUMGAMESTATES = 4;
+	public static final int NUMGAMESTATES = 5;
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
 	public static final int HELPSTATE = 3;
+	public static final int OPTIONSSTATE = 4;
 	
 	public GameStateManager() {
 		
@@ -36,6 +37,9 @@ public class GameStateManager {
 		}
 		if(state == HELPSTATE) {
 			gameStates[state] = new HelpState(this);
+		}
+		if(state == OPTIONSSTATE) {
+			gameStates[state] = new OptionsState(this);
 		}
 	}
 	

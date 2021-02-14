@@ -1,39 +1,29 @@
 package GameState;
 
-import Audio.AudioPlayer;
 import Main.GamePanel;
 import TileMap.Background;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class MenuState extends GameState {
-	
-	private Background bg;
-	
+public class OptionsState extends GameState {
+
 	private int currentChoice = 0;
 	private String[] options = {
-		"Start",
-		"Options",
-		"Help",
-		"Quit"
+			"Go back"
 	};
-	
+
 	private Color titleColor;
 	private Font titleFont;
-	
 	private Font font;
-	
-//	private AudioPlayer bgMusic;
-	
-	public MenuState(GameStateManager gsm) {
+	private Background bg;
+
+	public OptionsState(GameStateManager gsm) {
 		this.gsm = gsm;
 		init();
 	}
 	
 	public void init() {
-//		bgMusic = new AudioPlayer("/Music/menu-joesatriani.mp3");
-//		bgMusic.play();
 		try {
 			//Background image
 			bg = new Background("/Backgrounds/menubg.png", 0.1);
@@ -50,11 +40,11 @@ public class MenuState extends GameState {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void update() {
 		bg.update();
 	}
-	
+
 	public void draw(Graphics2D g) {
 
 		DrawBackground(g);
@@ -65,13 +55,14 @@ public class MenuState extends GameState {
 	}
 
 	private void DrawBackground(Graphics2D g) {
+		// draw bg
 		bg.draw(g);
 	}
 
 	private void DrawTitle(Graphics2D g) {
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("Pottumaa", GamePanel.WIDTH / 3, GamePanel.HEIGHT / 3);
+		g.drawString("Options", GamePanel.WIDTH / 3, GamePanel.HEIGHT / 3);
 	}
 
 	private void DrawMenuOptions(Graphics2D g) {
@@ -85,24 +76,17 @@ public class MenuState extends GameState {
 			}
 			g.drawString(options[i], 175, 140 + i * 15);
 		}
+
+		g.setColor(Color.BLACK);
+		g.drawString("Here are some options", 175, 200);
 	}
 
 	private void select() {
 		if(currentChoice == 0) {
-			gsm.setState(GameStateManager.LEVEL1STATE);
-//			bgMusic.stop();
-		}
-		if(currentChoice == 1) {
-			gsm.setState(GameStateManager.OPTIONSSTATE);
-		}
-		if(currentChoice == 2) {
-			gsm.setState(GameStateManager.HELPSTATE);
-		}
-		if(currentChoice == 3) {
-			System.exit(0);
+			gsm.setState(GameStateManager.MENUSTATE);
 		}
 	}
-	
+
 	public void keyPressed(int k) {
 		if(k == KeyEvent.VK_ENTER){
 			select();
@@ -121,8 +105,11 @@ public class MenuState extends GameState {
 		}
 	}
 	public void keyReleased(int k) {}
+
 	
 }
+
+
 
 
 
