@@ -10,19 +10,20 @@ public class GameStateManager {
 	private GameState[] gameStates;
 	private int currentState;
 
-	public static final int NUMGAMESTATES = 5;
+	public static final int NUMGAMESTATES = 6;
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
 	public static final int HELPSTATE = 3;
 	public static final int OPTIONSSTATE = 4;
+	public static final int MAPEDITORSTATE = 5;
 	
 	public GameStateManager() {
 		
 		gameStates = new GameState[NUMGAMESTATES];
 
 		//Ensin menu
-		currentState = MENUSTATE;
+		currentState = GameOptions.FIRSTSTATE;
 		
 		loadState(currentState);
 	}
@@ -42,6 +43,9 @@ public class GameStateManager {
 		}
 		if(state == OPTIONSSTATE) {
 			gameStates[state] = new OptionsState(this);
+		}
+		if(state == MAPEDITORSTATE) {
+			gameStates[state] = new MapEditorState(this);
 		}
 	}
 	

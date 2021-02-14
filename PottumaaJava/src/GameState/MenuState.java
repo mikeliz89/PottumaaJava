@@ -16,6 +16,7 @@ public class MenuState extends GameState {
 		"Start",
 		"Options",
 		"Help",
+		"MapEditor",
 		"Quit"
 	};
 	
@@ -99,6 +100,9 @@ public class MenuState extends GameState {
 			gsm.setState(GameStateManager.HELPSTATE);
 		}
 		if(currentChoice == 3) {
+			gsm.setState(GameStateManager.MAPEDITORSTATE);
+		}
+		if(currentChoice == 4) {
 			System.exit(0);
 		}
 	}
