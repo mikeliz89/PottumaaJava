@@ -6,6 +6,7 @@ import Entity.Enemy;
 import Entity.FireBall;
 import Entity.MapObject;
 import GameState.GameStateManager;
+import Main.GameOptions;
 import TileMap.MapPoint;
 import TileMap.Tile;
 import TileMap.TileMap;
@@ -349,9 +350,8 @@ public class Player extends MapObject {
 		
 		// update position
 		getNextPosition();
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tm = tileMaps.get(i);
+
+		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
 		}
 		setPosition(xtemp, ytemp);
@@ -473,6 +473,10 @@ public class Player extends MapObject {
 	}
 
 	private void DrawDebugArea(Graphics2D g) {
+
+		if(GameOptions.ISDEBUGMODE == false)
+			return;
+
 		Font titleFont = new Font(
 				"Century Gothic",
 				Font.PLAIN,
@@ -484,8 +488,8 @@ public class Player extends MapObject {
 		g.drawString("MaxSpeed: " + this.maxSpeed, 600, 13);
 		g.drawString("StopSpeed: " + this.stopSpeed, 600, 28);
 		g.setColor(Color.BLUE);
-		g.drawRect((int)(x + xmap - width / 2),
-				(int)(y + ymap - height / 2),
+		g.drawRect((int) (x + xmap - width / 2),
+				(int) (y + ymap - height / 2),
 				width,
 				height);
 	}
@@ -502,8 +506,8 @@ public class Player extends MapObject {
 	}
 
 	private void DrawFireBalls(Graphics2D g) {
-		for(int i = 0; i < fireBalls.size(); i++) {
-			fireBalls.get(i).draw(g);
+		for (FireBall fireBall : fireBalls) {
+			fireBall.draw(g);
 		}
 	}
 

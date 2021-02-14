@@ -1,5 +1,6 @@
 package GameState;
 
+import Main.GameOptions;
 import Main.GamePanel;
 import TileMap.Background;
 
@@ -39,6 +40,8 @@ public class OptionsState extends GameState {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		//todo: Tee tälle sivulle joku vipu millä debugModea voi säätää
 	}
 
 	public void update() {

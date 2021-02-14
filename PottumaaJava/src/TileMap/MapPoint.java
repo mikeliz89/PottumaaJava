@@ -1,5 +1,7 @@
 package TileMap;
 
+import Main.GameOptions;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -57,6 +59,14 @@ public class MapPoint {
 			(int)(y + ymap - this.image.getHeight() / 2),
 				null
 			);
+
+		DrawDebugRectangle(g);
+	}
+
+	private void DrawDebugRectangle(Graphics2D g) {
+		if(GameOptions.ISDEBUGMODE == false)
+			return;
+
 		g.setColor(Color.RED);
 		g.drawRect(
 				(int)(x + xmap - this.image.getWidth() / 2),

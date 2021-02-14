@@ -77,10 +77,14 @@ public class HelpState extends GameState {
 		}
 
 		g.setColor(Color.BLACK);
-		g.drawString("Press R to claw attack", 175, 200);
-		g.drawString("Press F to shoot fireballs", 175, 220);
-		g.drawString("Press Left Shift to run", 175, 240);
-		g.drawString("Press Esc to exit game", 175, 260);
+
+		g.drawString("Press D to toggle DebugMode", 175, 200);
+		g.drawString("Press R to claw attack", 175, 240);
+		g.drawString("Press F to shoot fireballs", 175, 260);
+		g.drawString("Press Left Shift to run", 175, 280);
+		g.drawString("Press Esc to exit game", 175, 300);
+
+
 	}
 
 	private void select() {

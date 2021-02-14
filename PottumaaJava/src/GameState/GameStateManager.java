@@ -1,5 +1,7 @@
 package GameState;
 
+import Main.GameOptions;
+
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
@@ -81,6 +83,8 @@ public class GameStateManager {
 		gameStates[currentState].keyPressed(k);
 		
 		if(k == KeyEvent.VK_ESCAPE) System.exit(0);
+
+		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
 	}
 	
 	public void keyReleased(int k) {

@@ -1,6 +1,7 @@
 package GameState;
 
 import Entity.Player.Player;
+import Main.GameOptions;
 import Main.GamePanel;
 import TileMap.*;
 import Entity.*;

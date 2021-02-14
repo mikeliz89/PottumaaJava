@@ -6,6 +6,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
+import Main.GameOptions;
 import Main.GamePanel;
 
 public class TileMap {
@@ -263,14 +264,22 @@ public class TileMap {
 					null
 				);
 				
-				//collision rectangles revealed
-				g.setColor(Color.WHITE);
-				g.drawRect((int)x + col * tileSize, (int)y + row * tileSize, tileSize, tileSize);
+				DrawDebugRectangles(g, col, row);
 				
 			}
 			
 		}
 		
+	}
+
+	private void DrawDebugRectangles(Graphics2D g, int col, int row) {
+
+		if(GameOptions.ISDEBUGMODE == false)
+			return;
+
+		//collision rectangles revealed
+		g.setColor(Color.WHITE);
+		g.drawRect((int)x + col * tileSize, (int)y + row * tileSize, tileSize, tileSize);
 	}
 	
 }

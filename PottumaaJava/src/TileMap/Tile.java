@@ -76,6 +76,11 @@ public class Tile {
 			(int)(y + ymap - this.image.getHeight() / 2),
 				null
 			);
+
+		DrawRectangle(g);
+	}
+
+	private void DrawRectangle(Graphics2D g) {
 		g.setColor(Color.RED);
 		g.drawRect(
 				(int)(x + xmap - this.image.getWidth() / 2),
