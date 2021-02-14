@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
@@ -28,7 +29,6 @@ public class Level1State extends GameState {
 	private HUD hud;
 	private AudioPlayer bgMusic;
 	private ArrayList<Integer> keysPressed;
-	private double tileMapTween = 0.11;
 
 	private House playerHome;
 
@@ -54,16 +54,21 @@ public class Level1State extends GameState {
 		keysPressed = new ArrayList<>();
 		hud = new HUD(player);
 
-		PlayMusic();
+		playMusic();
 	}
 
-	private void PlayMusic() {
-		//bgMusic = new AudioPlayer("/Music/level1-1.mp3");
-		//bgMusic.play();
+	private void playMusic() {
+
+		if(!GameOptions.IS_PLAY_MUSIC_ON)
+			return;
+
+		bgMusic = new AudioPlayer("/Music/happymusic.wav");
+		bgMusic.play();
 	}
 	
 	private void populateTileMaps() { 
 		tileMaps = new ArrayList<>();
+		double tileMapTween = 0.11;
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(30);

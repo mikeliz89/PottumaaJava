@@ -49,8 +49,15 @@ public class Level2State extends GameState {
 		keysPressed = new ArrayList<>();
 		
 		hud = new HUD(player);
-		
-		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
+
+		playMusic();
+	}
+
+	private void playMusic() {
+		if(!GameOptions.IS_PLAY_MUSIC_ON)
+			return;
+
+		bgMusic = new AudioPlayer("/Music/happymusic.wav");
 		bgMusic.play();
 	}
 	

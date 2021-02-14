@@ -1,6 +1,7 @@
 package GameState;
 
 import Audio.AudioPlayer;
+import Main.GameOptions;
 import Main.GamePanel;
 import TileMap.Background;
 
@@ -25,7 +26,7 @@ public class MenuState extends GameState {
 	
 	private Font font;
 	
-//	private AudioPlayer bgMusic;
+	private AudioPlayer bgMusic;
 	
 	public MenuState(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -33,8 +34,7 @@ public class MenuState extends GameState {
 	}
 	
 	public void init() {
-//		bgMusic = new AudioPlayer("/Music/menu-joesatriani.mp3");
-//		bgMusic.play();
+
 		try {
 			//Background image
 			bg = new Background("/Backgrounds/menubg.png", 0.1);
@@ -50,6 +50,16 @@ public class MenuState extends GameState {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		playMusic();
+	}
+
+	private void playMusic() {
+		if(!GameOptions.IS_PLAY_MUSIC_ON)
+			return;
+
+		bgMusic = new AudioPlayer("/Music/happymusic.wav");
+		bgMusic.play();
 	}
 	
 	public void update() {

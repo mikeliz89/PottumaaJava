@@ -39,7 +39,7 @@ public class Animation {
 			startTime = System.nanoTime(); // reset the timer
 		}
 		
-		//dont go pass amount of frames there are
+		//don't go pass amount of frames there are
 		if(currentFrame == frames.length) {
 			currentFrame = 0;
 			playedOnce = true;
