@@ -254,6 +254,10 @@ public class MapEditorState extends GameState {
 		}
 		
 	}
+
+	public void stopBackGroundMusic() {
+
+	}
 	
 }
 

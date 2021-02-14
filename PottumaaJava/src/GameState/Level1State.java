@@ -332,6 +332,10 @@ public class Level1State extends GameState {
 		}
 		
 	}
+
+	public void stopBackGroundMusic() {
+		bgMusic.stop();
+	}
 	
 }
 

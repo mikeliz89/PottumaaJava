@@ -3,7 +3,7 @@ package Main;
 public class GameOptions {
 
     public static boolean ISDEBUGMODE = false;
-    public static boolean IS_PLAY_MUSIC_ON = false;
+    public static boolean IS_PLAY_MUSIC_ON = true;
 
     /*
      MENUSTATE = 0;

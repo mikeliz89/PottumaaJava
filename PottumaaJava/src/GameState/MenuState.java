@@ -58,7 +58,8 @@ public class MenuState extends GameState {
 		if(!GameOptions.IS_PLAY_MUSIC_ON)
 			return;
 
-		bgMusic = new AudioPlayer("/Music/happymusic.wav");
+		//https://www.bensound.com/royalty-free-music/track/ukulele
+		bgMusic = new AudioPlayer("/Music/bensound-ukulele.wav");
 		bgMusic.play();
 	}
 	
@@ -101,7 +102,6 @@ public class MenuState extends GameState {
 	private void select() {
 		if(currentChoice == 0) {
 			gsm.setState(GameStateManager.LEVEL1STATE);
-//			bgMusic.stop();
 		}
 		if(currentChoice == 1) {
 			gsm.setState(GameStateManager.OPTIONSSTATE);
@@ -135,6 +135,10 @@ public class MenuState extends GameState {
 		}
 	}
 	public void keyReleased(int k) {}
+
+	public void stopBackGroundMusic() {
+		bgMusic.stop();
+	}
 	
 }
 

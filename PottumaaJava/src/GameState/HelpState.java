@@ -112,7 +112,11 @@ public class HelpState extends GameState {
 	}
 	public void keyReleased(int k) {}
 
-	
+	public void stopBackGroundMusic() {
+
+	}
+
+
 }
 
 

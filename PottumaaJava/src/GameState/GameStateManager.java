@@ -41,6 +41,7 @@ public class GameStateManager {
 	}
 	
 	private void unloadState(int state) {
+		gameStates[state].stopBackGroundMusic();
 		gameStates[state] = null;
 	}
 	
