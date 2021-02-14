@@ -76,7 +76,7 @@ public abstract class MapObject {
 	
 	// constructor
 	public MapObject() {
-		tileMaps = new ArrayList<TileMap>();
+		tileMaps = new ArrayList<>();
 	}
 	
 	public boolean intersects(MapObject o) {

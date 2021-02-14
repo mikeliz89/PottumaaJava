@@ -18,20 +18,13 @@ import javax.imageio.ImageIO;
 public class Level1State extends GameState {
 	
 	private ArrayList<TileMap> tileMaps;
-//	private Background bg;
-	
 	private Player player;
-	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<MapPoint> mapPoints;
-	
 	private HUD hud;
-	
 	private AudioPlayer bgMusic;
-	
 	private ArrayList<Integer> keysPressed;
-	
 	private double tileMapTween = 0.11;
 
 	public Level1State(GameStateManager gsm) {
@@ -43,8 +36,6 @@ public class Level1State extends GameState {
 		
 		populateTileMaps();
 		
-//		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
-		
 		populateMapPoints();
 		
 		player = new Player(tileMaps);
@@ -52,19 +43,15 @@ public class Level1State extends GameState {
 		
 		populateEnemies(tileMaps);
 		
-		explosions = new ArrayList<Explosion>();
-		
-		keysPressed = new ArrayList<Integer>();
-		
+		explosions = new ArrayList<>();
+		keysPressed = new ArrayList<>();
 		hud = new HUD(player);
-		
 		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
-			bgMusic.play();
-		
+		bgMusic.play();
 	}
 	
 	private void populateTileMaps() { 
-		tileMaps = new ArrayList<TileMap>();
+		tileMaps = new ArrayList<>();
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(30);
@@ -87,7 +74,7 @@ public class Level1State extends GameState {
 	}
 	
 	private void populateMapPoints() {
-		mapPoints = new ArrayList<MapPoint>();
+		mapPoints = new ArrayList<>();
 		try { 
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
@@ -149,9 +136,6 @@ public class Level1State extends GameState {
 			);
 		}
 		
-		// set background
-//		bg.setPosition(tileMap.getx(), tileMap.gety());
-		
 		// attack enemies
 		player.checkAttack(enemies);
 		
@@ -179,8 +163,6 @@ public class Level1State extends GameState {
 	}
 	
 	public void draw(Graphics2D g) {
-
-		DrawBackground(g);
 
 		DrawTileMaps(g);
 
@@ -223,10 +205,6 @@ public class Level1State extends GameState {
 			mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
 			mp.draw(g);
 		}
-	}
-
-	private void DrawBackground(Graphics2D g) {
-		//bg.draw(g);
 	}
 
 	private void DrawTileMaps(Graphics2D g) {

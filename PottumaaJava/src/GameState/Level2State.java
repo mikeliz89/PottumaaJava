@@ -18,18 +18,12 @@ import javax.imageio.ImageIO;
 public class Level2State extends GameState {
 	
 	private ArrayList<TileMap> tileMaps;
-//	private Background bg;
-	
 	private Player player;
-	
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<MapPoint> mapPoints;
-	
 	private HUD hud;
-	
 	private AudioPlayer bgMusic;
-	
 	private ArrayList<Integer> keysPressed;
 	
 	public Level2State(GameStateManager gsm) {
@@ -40,13 +34,11 @@ public class Level2State extends GameState {
 	public void init() {
 		
 		populateTileMaps();
-		
-//		bg = new Background("/Backgrounds/grassbg1.gif", 0.1);
-		
+
 		populateMapPoints();
-		
+
 //		tileMaps.add(tileMapObstacles);
-		
+
 		player = new Player(tileMaps);
 		player.setPosition(30, 575);
 		
@@ -59,12 +51,11 @@ public class Level2State extends GameState {
 		hud = new HUD(player);
 		
 		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
-//			bgMusic.play();
-		
+		bgMusic.play();
 	}
 	
 	private void populateMapPoints() {
-		mapPoints = new ArrayList<MapPoint>();
+		mapPoints = new ArrayList<>();
 		try { 
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
@@ -145,9 +136,6 @@ public class Level2State extends GameState {
 			);
 		}
 		
-		// set background
-//		bg.setPosition(tileMap.getx(), tileMap.gety());
-		
 		// attack enemies
 		player.checkAttack(enemies);
 		
@@ -176,8 +164,6 @@ public class Level2State extends GameState {
 	
 	public void draw(Graphics2D g) {
 
-		DrawBackground(g);
-
 		DrawTileMaps(g);
 
 		DrawMapPoints(g);
@@ -189,10 +175,6 @@ public class Level2State extends GameState {
 		DrawExplosions(g);
 
 		DrawHUD(g);
-	}
-
-	private void DrawBackground(Graphics2D g) {
-		//bg.draw(g);
 	}
 
 	private void DrawHUD(Graphics2D g) {
