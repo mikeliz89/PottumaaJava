@@ -1,5 +1,6 @@
 package GameState;
 
+import Main.GamePanel;
 import TileMap.TileMap;
 import TileMap.Tile;
 import javax.imageio.ImageIO;
@@ -96,9 +97,9 @@ public class MapEditorState extends GameState {
 	
 	public void draw(Graphics2D g) {
 
-		DrawTileSets(g);
-
 		DrawBackground(g);
+
+		DrawTileSets(g);
 
 		DrawRectangles(g);
 
@@ -165,13 +166,16 @@ public class MapEditorState extends GameState {
 	}
 
 	private void DrawBackground(Graphics2D g) {
+
+		//Piirrä koko ruudun kokoinen rectangle taustaksi
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
+
+		//Piirrä alue johon kenttä suunnitellaan
 		int width = 240;
 		int height = 240;
-		BufferedImage image = new BufferedImage(width, height,
-				BufferedImage.TYPE_BYTE_BINARY);
 		g.setColor(Color.WHITE);
 		g.fillRect(tileSize, 0, width, height);
-		g.setColor(Color.BLACK);
 	}
 
 	private void DrawRectangles(Graphics2D g) {
