@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.NPCs.MrPotatoGuy;
 import Entity.Player.Player;
 import Main.GameOptions;
 import Main.GamePanel;
@@ -20,6 +21,7 @@ public class Level1State extends GameState {
 	private ArrayList<TileMap> tileMaps;
 	private Player player;
 	private ArrayList<Enemy> enemies;
+	private ArrayList<NPC> NPCs;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<MapPoint> mapPoints;
 	private HUD hud;
@@ -41,13 +43,19 @@ public class Level1State extends GameState {
 		player = new Player(tileMaps);
 		player.setPosition(40, 100);
 		
-		populateEnemies(tileMaps);
+		populateEnemies();
+		populateNPCs();
 		
 		explosions = new ArrayList<>();
 		keysPressed = new ArrayList<>();
 		hud = new HUD(player);
-		bgMusic = new AudioPlayer("/Music/level1-1.mp3");
-		bgMusic.play();
+
+		PlayMusic();
+	}
+
+	private void PlayMusic() {
+		//bgMusic = new AudioPlayer("/Music/level1-1.mp3");
+		//bgMusic.play();
 	}
 	
 	private void populateTileMaps() { 
@@ -100,9 +108,9 @@ public class Level1State extends GameState {
 		}
 	}
 	
-	private void populateEnemies(ArrayList<TileMap> tileMaps) {
+	private void populateEnemies() {
 		
-		enemies = new ArrayList<Enemy>();
+		enemies = new ArrayList<>();
 		
 		Slugger s;
 		Point[] sluggerPoints = new Point[] {
@@ -119,17 +127,31 @@ public class Level1State extends GameState {
 		}
 		
 	}
+
+	private void populateNPCs() {
+		NPCs = new ArrayList<>();
+
+		MrPotatoGuy mr;
+		Point[] points = new Point [] {
+				new Point(300, 300)
+		};
+		for(Point npcPoint : points) {
+			mr = new MrPotatoGuy(tileMaps, 1000);
+			mr.setPosition(npcPoint.x, npcPoint.y);
+			NPCs.add(mr);
+		}
+	}
 	
 	public void update() {
 		
 		// update player
 		player.update();
+
 		for (MapPoint mapPoint : mapPoints) {
 			player.checkLevelPoints(mapPoint, gsm);
 		}
 
 		for (TileMap tm : tileMaps) {
-
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
@@ -138,8 +160,22 @@ public class Level1State extends GameState {
 		
 		// attack enemies
 		player.checkAttack(enemies);
-		
-		// update all enemies
+
+		UpdateEnemies();
+
+		UpdateNPCs();
+
+		UpdateExplosions();
+	}
+
+	private void UpdateNPCs() {
+		for(int i = 0; i < NPCs.size(); i++) {
+			NPC npc = NPCs.get(i);
+			npc.update();
+		}
+	}
+
+	private void UpdateEnemies() {
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
@@ -150,8 +186,9 @@ public class Level1State extends GameState {
 					new Explosion(e.getx(), e.gety()));
 			}
 		}
-		
-		// update explosions
+	}
+
+	private void UpdateExplosions() {
 		for(int i = 0; i < explosions.size(); i++) {
 			explosions.get(i).update();
 			if(explosions.get(i).shouldRemove()) {
@@ -159,14 +196,15 @@ public class Level1State extends GameState {
 				i--;
 			}
 		}
-		
 	}
-	
+
 	public void draw(Graphics2D g) {
 
 		DrawTileMaps(g);
 
 		DrawMapPoints(g);
+
+		DrawNPCs(g);
 
 		DrawPlayer(g);
 
@@ -192,6 +230,12 @@ public class Level1State extends GameState {
 	private void DrawEnemies(Graphics2D g) {
 		for (Enemy enemy : enemies) {
 			enemy.draw(g);
+		}
+	}
+
+	private void DrawNPCs(Graphics2D g) {
+		for(NPC npc : NPCs) {
+			npc.draw(g);
 		}
 	}
 
