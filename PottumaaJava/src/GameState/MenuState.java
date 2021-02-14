@@ -137,7 +137,8 @@ public class MenuState extends GameState {
 	public void keyReleased(int k) {}
 
 	public void stopBackGroundMusic() {
-		bgMusic.stop();
+		if(bgMusic != null)
+			bgMusic.stop();
 	}
 	
 }

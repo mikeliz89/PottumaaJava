@@ -1,5 +1,6 @@
 package Entity.Enemies;
 
+import Audio.AudioPlayer;
 import Entity.*;
 import TileMap.TileMap;
 
@@ -8,11 +9,13 @@ import java.awt.Graphics2D;
 
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Slugger extends Enemy {
 	
 	private BufferedImage[] sprites;
-	
+	private HashMap<String, AudioPlayer> sfx;
+
 	public Slugger(ArrayList<TileMap> tileMaps, int maxHealth) {
 		
 		super(tileMaps, maxHealth);
@@ -38,7 +41,8 @@ public class Slugger extends Enemy {
 		
 		right = true;
 		facingRight = true;
-		
+
+		setSoundEffects();
 	}
 
 	private void loadSprites() {
@@ -90,7 +94,9 @@ public class Slugger extends Enemy {
 	}
 	
 	public void update() {
-		
+
+		//playSoundEffect("slimy");
+
 		// update position
 		getNextPosition();
 
@@ -133,6 +139,15 @@ public class Slugger extends Enemy {
 		
 		super.draw(g);
 		
+	}
+
+	private void setSoundEffects() {
+		sfx = new HashMap<>();
+		sfx.put("slimy", new AudioPlayer("/SFX/slimy.wav"));
+	}
+
+	private void playSoundEffect(String soundEffectName) {
+		sfx.get(soundEffectName).play();
 	}
 	
 }

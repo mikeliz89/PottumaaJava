@@ -1,16 +1,18 @@
 package Entity;
 
+import Audio.AudioPlayer;
 import Entity.Player.Player;
 import Main.GamePanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class HUD {
 	
 	private Player player;
-	
+	private HashMap<String, AudioPlayer> sfx;
 	private BufferedImage image;
 	private Font font;
 
@@ -31,9 +33,14 @@ public class HUD {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		setSoundEffects();
 	}
 
 	public void ToggleInventory() {
+		if(showInventory == false) {
+			playSoundEffect("inventoryOpened");
+		}
 		showInventory = !showInventory;
 	}
 
@@ -42,6 +49,10 @@ public class HUD {
 	}
 
 	public void ToggleMap() {
+		if(showMap == false) {
+			playSoundEffect("takeMapFromPocket");
+		}
+		playSoundEffect("putMapBackToPocket");
 		showMap = !showMap;
 	}
 	
@@ -159,6 +170,17 @@ public class HUD {
 			30,
 			25
 		);
+	}
+
+	private void setSoundEffects() {
+		sfx = new HashMap<>();
+		sfx.put("takeMapFromPocket", new AudioPlayer("/SFX/mapTakeFromPocket.wav"));
+		sfx.put("putMapBackToPocket", new AudioPlayer("/SFX/mapPutBackToPocket.wav"));
+		sfx.put("inventoryOpened", new AudioPlayer("/SFX/inventoryOpened.wav"));
+	}
+
+	private void playSoundEffect(String soundEffectName) {
+		sfx.get(soundEffectName).play();
 	}
 
 }
