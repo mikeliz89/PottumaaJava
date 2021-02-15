@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
@@ -165,8 +164,8 @@ public class Level1State extends GameState {
 
 		for (TileMap tm : tileMaps) {
 			tm.setPosition(
-					GamePanel.WIDTH / 2 - player.getx(),
-					GamePanel.HEIGHT / 2 - player.gety()
+					GamePanel.WIDTH / 2 - player.getX(),
+					GamePanel.HEIGHT / 2 - player.getY()
 			);
 		}
 		
@@ -195,7 +194,7 @@ public class Level1State extends GameState {
 				enemies.remove(i);
 				i--;
 				explosions.add(
-					new Explosion(e.getx(), e.gety()));
+					new Explosion(e.getX(), e.getY()));
 			}
 		}
 	}

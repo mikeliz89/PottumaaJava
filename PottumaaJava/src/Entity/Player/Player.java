@@ -64,8 +64,8 @@ public class Player extends MapObject {
 		this.tileMaps = tileMaps;
 		width = 30;
 		height = 30;
-		cwidth = 20;
-		cheight = 20;
+		collisionBoxWidth = 20;
+		collisionBoxHeight = 20;
 		
 		moveSpeed = 0.1;
 		maxSpeed = originalMaxSpeed = 0.6;
@@ -133,7 +133,7 @@ public class Player extends MapObject {
  	private void loadSprites() {
 		try {
 
-			BufferedImage spritesheet = ImageIO.read(
+			BufferedImage spriteSheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Player/playersprites.gif"
 				)
@@ -148,7 +148,7 @@ public class Player extends MapObject {
 				for(int j = 0; j < numFrames[i]; j++) {
 
 					if(i != SCRATCHING) {
-						bi[j] = spritesheet.getSubimage(
+						bi[j] = spriteSheet.getSubimage(
 								j * width,
 								i * height,
 								width,
@@ -156,7 +156,7 @@ public class Player extends MapObject {
 						);
 					}
 					else {
-						bi[j] = spritesheet.getSubimage(
+						bi[j] = spriteSheet.getSubimage(
 								j * width * 2,
 								i * height,
 								width * 2,
@@ -224,10 +224,10 @@ public class Player extends MapObject {
 //		System.out.println("x " + levelPoint.getx());
 //		System.out.println("y " + levelPoint.gety());
 		
-		if(x > levelPoint.getx() && 
-				x < levelPoint.getx() + levelPoint.getImage().getWidth() &&
-				y > levelPoint.gety() &&
-				y < levelPoint.gety() + levelPoint.getImage().getHeight()) {
+		if(x > levelPoint.getX() &&
+				x < levelPoint.getX() + levelPoint.getImage().getWidth() &&
+				y > levelPoint.getY() &&
+				y < levelPoint.getY() + levelPoint.getImage().getHeight()) {
 			gsm.setState(levelPoint.getGotoLevel());
 		}
 //		if(intersects(e)) {
@@ -244,43 +244,48 @@ public class Player extends MapObject {
 			if (scratching) {
 				if (facingRight) {
 					if (
-							e.getx() > x &&
-									e.getx() < x + scratchRange &&
-									e.gety() > y - height / 2 &&
-									e.gety() < y + height / 2
+							e.getX() > x &&
+									e.getX() < x + scratchRange &&
+									e.getY() > y - height / 2 &&
+									e.getY() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
 				} else {
 					if (
-							e.getx() < x &&
-									e.getx() > x - scratchRange &&
-									e.gety() > y - height / 2 &&
-									e.gety() < y + height / 2
+							e.getX() < x &&
+									e.getX() > x - scratchRange &&
+									e.getY() > y - height / 2 &&
+									e.getY() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
 				}
 			}
 
-			// fireballs
-			for (FireBall fireBall : fireBalls) {
-				if (fireBall.intersects(e)) {
-					e.hit(fireBallDamage);
-					fireBall.setHit();
-					break;
-				}
-			}
+			checkFireBallCollisions(e);
 
-			// check enemy collision
-			if (intersects(e)) {
-				hit(e.getDamage());
-			}
-
+			checkEnemyCollision(e);
 		}
 		
 	}
-	
+
+	private void checkFireBallCollisions(Enemy e) {
+		for (FireBall fireBall : fireBalls) {
+			if (fireBall.intersects(e)) {
+				e.hit(fireBallDamage);
+				fireBall.setHit();
+				break;
+			}
+		}
+	}
+
+	private void checkEnemyCollision(Enemy e) {
+		if (intersects(e)) {
+			hit(e.getDamage());
+		}
+	}
+
 	public void hit(int damage) {
 		if(flinching) return;
 		health -= damage;

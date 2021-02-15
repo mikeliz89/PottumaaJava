@@ -43,11 +43,11 @@ public class Tile {
 		return frictionType;
 	}
 	
-	public double getx() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public double gety() { 
+	public double getY() {
 		return this.y;
 	}
 	

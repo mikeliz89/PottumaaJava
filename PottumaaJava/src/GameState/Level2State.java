@@ -134,8 +134,8 @@ public class Level2State extends GameState {
 
 		for (TileMap tm : tileMaps) {
 			tm.setPosition(
-					GamePanel.WIDTH / 2 - player.getx(),
-					GamePanel.HEIGHT / 2 - player.gety()
+					GamePanel.WIDTH / 2 - player.getX(),
+					GamePanel.HEIGHT / 2 - player.getY()
 			);
 		}
 		
@@ -166,7 +166,7 @@ public class Level2State extends GameState {
 				enemies.remove(i);
 				i--;
 				explosions.add(
-					new Explosion(e.getx(), e.gety()));
+					new Explosion(e.getX(), e.getY()));
 			}
 		}
 	}

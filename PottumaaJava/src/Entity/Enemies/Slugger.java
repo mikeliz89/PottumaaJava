@@ -28,8 +28,8 @@ public class Slugger extends Enemy {
 		
 		width = 30;
 		height = 30;
-		cwidth = 20;
-		cheight = 20;
+		collisionBoxWidth = 20;
+		collisionBoxHeight = 20;
 
 		damage = 1;
 
@@ -51,7 +51,7 @@ public class Slugger extends Enemy {
 	private void loadSprites() {
 		try {
 
-			BufferedImage spritesheet = ImageIO.read(
+			BufferedImage spriteSheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Enemies/slugger.gif"
 				)
@@ -59,7 +59,7 @@ public class Slugger extends Enemy {
 
 			sprites = new BufferedImage[3];
 			for(int i = 0; i < sprites.length; i++) {
-				sprites[i] = spritesheet.getSubimage(
+				sprites[i] = spriteSheet.getSubimage(
 					i * width,
 					0,
 					width,

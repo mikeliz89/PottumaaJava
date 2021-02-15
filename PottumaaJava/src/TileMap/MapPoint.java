@@ -15,7 +15,6 @@ public class MapPoint {
 	private double y;
 	private double xmap;
 	private double ymap;
-	
 	private int gotoLevel;
 	
 	public MapPoint(BufferedImage image) {
@@ -26,11 +25,11 @@ public class MapPoint {
 		return image;
 	}
 	
-	public double getx() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public double gety() { 
+	public double getY() {
 		return this.y;
 	}
 	

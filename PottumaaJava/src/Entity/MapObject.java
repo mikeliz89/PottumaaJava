@@ -11,7 +11,6 @@ public abstract class MapObject {
 	
 	// tile stuff
 	protected ArrayList<TileMap> tileMaps;
-//	protected int tileSize;
 	protected double xmap;
 	protected double ymap;
 	
@@ -26,8 +25,8 @@ public abstract class MapObject {
 	protected int height;
 	
 	// collision box
-	protected int cwidth;
-	protected int cheight;
+	protected int collisionBoxWidth;
+	protected int collisionBoxHeight;
 	
 	// collision
 	protected int currRow;
@@ -87,19 +86,19 @@ public abstract class MapObject {
 	
 	public Rectangle getRectangle() {
 		return new Rectangle(
-				(int)x - cwidth,
-				(int)y - cheight,
-				cwidth,
-				cheight
+				(int)x - collisionBoxWidth,
+				(int)y - collisionBoxHeight,
+				collisionBoxWidth,
+				collisionBoxHeight
 		);
 	}
 	
 	public void calculateCorners(double x, double y, TileMap tileMap) {
 		
-		 leftTile = (int)(x - cwidth / 2) / tileMap.getTileSize();
-		 rightTile = (int)(x + cwidth / 2 - 1) / tileMap.getTileSize();
-		 topTile = (int)(y - cheight / 2) / tileMap.getTileSize();
-		 bottomTile = (int)(y + cheight / 2 - 1) / tileMap.getTileSize();
+		 leftTile = (int)(x - collisionBoxWidth / 2) / tileMap.getTileSize();
+		 rightTile = (int)(x + collisionBoxWidth / 2 - 1) / tileMap.getTileSize();
+		 topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
+		 bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
 		 
 		int topleft = tileMap.getTileType(topTile, leftTile);
 		int topright = tileMap.getTileType(topTile, rightTile);
@@ -129,7 +128,7 @@ public abstract class MapObject {
 			if (dy < 0) {
 				if (topLeft || topRight) {
 					dy = 0;
-					ytemp = currRow * tm.getTileSize() + cheight / 2;
+					ytemp = currRow * tm.getTileSize() + collisionBoxHeight / 2;
 				} else {
 					ytemp += dy;
 				}
@@ -139,7 +138,7 @@ public abstract class MapObject {
 
 					dy = 0;
 					falling = false;
-					ytemp = (currRow + 1) * tm.getTileSize() - cheight / 2;
+					ytemp = (currRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
 				} else {
 					ytemp += dy;
 				}
@@ -149,7 +148,7 @@ public abstract class MapObject {
 			if (dx < 0) {
 				if (topLeft || bottomLeft) {
 					dx = 0;
-					xtemp = currCol * tm.getTileSize() + cwidth / 2;
+					xtemp = currCol * tm.getTileSize() + collisionBoxWidth / 2;
 				} else {
 					xtemp += dx;
 				}
@@ -157,7 +156,7 @@ public abstract class MapObject {
 			if (dx > 0) {
 				if (topRight || bottomRight) {
 					dx = 0;
-					xtemp = (currCol + 1) * tm.getTileSize() - cwidth / 2;
+					xtemp = (currCol + 1) * tm.getTileSize() - collisionBoxWidth / 2;
 				} else {
 					xtemp += dx;
 				}
@@ -173,12 +172,12 @@ public abstract class MapObject {
 		
 	}
 	
-	public int getx() { return (int)x; }
-	public int gety() { return (int)y; }
+	public int getX() { return (int)x; }
+	public int getY() { return (int)y; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
-	public int getCWidth() { return cwidth; }
-	public int getCHeight() { return cheight; }
+	public int getCollisionBoxWidth() { return collisionBoxWidth; }
+	public int getCollisionbBoxHeight() { return collisionBoxHeight; }
 	
 	protected void checkCharging() {
 		if(charging) {

@@ -19,8 +19,8 @@ public class MrPotatoGuy extends NPC {
 
         width = 60;
         height = 84;
-        cwidth = 20;
-        cheight = 20;
+        collisionBoxWidth = 20;
+        collisionBoxHeight = 20;
 
         damage = 100;
 
@@ -38,7 +38,7 @@ public class MrPotatoGuy extends NPC {
     private void loadSprites() {
         try {
 
-            BufferedImage spritesheet = ImageIO.read(
+            BufferedImage spriteSheet = ImageIO.read(
                     getClass().getResourceAsStream(
                             "/Sprites/NPC/mrpotatoguy.gif"
                     )
@@ -46,7 +46,7 @@ public class MrPotatoGuy extends NPC {
 
             sprites = new BufferedImage[4];
             for(int i = 0; i < sprites.length; i++) {
-                sprites[i] = spritesheet.getSubimage(
+                sprites[i] = spriteSheet.getSubimage(
                         i * width,
                         0,
                         width,

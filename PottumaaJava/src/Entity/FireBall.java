@@ -27,8 +27,8 @@ public class FireBall extends MapObject {
 		
 		width = 30;
 		height = 30;
-		cwidth = 14;
-		cheight = 14;
+		collisionBoxWidth = 14;
+		collisionBoxHeight = 14;
 
 		loadSprites();
 	}
@@ -36,7 +36,7 @@ public class FireBall extends MapObject {
 	private void loadSprites() {
 		try {
 
-			BufferedImage spritesheet = ImageIO.read(
+			BufferedImage spriteSheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Player/fireball.gif"
 				)
@@ -44,7 +44,7 @@ public class FireBall extends MapObject {
 
 			sprites = new BufferedImage[4];
 			for(int i = 0; i < sprites.length; i++) {
-				sprites[i] = spritesheet.getSubimage(
+				sprites[i] = spriteSheet.getSubimage(
 					i * width,
 					0,
 					width,
@@ -54,7 +54,7 @@ public class FireBall extends MapObject {
 
 			hitSprites = new BufferedImage[3];
 			for(int i = 0; i < hitSprites.length; i++) {
-				hitSprites[i] = spritesheet.getSubimage(
+				hitSprites[i] = spriteSheet.getSubimage(
 					i * width,
 					height,
 					width,
