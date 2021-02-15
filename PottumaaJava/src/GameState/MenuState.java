@@ -133,6 +133,15 @@ public class MenuState extends GameState {
 				currentChoice = 0;
 			}
 		}
+
+		if(k == KeyEvent.VK_F1) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume-0.1f);
+		}
+		if(k == KeyEvent.VK_F2) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume+0.1f);
+		}
 	}
 	public void keyReleased(int k) {}
 

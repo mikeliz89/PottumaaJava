@@ -317,6 +317,16 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_M) hud.ToggleMap();
 		if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
 
+
+		if(k == KeyEvent.VK_F1) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume-0.1f);
+		}
+		if(k == KeyEvent.VK_F2) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume+0.1f);
+		}
+
 	}
 	
 	public void keyReleased(int k) {

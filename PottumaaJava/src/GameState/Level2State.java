@@ -285,6 +285,15 @@ public class Level2State extends GameState {
 		if(keysPressed.contains(k) == true) {
 			keysPressed.remove(keysPressed.indexOf(k));
 		}
+
+		if(k == KeyEvent.VK_F1) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume-0.1f);
+		}
+		if(k == KeyEvent.VK_F2) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume+0.1f);
+		}
 		
 	}
 
