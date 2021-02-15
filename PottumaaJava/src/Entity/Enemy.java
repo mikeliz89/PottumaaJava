@@ -82,13 +82,17 @@ public abstract class Enemy extends MapObject {
 		//todo: Voisiko olla erillinen HealthBar-luokka josta luotaisiin olio initissä,
 		//ja jolle annettaisiin tarvittavat parametrit, ja jonka drawia tässä kutsuttaisiin.
 
-		//piiirrä healthbarin sisältö
+		var healthPositionX = (int)this.x -10 + (int)xmap;
+		var healthPositionY = (int)this.y -10 + (int)ymap;
+		var height = 3;
+
+		//piirrä healthbarin sisältö
 		g.setColor(Color.RED);
-		g.fillRect((int)this.x - 10, (int)y -10 , this.health + 5, 3);
+		g.fillRect(healthPositionX, healthPositionY , this.health , height);
 
 		//piirrä ääriviivat
 		g.setColor(Color.BLACK);
-		g.drawRect((int)this.x - 10, (int)y - 10, 15, 3);
+		g.drawRect(healthPositionX, healthPositionY, this.maxHealth, height);
 
 	}
 
