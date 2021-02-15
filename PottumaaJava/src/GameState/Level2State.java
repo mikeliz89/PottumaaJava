@@ -37,17 +37,13 @@ public class Level2State extends GameState {
 
 		populateMapPoints();
 
-//		tileMaps.add(tileMapObstacles);
-
 		player = new Player(tileMaps);
 		player.setPosition(30, 575);
 		
 		populateEnemies(tileMaps);
 		
 		explosions = new ArrayList<>();
-		
 		keysPressed = new ArrayList<>();
-		
 		hud = new HUD(player);
 
 		playMusic();
@@ -67,16 +63,15 @@ public class Level2State extends GameState {
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
 			);
-			
-			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
-			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
-			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
+
 			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
-			
+			//BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
+			//BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
+			//BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
+
 			MapPoint level1Point = new MapPoint(leftArrow);
 			level1Point.setPosition(leftArrow.getWidth() / 2, 585);
 			level1Point.setGotoLevel(GameStateManager.LEVEL1STATE);
-			
 			mapPoints.add(level1Point);
 		} 
 		catch(Exception e) {
@@ -104,6 +99,7 @@ public class Level2State extends GameState {
 		tileMapObstacles.setTween(0.11);
 		
 		tileMaps.add(tileMapGround);
+		tileMaps.add(tileMapObstacles);
 	}
 	
 	private void populateEnemies(ArrayList<TileMap> tileMaps) {
@@ -131,12 +127,12 @@ public class Level2State extends GameState {
 		
 		// update player
 		player.update();
+
 		for (MapPoint mapPoint : mapPoints) {
 			player.checkLevelPoints(mapPoint, gsm);
 		}
 
 		for (TileMap tm : tileMaps) {
-
 			tm.setPosition(
 					GamePanel.WIDTH / 2 - player.getx(),
 					GamePanel.HEIGHT / 2 - player.gety()
@@ -145,8 +141,23 @@ public class Level2State extends GameState {
 		
 		// attack enemies
 		player.checkAttack(enemies);
-		
-		// update all enemies
+
+		UpdateEnemies();
+
+		UpdateExplosions();
+	}
+
+	private void UpdateExplosions() {
+		for(int i = 0; i < explosions.size(); i++) {
+			explosions.get(i).update();
+			if(explosions.get(i).shouldRemove()) {
+				explosions.remove(i);
+				i--;
+			}
+		}
+	}
+
+	private void UpdateEnemies() {
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy e = enemies.get(i);
 			e.update();
@@ -158,16 +169,6 @@ public class Level2State extends GameState {
 					new Explosion(e.getx(), e.gety()));
 			}
 		}
-		
-		// update explosions
-		for(int i = 0; i < explosions.size(); i++) {
-			explosions.get(i).update();
-			if(explosions.get(i).shouldRemove()) {
-				explosions.remove(i);
-				i--;
-			}
-		}
-		
 	}
 
 	private void givePlayerRewards(Enemy e) {
@@ -257,6 +258,10 @@ public class Level2State extends GameState {
 //		if(k == KeyEvent.VK_E) player.setGliding(true);
 		if(k == KeyEvent.VK_R) player.setScratching();
 		if(k == KeyEvent.VK_F) player.setFiring();
+
+		if(k == KeyEvent.VK_I) hud.ToggleInventory();
+		if(k == KeyEvent.VK_M) hud.ToggleMap();
+		if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
 	}
 	
 	public void keyReleased(int k) {
@@ -264,7 +269,6 @@ public class Level2State extends GameState {
 		if(k == KeyEvent.VK_SHIFT) {
 			player.setCharging(false);
 		}
-		
 		if(k == KeyEvent.VK_LEFT) {
 			player.setLeft(false);
 		}

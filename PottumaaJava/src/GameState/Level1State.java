@@ -330,6 +330,7 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_RIGHT) {
 			player.setRight(false);
 		}
+		//NOTE: if next 2 are commented, player keeps going down or up
 		if(k == KeyEvent.VK_UP) player.setUp(false);
 		if(k == KeyEvent.VK_DOWN) player.setDown(false);
 //		if(k == KeyEvent.VK_W) player.setJumping(false);
