@@ -10,6 +10,7 @@ public abstract class Enemy extends MapObject {
 	private int health;
 	private int maxHealth;
 	protected int moneyGainedWhenKilled;
+	protected int experienceGainedWhenKilled;
 	protected boolean dead;
 	protected int damage;
 	protected boolean flinching;
@@ -65,6 +66,8 @@ public abstract class Enemy extends MapObject {
 	public int getMoneyGainedWhenKilled() {
 		return moneyGainedWhenKilled;
 	}
+
+	public int getExperienceGainedWhenKilled() { return experienceGainedWhenKilled; }
 
 }
 

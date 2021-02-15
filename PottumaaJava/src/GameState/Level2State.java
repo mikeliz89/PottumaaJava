@@ -171,7 +171,7 @@ public class Level2State extends GameState {
 	}
 
 	private void givePlayerRewards(Enemy e) {
-		player.addExperience(3); //todo: lisää expansaannin määrä per enemy
+		player.addExperience(e.getExperienceGainedWhenKilled());
 		player.addMoney(e.getMoneyGainedWhenKilled());
 	}
 	
