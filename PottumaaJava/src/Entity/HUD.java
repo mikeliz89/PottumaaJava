@@ -145,10 +145,17 @@ public class HUD {
 		DrawExperiencePoints(g, innerBox);
 
 		DrawAttackStats(g, innerBox);
+
+		DrawHealthPoints(g, innerBox);
 	}
 
 	private final int inventoryXPosition = 10;
 	private final int characterStatsXPosition = 480;
+
+	private void DrawHealthPoints(Graphics2D g, Rectangle innerBox) {
+		g.setColor(Color.WHITE);
+		g.drawString("HP : "+ player.getHealth() + " / " + player.getMaxHealth(), innerBox.x + characterStatsXPosition, innerBox.y + 100);
+	}
 
 	private void DrawCharacterStatsTitle(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
@@ -187,7 +194,7 @@ public class HUD {
 		g.setColor(Color.WHITE);
 
 		DrawMoneyAmount(g);
-		DrawHealthPoints(g);
+		DrawHealthPointsToHUD(g);
 		DrawManaPoints(g);
 	}
 
@@ -208,7 +215,7 @@ public class HUD {
 		);
 	}
 
-	private void DrawHealthPoints(Graphics2D g) {
+	private void DrawHealthPointsToHUD(Graphics2D g) {
 		if(player.hasLowHealth())
 			g.setColor(Color.RED);
 		else
