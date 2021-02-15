@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 public abstract class Enemy extends MapObject {
-	
+
 	private int health;
 	private int maxHealth;
 	protected int moneyGainedWhenKilled;
@@ -16,6 +16,7 @@ public abstract class Enemy extends MapObject {
 	protected int damage;
 	protected boolean flinching;
 	protected long flinchTimer;
+	protected int enemyType;
 
 	private HashMap<String, AudioPlayer> sfx;
 	
@@ -25,6 +26,10 @@ public abstract class Enemy extends MapObject {
 		this.health = maxHealth;
 
 		setSoundEffects();
+	}
+
+	public int getEnemyType() {
+		return enemyType;
 	}
 	
 	public boolean isDead() { return dead; }

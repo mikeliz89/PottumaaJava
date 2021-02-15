@@ -190,6 +190,7 @@ public class Level1State extends GameState {
 			Enemy e = enemies.get(i);
 			e.update();
 			if(e.isDead()) {
+				updateQuests(e);
 				givePlayerRewards(e);
 				enemies.remove(i);
 				i--;
@@ -197,6 +198,10 @@ public class Level1State extends GameState {
 					new Explosion(e.getX(), e.getY()));
 			}
 		}
+	}
+
+	private void updateQuests(Enemy e) {
+		hud.KillOneEnemy(e.getEnemyType());
 	}
 
 	private void givePlayerRewards(Enemy e) {
@@ -315,7 +320,7 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_I) hud.ToggleInventory();
 		if(k == KeyEvent.VK_M) hud.ToggleMap();
 		if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
-
+		if(k == KeyEvent.VK_Q) hud.ToggleQuestLog();
 
 		if(k == KeyEvent.VK_F1) {
 			var currentVolume = bgMusic.getVolume();

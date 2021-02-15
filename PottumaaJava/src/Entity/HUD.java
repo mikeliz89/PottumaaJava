@@ -1,7 +1,11 @@
 package Entity;
 
 import Audio.AudioPlayer;
+import Entity.Enemies.EnemySettings;
 import Entity.Player.Player;
+import Entity.Quests.KillQuest;
+import Entity.Quests.Quest;
+import Entity.Quests.QuestLog;
 import Main.GamePanel;
 
 import java.awt.*;
@@ -15,10 +19,11 @@ public class HUD {
 	private HashMap<String, AudioPlayer> sfx;
 	private BufferedImage image;
 	private Font font;
-
+	private QuestLog questLog;
 	private boolean showMap;
 	private boolean showInventory;
 	private boolean showDialogBox;
+	private boolean showQuestLog;
 	
 	public HUD(Player p) {
 		player = p;
@@ -33,9 +38,27 @@ public class HUD {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-
+		createQuestLog();
 		setSoundEffects();
 	}
+
+	private void createQuestLog() {
+		questLog = new QuestLog();
+		Quest killSluggersQuest = new KillQuest("Kill 5 Sluggers",
+				"Sluggers are those little slimy \n" +
+				"spiky snails that keep terrorizing your farm.\n" +
+				"Fellow villagers area scared of them.\n" +
+				"Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
+		questLog.addQuest(killSluggersQuest);
+	}
+
+	public void KillOneEnemy (int EnemyType) {
+		for(Quest quest : questLog.getKillQuests()) {
+			if(quest instanceof  KillQuest) {
+				quest.KillOneEnemy(EnemyType, player);
+			}
+		}
+ 	}
 
 	public void ToggleInventory() {
 		if(showInventory == false) {
@@ -55,6 +78,10 @@ public class HUD {
 		playSoundEffect("putMapBackToPocket");
 		showMap = !showMap;
 	}
+
+	public void ToggleQuestLog() {
+		showQuestLog = !showQuestLog;
+	}
 	
 	public void draw(Graphics2D g) {
 
@@ -70,6 +97,13 @@ public class HUD {
 
 		if(showInventory)
 			DrawInventory(g);
+
+		if(showQuestLog)
+			DrawQuestLog(g);
+	}
+
+	private void DrawQuestLog(Graphics2D g) {
+		questLog.draw(g);
 	}
 
 	private void DrawMap(Graphics2D g) {

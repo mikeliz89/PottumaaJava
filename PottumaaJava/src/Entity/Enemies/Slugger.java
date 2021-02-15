@@ -45,6 +45,8 @@ public class Slugger extends Enemy {
 		moneyGainedWhenKilled = EnemySettings.SLUGGER_MONEY_GAINED_WHEN_KILLED;
 		experienceGainedWhenKilled = EnemySettings.SLUGGER_EXP_GAINED_WHEN_KILLED;
 
+		enemyType = EnemySettings.ENEMY_TYPES_SLUGGER;
+
 		setSoundEffects();
 	}
 

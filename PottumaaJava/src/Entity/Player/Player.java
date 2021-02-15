@@ -59,7 +59,7 @@ public class Player extends MapObject {
 	private HashMap<String, AudioPlayer> sfx;
 
 	private Wallet wallet;
-	
+
 	public Player(ArrayList<TileMap> tileMaps) {
 		this.tileMaps = tileMaps;
 		width = 30;
@@ -533,7 +533,6 @@ public class Player extends MapObject {
 		DrawDebugArea(g);
 
 		super.draw(g);
-		
 	}
 
 	private void DrawDebugArea(Graphics2D g) {
