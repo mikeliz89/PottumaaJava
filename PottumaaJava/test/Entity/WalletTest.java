@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WalletTest {
 
     Wallet myWallet;
+    private final int _moneyInWallet = 500;
 
     public WalletTest() {
-        int money = 500;
+        int money = _moneyInWallet;
         myWallet = new Wallet(money);
     }
 
@@ -54,6 +55,21 @@ public class WalletTest {
         myWallet.TakeMoney(myWallet.GetMoneyAmount() + 10);
         var moneyInWallet = myWallet.GetMoneyAmount();
         assertEquals(0, moneyInWallet);
+    }
+
+    @Test
+    void AddMoneyToWalletShouldWork() {
+        var moneyInWalletAtTheStart = myWallet.GetMoneyAmount();
+        myWallet.AddMoney(100);
+        var moneyInWalletAfterAdding = myWallet.GetMoneyAmount();
+        assertEquals(moneyInWalletAfterAdding, moneyInWalletAtTheStart + 100);
+    }
+
+    @Test
+    void AddMoreManyToWalletThanItsMaxAmountIs_WalletShouldHaveMaxAmountOfMoney() {
+        myWallet.AddMoney(1500);
+        var moneyInWalletAfterAdding = myWallet.GetMoneyAmount();
+        assertEquals(moneyInWalletAfterAdding, myWallet.GetMaxMoneyAmount());
     }
 
 }

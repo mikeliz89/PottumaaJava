@@ -18,6 +18,10 @@ public class Wallet {
     }
 
     public void AddMoney(int amount) {
+        if(this.money + amount > this.maxMoney) {
+            this.money = this.maxMoney;
+            return;
+        }
         this.money += amount;
     }
 
