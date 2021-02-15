@@ -3,6 +3,7 @@ package Entity;
 import Audio.AudioPlayer;
 import TileMap.TileMap;
 
+import java.awt.*;
 import java.util.HashMap;
 
 public abstract class Enemy extends MapObject {
@@ -68,6 +69,28 @@ public abstract class Enemy extends MapObject {
 	}
 
 	public int getExperienceGainedWhenKilled() { return experienceGainedWhenKilled; }
+
+	public void draw(Graphics2D g) {
+
+		super.draw(g);
+
+		drawHealthBar(g);
+	}
+
+	private void drawHealthBar(Graphics2D g) {
+
+		//todo: Voisiko olla erillinen HealthBar-luokka josta luotaisiin olio initissä,
+		//ja jolle annettaisiin tarvittavat parametrit, ja jonka drawia tässä kutsuttaisiin.
+
+		//piiirrä healthbarin sisältö
+		g.setColor(Color.RED);
+		g.fillRect((int)this.x - 10, (int)y -10 , this.health + 5, 3);
+
+		//piirrä ääriviivat
+		g.setColor(Color.BLACK);
+		g.drawRect((int)this.x - 10, (int)y - 10, 15, 3);
+
+	}
 
 }
 
