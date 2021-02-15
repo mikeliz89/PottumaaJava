@@ -6,6 +6,7 @@ Humorous RPG-styled 2D Java game
 Recommended IDE: IntelliJ Idea for development
 
 Dependencies: 
+- JDK 15.0.2 (Java Development Kit)
 - Unit testing: JUnit.4.13
 
 In Project Structure settings
