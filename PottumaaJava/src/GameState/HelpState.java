@@ -85,7 +85,8 @@ public class HelpState extends GameState {
 		g.drawString("Press F to shoot fireballs", x, 260);
 		g.drawString("Press Left Shift to run", x, 280);
 		g.drawString("Press I to open inventory", x, 300);
-		g.drawString("Press Esc to exit to menu", x, 320);
+		g.drawString("Press M to open map", x, 320);
+		g.drawString("Press Esc to exit to menu", x, 340);
 	}
 
 	private void select() {
