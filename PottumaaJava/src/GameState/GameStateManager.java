@@ -102,6 +102,7 @@ public class GameStateManager {
 		if(k == KeyEvent.VK_ESCAPE) setState(MENUSTATE);
 
 		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
+		if(k == KeyEvent.VK_T) GameOptions.ToggleMusicOnOff();
 	}
 	
 	public void keyReleased(int k) {

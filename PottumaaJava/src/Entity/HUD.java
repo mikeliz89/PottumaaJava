@@ -147,6 +147,10 @@ public class HUD {
 
 		g.setColor(Color.WHITE);
 		g.drawString("Character stats", shape.x + 320, shape.y + 20);
+
+		//Näytä exp määrä
+		g.setColor(Color.CYAN);
+		g.drawString("Exp: " + player.getExperiencePointsAmount(), shape.x + 320, shape.y + 40 );
 	}
 
 	private void DrawImage(Graphics2D g) {

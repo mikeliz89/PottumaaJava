@@ -191,13 +191,18 @@ public class Level1State extends GameState {
 			Enemy e = enemies.get(i);
 			e.update();
 			if(e.isDead()) {
-				player.addMoney(e.getMoneyGainedWhenKilled());
+				givePlayerRewards(e);
 				enemies.remove(i);
 				i--;
 				explosions.add(
 					new Explosion(e.getx(), e.gety()));
 			}
 		}
+	}
+
+	private void givePlayerRewards(Enemy e) {
+		player.addExperience(3); //todo: lisää expansaannin määrä per enemy
+		player.addMoney(e.getMoneyGainedWhenKilled());
 	}
 
 	private void UpdateExplosions() {

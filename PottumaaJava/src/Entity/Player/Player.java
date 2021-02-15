@@ -25,6 +25,7 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	private boolean charging;
+	private int experiencePoints;
 	
 	// fireball
 	private boolean firing;
@@ -79,6 +80,8 @@ public class Player extends MapObject {
 		
 		health = maxHealth = 5;
 		fire = maxFire = 2500;
+
+		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
 		
 		fireCost = 200;
 		fireBallDamage = 5;
@@ -119,7 +122,15 @@ public class Player extends MapObject {
 		return false;
 	}
 
-	private void loadSprites() {
+	public void addExperience(int exp) {
+		experiencePoints += exp;
+	}
+
+	public int getExperiencePointsAmount() {
+		return experiencePoints;
+	}
+
+ 	private void loadSprites() {
 		try {
 
 			BufferedImage spritesheet = ImageIO.read(

@@ -81,6 +81,7 @@ public class HelpState extends GameState {
 		g.setColor(Color.BLACK);
 
 		g.drawString("Press D to toggle DebugMode", x, 200);
+		g.drawString("Press T to toggle music on/off", x, 220);
 		g.drawString("Press R to claw attack", x, 240);
 		g.drawString("Press F to shoot fireballs", x, 260);
 		g.drawString("Press Left Shift to run", x, 280);
