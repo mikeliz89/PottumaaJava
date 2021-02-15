@@ -117,40 +117,64 @@ public class HUD {
 		var y = 100;
 		var width = GamePanel.WIDTH - 200;
 		var height = GamePanel.HEIGHT - 200;
-		var shape = new Rectangle(x, y, width, height);
+		var outerBox = new Rectangle(x, y, width, height);
 
 		//Piirrä läpinäkyvä neliö
 		int alpha = 127; // 50% transparent
 		Color semiTransParentColor = new Color(180, 150, 150, alpha);
 		g.setColor(semiTransParentColor);
-		g.fill(shape);
+		g.fill(outerBox);
 
 		//Piirrä sisempi läpinäkyvä neliö
 		alpha = 100; // vähemmän kuin 50% transparent
 		semiTransParentColor = new Color(0, 0, 0, alpha);
 		g.setColor(semiTransParentColor);
-		shape = new Rectangle(x + 10, y + 10, width-20, height-20);
-		g.fill(shape);
+		var innerBox = new Rectangle(x + 10, y + 10, width-20, height-20);
+		g.fill(innerBox);
 
 		//Piirrä ääriviivat
 		g.setColor(Color.BLACK);
 		g.drawRect(x, y, width, height);
 
-		//Piirrä teksti
+		DrawInventoryTitle(g, innerBox);
+
+		DrawGold(g, innerBox);
+
+		DrawCharacterStatsTitle(g, innerBox);
+
+		DrawExperiencePoints(g, innerBox);
+
+		DrawAttackStats(g, innerBox);
+	}
+
+	private final int inventoryXPosition = 10;
+	private final int characterStatsXPosition = 480;
+
+	private void DrawCharacterStatsTitle(Graphics2D g, Rectangle innerBox) {
+		g.setColor(Color.WHITE);
+		g.drawString("Character stats", innerBox.x + characterStatsXPosition, innerBox.y + 20);
+	}
+
+	private void DrawExperiencePoints(Graphics2D g, Rectangle innerBox) {
+		g.setColor(Color.CYAN);
+		g.drawString("Exp: " + player.getExperiencePointsAmount(), innerBox.x + characterStatsXPosition, innerBox.y + 40 );
+	}
+
+	private void DrawGold(Graphics2D g, Rectangle innerBox) {
+		g.setColor(Color.ORANGE);
+		g.drawString("Gold: " + player.getMoneyInWallet(), innerBox.x + inventoryXPosition, innerBox.y + 40);
+	}
+
+	private void DrawInventoryTitle(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.setFont(font);
-		g.drawString("Inventory", shape.x + 10, shape.y + 20);
+		g.drawString("Inventory", innerBox.x + inventoryXPosition, innerBox.y + 20);
+	}
 
-		//Näytä gold määrä
-		g.setColor(Color.ORANGE);
-		g.drawString("Gold: " + player.getMoneyInWallet(), shape.x + 10, shape.y + 40);
-
+	private void DrawAttackStats(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
-		g.drawString("Character stats", shape.x + 320, shape.y + 20);
-
-		//Näytä exp määrä
-		g.setColor(Color.CYAN);
-		g.drawString("Exp: " + player.getExperiencePointsAmount(), shape.x + 320, shape.y + 40 );
+		g.drawString("Scratch dmg: " + player.getScratchDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 60);
+		g.drawString("Fireball dmg: " + player.getFireBallDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 80);
 	}
 
 	private void DrawImage(Graphics2D g) {

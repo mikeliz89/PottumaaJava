@@ -84,10 +84,10 @@ public class Player extends MapObject {
 		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
 		
 		fireCost = 200;
-		fireBallDamage = 5;
+		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		fireBalls = new ArrayList<>();
 		
-		scratchDamage = 8;
+		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
 		scratchRange = 40;
 
 		loadSprites();
@@ -575,6 +575,13 @@ public class Player extends MapObject {
 		}
 	}
 
+	public int getFireBallDamage() {
+		return fireBallDamage;
+	}
+
+	public int getScratchDamage(){
+		return scratchDamage;
+	}
 }
 
 
