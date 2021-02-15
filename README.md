@@ -1,7 +1,7 @@
 PottumaaJava
 ============
 
-Humorous RPG-styled 2D Java game
+Humorous RPG-styled 2D Java game, Open Source
 
 Recommended IDE: IntelliJ Idea for development
 
