@@ -1,11 +1,9 @@
-package Entity;
+package Entity.HUD;
 
 import Audio.AudioPlayer;
 import Entity.Enemies.EnemySettings;
 import Entity.Player.Player;
-import Entity.Quests.KillQuest;
-import Entity.Quests.Quest;
-import Entity.Quests.QuestLog;
+import Entity.Quests.*;
 import Main.GamePanel;
 
 import java.awt.*;
@@ -44,11 +42,12 @@ public class HUD {
 
 	private void createQuestLog() {
 		questLog = new QuestLog();
-		Quest killSluggersQuest = new KillQuest("Kill 5 Sluggers",
+		QuestFactory questFactory = new QuestFactory("Kill 5 Sluggers",
 				"Sluggers are those little slimy \n" +
 				"spiky snails that keep terrorizing your farm.\n" +
 				"Fellow villagers area scared of them.\n" +
 				"Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
+		Quest killSluggersQuest = questFactory.getQuest(QuestSettings.QUEST_TYPE_KILLQUEST);
 		questLog.addQuest(killSluggersQuest);
 	}
 

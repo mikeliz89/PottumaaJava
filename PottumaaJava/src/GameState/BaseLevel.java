@@ -3,7 +3,7 @@ package GameState;
 import Audio.AudioPlayer;
 import Entity.Enemy;
 import Entity.Explosion;
-import Entity.HUD;
+import Entity.HUD.HUD;
 import Entity.NPC;
 import Entity.Player.Player;
 import Main.GameOptions;
