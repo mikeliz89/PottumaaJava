@@ -32,7 +32,7 @@ public class MrPotatoGuy extends NPC {
 
         right = true;
         facingRight = true;
-
+        name = "Mr. Potatoguy";
     }
 
     private void loadSprites() {

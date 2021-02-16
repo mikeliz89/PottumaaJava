@@ -28,10 +28,22 @@ public class HealthBar {
     }
 
     public void setMaxWidth(int maxWidth) {
+
         this.maxWidth = maxWidth;
     }
 
+    private final int maximumLength = 30;
+
     public void draw(Graphics2D g) {
+
+        if(width > maximumLength) {
+            width = maximumLength;
+        }
+
+        if(maxWidth > maximumLength) {
+            maxWidth = maximumLength;
+        }
+
         //piirrä healthbarin sisältö
         g.setColor(Color.RED);
         g.fillRect(x, y , width, height);
