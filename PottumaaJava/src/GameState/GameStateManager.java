@@ -15,10 +15,10 @@ public class GameStateManager {
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
-	public static final int LEVEL3STATE = 3;
-	public static final int HELPSTATE = 13;
-	public static final int OPTIONSSTATE = 14;
-	public static final int MAPEDITORSTATE = 15;
+	public static final int HELPSTATE = 3;
+	public static final int OPTIONSSTATE = 4;
+	public static final int MAPEDITORSTATE = 5;
+	public static final int LEVEL3STATE = 6;
 	
 	public GameStateManager() {
 		
