@@ -76,6 +76,11 @@ public class Level1State extends BaseLevel {
 					EnemySettings.SLUGGER_MAX_HEALTH);
 			enemies.add(s);
 		}
+		//hämähäkki
+		var a = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_ARACHNID,
+				400, 400,
+				EnemySettings.ARACHNID_MAX_HEALTH);
+		enemies.add(a);
 	}
 
 	@Override

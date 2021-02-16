@@ -22,6 +22,11 @@ public class EnemyFactory {
             slugger.setPosition(xCoordinate, yCoordinate);
             return slugger;
         }
+        else if(enemyType == EnemySettings.ENEMY_TYPES_ARACHNID) {
+            var arachnid = new Arachnid(tileMaps, maxHealth);
+            arachnid.setPosition(xCoordinate, yCoordinate);
+            return arachnid;
+        }
 
         return null;
     }
