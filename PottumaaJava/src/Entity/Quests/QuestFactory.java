@@ -7,10 +7,6 @@ public class QuestFactory {
     private int howManyNeedsToBeKilled;
     private int enemyType;
 
-    public QuestFactory() {
-
-    }
-
     public QuestFactory(String title, String description) {
         this.title = title;
         this.description = description;
