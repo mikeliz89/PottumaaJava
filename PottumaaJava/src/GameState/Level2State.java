@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import Entity.Enemies.Slugger;
 import TileMap.MapPoint;
@@ -40,7 +41,7 @@ public class Level2State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
-		Slugger s;
+		var enemyFactory = new EnemyFactory(tileMaps);
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
 				new Point(700, 700),
@@ -50,8 +51,10 @@ public class Level2State extends BaseLevel {
 		};
 		for (Point sluggerPoint : sluggerPoints) {
 			//little bit tougher enemy in level 2
-			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH + 3);
-			s.setPosition(sluggerPoint.x, sluggerPoint.y);
+			var s = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
+					sluggerPoint.x,
+					sluggerPoint.y,
+					EnemySettings.SLUGGER_MAX_HEALTH + 2); //tougher slugger in level 2
 			enemies.add(s);
 		}
 	}

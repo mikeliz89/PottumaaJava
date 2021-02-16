@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import Entity.Enemies.Slugger;
 import Entity.NPCs.MrPotatoGuy;
@@ -62,7 +63,7 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
-		Slugger s;
+		var enemyFactory = new EnemyFactory(tileMaps);
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
 				new Point(330, 100),
@@ -71,8 +72,10 @@ public class Level1State extends BaseLevel {
 				new Point(100, 500),
 		};
 		for (Point sluggerPoint : sluggerPoints) {
-			s = new Slugger(tileMaps, EnemySettings.SLUGGER_MAX_HEALTH);
-			s.setPosition(sluggerPoint.x, sluggerPoint.y);
+			var s = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
+					sluggerPoint.x,
+					sluggerPoint.y,
+					EnemySettings.SLUGGER_MAX_HEALTH);
 			enemies.add(s);
 		}
 	}
