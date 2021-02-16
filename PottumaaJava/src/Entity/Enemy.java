@@ -18,12 +18,17 @@ public abstract class Enemy extends MapObject {
 	protected long flinchTimer;
 	protected int enemyType;
 
+	HealthBar healthBar;
+
 	private HashMap<String, AudioPlayer> sfx;
 	
 	public Enemy(java.util.ArrayList<TileMap> tileMaps, int maxHealth) {
 		this.tileMaps = tileMaps;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
+
+		//todo: Tee vaihtuva healthBarin korkeus per enemy tyyppi
+		healthBar = new HealthBar(3, this.maxHealth);
 
 		setSoundEffects();
 	}
@@ -76,29 +81,15 @@ public abstract class Enemy extends MapObject {
 	public int getExperienceGainedWhenKilled() { return experienceGainedWhenKilled; }
 
 	public void draw(Graphics2D g) {
-
 		super.draw(g);
-
 		drawHealthBar(g);
 	}
 
 	private void drawHealthBar(Graphics2D g) {
-
-		//todo: Voisiko olla erillinen HealthBar-luokka josta luotaisiin olio initissä,
-		//ja jolle annettaisiin tarvittavat parametrit, ja jonka drawia tässä kutsuttaisiin.
-
-		var healthPositionX = (int)this.x -10 + (int)xmap;
-		var healthPositionY = (int)this.y -10 + (int)ymap;
-		var height = 3;
-
-		//piirrä healthbarin sisältö
-		g.setColor(Color.RED);
-		g.fillRect(healthPositionX, healthPositionY , this.health , height);
-
-		//piirrä ääriviivat
-		g.setColor(Color.BLACK);
-		g.drawRect(healthPositionX, healthPositionY, this.maxHealth, height);
-
+		healthBar.setX((int)this.x -10 + (int)xmap);
+		healthBar.setY((int)this.y-10 + (int)ymap);
+		healthBar.setWidth(this.health);
+		healthBar.draw(g);
 	}
 
 }
