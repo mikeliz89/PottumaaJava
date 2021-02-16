@@ -2,11 +2,9 @@ package GameState;
 
 import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
-import Entity.Enemies.Slugger;
 import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.House;
 import TileMap.MapPoint;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
