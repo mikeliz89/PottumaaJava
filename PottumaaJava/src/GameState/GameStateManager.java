@@ -37,9 +37,7 @@ public class GameStateManager {
 	private void loadState(int state, int previousState) {
 
 		switch (state) {
-			case MENUSTATE -> {
-				gameStates[state] = new MenuState(this);
-			}
+			case MENUSTATE -> gameStates[state] = new MenuState(this);
 			case LEVEL1STATE -> {
 
 				var playerStartingPointX = 0;
@@ -56,7 +54,7 @@ public class GameStateManager {
 				}
 				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
 			}
-			case LEVEL2STATE -> gameStates[state] = new Level2State(this);
+			case LEVEL2STATE -> gameStates[state] = new Level2State(this, 80, 575);
 			case HELPSTATE -> gameStates[state] = new HelpState(this);
 			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
 			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);

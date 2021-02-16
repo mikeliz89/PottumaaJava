@@ -38,13 +38,11 @@ public class Level1State extends GameState {
 	public void init() {
 
 	}
-	
+
 	public void init(int PlayerStartingPositionX, int PlayerStartingPositionY) {
 		
 		populateTileMaps();
-		
 		populateMapPoints();
-		
 		player = new Player(tileMaps);
 		player.setPosition(PlayerStartingPositionX, PlayerStartingPositionY);
 		
@@ -60,15 +58,14 @@ public class Level1State extends GameState {
 	}
 
 	private void playMusic() {
-
 		if(!GameOptions.IS_PLAY_MUSIC_ON)
 			return;
 
 		bgMusic = new AudioPlayer("/Music/happymusic.wav");
 		bgMusic.play();
 	}
-	
-	private void populateTileMaps() { 
+
+	private void populateTileMaps() {
 		tileMaps = new ArrayList<>();
 		double tileMapTween = 0.11;
 		
@@ -91,10 +88,10 @@ public class Level1State extends GameState {
 		tileMaps.add(tileMapGround);
 		tileMaps.add(tileMapObstacles);
 	}
-	
+
 	private void populateMapPoints() {
 		mapPoints = new ArrayList<>();
-		try { 
+		try {
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
 			);
@@ -104,11 +101,11 @@ public class Level1State extends GameState {
 			//BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
 			//BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
 			
-			MapPoint level2Point = new MapPoint(rightArrow);
-			level2Point.setPosition(885, 585);
-			level2Point.setGotoLevel(GameStateManager.LEVEL2STATE);
-			mapPoints.add(level2Point);
-		} 
+			MapPoint mapPoint = new MapPoint(rightArrow);
+			mapPoint.setPosition(885, 585);
+			mapPoint.setGotoLevel(GameStateManager.LEVEL2STATE);
+			mapPoints.add(mapPoint);
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -335,13 +332,6 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_2) quickTravel(2);
 		//if(k == KeyEvent.VK_3) quickTravel(3);
 	}
-
-	private void quickTravel(int levelNumber) {
-		if(!GameOptions.ISDEBUGMODE)
-			return;
-
-		gsm.setState(levelNumber);
-	}
 	
 	public void keyReleased(int k) {
 		
@@ -365,6 +355,13 @@ public class Level1State extends GameState {
 			keysPressed.remove(keysPressed.indexOf(k));
 		}
 		
+	}
+
+	private void quickTravel(int levelNumber) {
+		if(!GameOptions.ISDEBUGMODE)
+			return;
+
+		gsm.setState(levelNumber);
 	}
 
 	public void stopBackGroundMusic() {

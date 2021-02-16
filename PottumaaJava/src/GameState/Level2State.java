@@ -20,27 +20,32 @@ public class Level2State extends GameState {
 	private ArrayList<TileMap> tileMaps;
 	private Player player;
 	private ArrayList<Enemy> enemies;
+	private ArrayList<NPC> NPCs;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<MapPoint> mapPoints;
 	private HUD hud;
 	private AudioPlayer bgMusic;
 	private ArrayList<Integer> keysPressed;
 	
-	public Level2State(GameStateManager gsm) {
+	public Level2State(GameStateManager gsm, int PlayerStartingPositionX, int PlayerStartingPositionY) {
 		this.gsm = gsm;
-		init();
+		init(PlayerStartingPositionX, PlayerStartingPositionY);
 	}
-	
+
 	public void init() {
+
+	}
+
+	public void init(int PlayerStartingPositionX, int PlayerStartingPositionY) {
 		
 		populateTileMaps();
-
 		populateMapPoints();
-
 		player = new Player(tileMaps);
-		player.setPosition(30, 575);
+		player.setPosition(PlayerStartingPositionX, PlayerStartingPositionY);
 		
-		populateEnemies(tileMaps);
+		populateEnemies();
+		populateNPCs();
+		populateObstacles();
 		
 		explosions = new ArrayList<>();
 		keysPressed = new ArrayList<>();
@@ -56,10 +61,34 @@ public class Level2State extends GameState {
 		bgMusic = new AudioPlayer("/Music/happymusic.wav");
 		bgMusic.play();
 	}
-	
+
+	private void populateTileMaps() {
+		tileMaps = new ArrayList<>();
+		double tileMapTween = 0.11;
+		
+		// tiles: ground
+		TileMap tileMapGround = new TileMap(30);
+		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
+		tileMapGround.loadMap("/Maps/map2.csv");
+		tileMapGround.setPosition(0, 0);
+		tileMapGround.setType(TileMap.GROUND);
+		tileMapGround.setTween(tileMapTween);
+		
+		// tiles: obstacles
+		TileMap tileMapObstacles = new TileMap(30);
+		tileMapObstacles.loadTiles("/Tilesets/obstacles.png", true);
+		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
+		tileMapObstacles.setPosition(0, 0);
+		tileMapObstacles.setType(TileMap.OBSTACLE);
+		tileMapObstacles.setTween(tileMapTween);
+		
+		tileMaps.add(tileMapGround);
+		tileMaps.add(tileMapObstacles);
+	}
+
 	private void populateMapPoints() {
 		mapPoints = new ArrayList<>();
-		try { 
+		try {
 			BufferedImage tileset = ImageIO.read(
 				getClass().getResourceAsStream("/Tiles/arrows.png")
 			);
@@ -69,40 +98,22 @@ public class Level2State extends GameState {
 			//BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
 			//BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
 
-			MapPoint level1Point = new MapPoint(leftArrow);
-			level1Point.setPosition(leftArrow.getWidth() / 2, 585);
-			level1Point.setGotoLevel(GameStateManager.LEVEL1STATE);
-			mapPoints.add(level1Point);
-		} 
+			MapPoint mapPoint = new MapPoint(leftArrow);
+			mapPoint.setPosition(leftArrow.getWidth() / 2, 585);
+			mapPoint.setGotoLevel(GameStateManager.LEVEL1STATE);
+			mapPoints.add(mapPoint);
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void populateTileMaps() {
-		tileMaps = new ArrayList<>();
-		
-		// tiles: ground
-		TileMap tileMapGround = new TileMap(30);
-		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
-		tileMapGround.loadMap("/Maps/map2.csv");
-		tileMapGround.setPosition(0, 0);
-		tileMapGround.setType(TileMap.GROUND);
-		tileMapGround.setTween(0.11);
-		
-		// tiles: obstacles
-		TileMap tileMapObstacles = new TileMap(30);
-		tileMapObstacles.loadTiles("/Tilesets/obstacles.png", true);
-		tileMapObstacles.loadMap("/Maps/map1_obstacles.csv");
-		tileMapObstacles.setPosition(0, 0);
-		tileMapObstacles.setType(TileMap.OBSTACLE);
-		tileMapObstacles.setTween(0.11);
-		
-		tileMaps.add(tileMapGround);
-		tileMaps.add(tileMapObstacles);
+
+	private void populateObstacles() {
+
+
 	}
 	
-	private void populateEnemies(ArrayList<TileMap> tileMaps) {
+	private void populateEnemies() {
 		
 		enemies = new ArrayList<>();
 		
@@ -121,6 +132,10 @@ public class Level2State extends GameState {
 			enemies.add(s);
 		}
 		
+	}
+
+	private void populateNPCs() {
+
 	}
 	
 	public void update() {
@@ -144,17 +159,13 @@ public class Level2State extends GameState {
 
 		UpdateEnemies();
 
+		UpdateNPCs();
+
 		UpdateExplosions();
 	}
 
-	private void UpdateExplosions() {
-		for(int i = 0; i < explosions.size(); i++) {
-			explosions.get(i).update();
-			if(explosions.get(i).shouldRemove()) {
-				explosions.remove(i);
-				i--;
-			}
-		}
+	private void UpdateNPCs() {
+
 	}
 
 	private void UpdateEnemies() {
@@ -175,12 +186,26 @@ public class Level2State extends GameState {
 		player.addExperience(e.getExperienceGainedWhenKilled());
 		player.addMoney(e.getMoneyGainedWhenKilled());
 	}
-	
+
+	private void UpdateExplosions() {
+		for(int i = 0; i < explosions.size(); i++) {
+			explosions.get(i).update();
+			if(explosions.get(i).shouldRemove()) {
+				explosions.remove(i);
+				i--;
+			}
+		}
+	}
+
 	public void draw(Graphics2D g) {
 
 		DrawTileMaps(g);
 
 		DrawMapPoints(g);
+
+		DrawObstacles(g);
+
+		DrawNPCs(g);
 
 		DrawPlayer(g);
 
@@ -191,22 +216,12 @@ public class Level2State extends GameState {
 		DrawHUD(g);
 	}
 
+	private void DrawObstacles(Graphics2D g) {
+
+	}
+
 	private void DrawHUD(Graphics2D g) {
 		hud.draw(g);
-	}
-
-	private void DrawTileMaps(Graphics2D g) {
-		for (TileMap tm : tileMaps) {
-			tm.draw(g);
-		}
-	}
-
-	private void DrawMapPoints(Graphics2D g) {
-		for (MapPoint mp : mapPoints) {
-			//use only tileMap[0](ground tiles)
-			mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
-			mp.draw(g);
-		}
 	}
 
 	private void DrawExplosions(Graphics2D g) {
@@ -218,13 +233,31 @@ public class Level2State extends GameState {
 	}
 
 	private void DrawEnemies(Graphics2D g) {
-		for(int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).draw(g);
+		for (Enemy enemy : enemies) {
+			enemy.draw(g);
 		}
+	}
+
+	private void DrawNPCs(Graphics2D g) {
+
 	}
 
 	private void DrawPlayer(Graphics2D g) {
 		player.draw(g);
+	}
+
+	private void DrawMapPoints(Graphics2D g) {
+		for (MapPoint mp : mapPoints) {
+			//use only tileMap[0](ground tiles)
+			mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
+			mp.draw(g);
+		}
+	}
+
+	private void DrawTileMaps(Graphics2D g) {
+		for (TileMap tm : tileMaps) {
+			tm.draw(g);
+		}
 	}
 
 	public void keyPressed(int k) {
@@ -234,7 +267,7 @@ public class Level2State extends GameState {
 		
 		if(keysPressed.contains(KeyEvent.VK_LEFT) == true ||
 				keysPressed.contains(KeyEvent.VK_RIGHT) == true ||
-				keysPressed.contains(KeyEvent.VK_UP) == true || 
+				keysPressed.contains(KeyEvent.VK_UP) == true ||
 				keysPressed.contains(KeyEvent.VK_DOWN) == true) {
 			if(keysPressed.contains(KeyEvent.VK_SHIFT)) {
 				player.setCharging(true);
@@ -262,6 +295,19 @@ public class Level2State extends GameState {
 		if(k == KeyEvent.VK_I) hud.ToggleInventory();
 		if(k == KeyEvent.VK_M) hud.ToggleMap();
 		if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
+
+		if(k == KeyEvent.VK_F1) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume-0.1f);
+		}
+		if(k == KeyEvent.VK_F2) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume+0.1f);
+		}
+
+		if(k == KeyEvent.VK_1) quickTravel(1);
+		if(k == KeyEvent.VK_2) quickTravel(2);
+		//if(k == KeyEvent.VK_3) quickTravel(3);
 	}
 	
 	public void keyReleased(int k) {
@@ -285,19 +331,6 @@ public class Level2State extends GameState {
 		if(keysPressed.contains(k) == true) {
 			keysPressed.remove(keysPressed.indexOf(k));
 		}
-
-		if(k == KeyEvent.VK_F1) {
-			var currentVolume = bgMusic.getVolume();
-			bgMusic.setVolume(currentVolume-0.1f);
-		}
-		if(k == KeyEvent.VK_F2) {
-			var currentVolume = bgMusic.getVolume();
-			bgMusic.setVolume(currentVolume+0.1f);
-		}
-
-		if(k == KeyEvent.VK_1) quickTravel(1);
-		if(k == KeyEvent.VK_2) quickTravel(2);
-		//if(k == KeyEvent.VK_3) quickTravel(3);
 		
 	}
 
