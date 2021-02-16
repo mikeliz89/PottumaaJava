@@ -4,7 +4,7 @@ import Audio.AudioPlayer;
 import Entity.*;
 import GameState.GameStateManager;
 import Main.GameOptions;
-import TileMap.MapPoint;
+import MapPoint.MapPoint;
 import TileMap.Tile;
 import TileMap.TileMap;
 

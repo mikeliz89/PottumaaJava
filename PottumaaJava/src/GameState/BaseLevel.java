@@ -1,8 +1,6 @@
 package GameState;
 
 import Audio.AudioPlayer;
-import Entity.Enemies.EnemySettings;
-import Entity.Enemies.Slugger;
 import Entity.Enemy;
 import Entity.Explosion;
 import Entity.HUD;
@@ -10,6 +8,7 @@ import Entity.NPC;
 import Entity.Player.Player;
 import Main.GameOptions;
 import Main.GamePanel;
+import MapPoint.MapPoint;
 import TileMap.*;
 
 import java.awt.*;
