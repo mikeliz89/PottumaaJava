@@ -331,6 +331,16 @@ public class Level1State extends GameState {
 			bgMusic.setVolume(currentVolume+0.1f);
 		}
 
+		if(k == KeyEvent.VK_1) quickTravel(1);
+		if(k == KeyEvent.VK_2) quickTravel(2);
+		//if(k == KeyEvent.VK_3) quickTravel(3);
+	}
+
+	private void quickTravel(int levelNumber) {
+		if(!GameOptions.ISDEBUGMODE)
+			return;
+
+		gsm.setState(levelNumber);
 	}
 	
 	public void keyReleased(int k) {

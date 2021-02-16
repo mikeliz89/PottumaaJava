@@ -11,12 +11,14 @@ public class GameStateManager {
 	private int currentState;
 
 	public static final int NUMGAMESTATES = 6;
+	//States
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
-	public static final int HELPSTATE = 3;
-	public static final int OPTIONSSTATE = 4;
-	public static final int MAPEDITORSTATE = 5;
+	public static final int LEVEL3STATE = 3;
+	public static final int HELPSTATE = 13;
+	public static final int OPTIONSSTATE = 14;
+	public static final int MAPEDITORSTATE = 15;
 	
 	public GameStateManager() {
 		
@@ -42,7 +44,9 @@ public class GameStateManager {
 
 				var playerStartingPointX = 0;
 				var playerStartingPointY = 0;
-				if(previousState == MENUSTATE) {
+				//Quick and dirty
+				if(previousState == MENUSTATE ||
+						previousState == LEVEL1STATE) {
 					playerStartingPointX = 40;
 					playerStartingPointY = 100;
 				}
