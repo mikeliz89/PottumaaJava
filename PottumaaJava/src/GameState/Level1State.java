@@ -24,8 +24,9 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateObstacles() {
+
 		playerHome = new House(tileMaps);
-		playerHome.setPosition(500, 260);
+		playerHome.setPosition(527 - 180, 247 - 120);
 	}
 
 	@Override
@@ -40,6 +41,12 @@ public class Level1State extends BaseLevel {
 			mapPoint.setPosition(885, 585);
 			mapPoint.setGotoLevel(GameStateManager.LEVEL2STATE);
 			mapPoints.add(mapPoint);
+
+			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
+			MapPoint mapPoint2 = new MapPoint(upArrow);
+			mapPoint2.setPosition(345, 195);
+			mapPoint2.setGotoLevel(GameStateManager.INSIDEHOUSE);
+			mapPoints.add(mapPoint2);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
