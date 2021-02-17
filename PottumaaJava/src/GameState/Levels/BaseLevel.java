@@ -1,12 +1,11 @@
-package GameState;
+package GameState.Levels;
 
-import Audio.AudioPlayer;
 import Entity.Enemy;
 import Entity.Explosion;
 import Entity.HUD.HUD;
 import Entity.NPC;
 import Entity.Player.Player;
-import Main.GameOptions;
+import GameState.*;
 import Main.GamePanel;
 import MapPoint.MapPoint;
 import TileMap.*;
@@ -23,7 +22,6 @@ public abstract class BaseLevel extends GameState  {
     private ArrayList<Explosion> explosions;
     protected ArrayList<MapPoint> mapPoints;
     private HUD hud;
-    private AudioPlayer bgMusic;
     private ArrayList<Integer> keysPressed;
 
     //muuttuvat
@@ -52,6 +50,8 @@ public abstract class BaseLevel extends GameState  {
 
     public void init(int playerStartingPositionX, int playerStartingPositionY) {
 
+        gsm.setSongToPlay(bgMusicSoundFileName);
+
         mapPoints = new ArrayList<>();
         explosions = new ArrayList<>();
         keysPressed = new ArrayList<>();
@@ -69,21 +69,11 @@ public abstract class BaseLevel extends GameState  {
 
         //Note: Hud has to be created after Player!
         hud = new HUD(player);
-
-        playMusic();
     }
 
     private void createPlayer(int playerStartingPositionX, int playerStartingPositionY) {
         player = new Player(tileMaps);
         player.setPosition(playerStartingPositionX, playerStartingPositionY);
-    }
-
-    private void playMusic() {
-        if(!GameOptions.IS_PLAY_MUSIC_ON)
-            return;
-
-        bgMusic = new AudioPlayer(bgMusicSoundFileName);
-        bgMusic.play();
     }
 
     private void populateTileMaps() {
@@ -282,15 +272,6 @@ public abstract class BaseLevel extends GameState  {
         if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
         if(k == KeyEvent.VK_Q) hud.ToggleQuestLog();
 
-        if(k == KeyEvent.VK_F1) {
-            var currentVolume = bgMusic.getVolume();
-            bgMusic.setVolume(currentVolume-0.1f);
-        }
-        if(k == KeyEvent.VK_F2) {
-            var currentVolume = bgMusic.getVolume();
-            bgMusic.setVolume(currentVolume+0.1f);
-        }
-
         if(k == KeyEvent.VK_1) quickTravel(1);
         if(k == KeyEvent.VK_2) quickTravel(2);
         if(k == KeyEvent.VK_3) quickTravel(6);
@@ -319,14 +300,6 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void quickTravel(int levelNumber) {
-        if(!GameOptions.ISDEBUGMODE)
-            return;
-
         gsm.setState(levelNumber);
-    }
-
-    public void stopBackGroundMusic() {
-        if(bgMusic != null)
-            bgMusic.stop();
     }
 }

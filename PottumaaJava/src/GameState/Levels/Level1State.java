@@ -1,9 +1,10 @@
-package GameState;
+package GameState.Levels;
 
 import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.House;
+import GameState.*;
 import MapPoint.MapPoint;
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,7 +19,7 @@ public class Level1State extends BaseLevel {
 				"/Tilesets/obstacles.png",
 				"/Maps/map1.csv",
 				"/Maps/map1_obstacles.csv",
-				"/Music/happymusic.wav"
+				"/Music/bensound-ukulele.wav"
 				);
 	}
 

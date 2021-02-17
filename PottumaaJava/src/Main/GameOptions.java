@@ -19,5 +19,5 @@ public class GameOptions {
         ISDEBUGMODE = !ISDEBUGMODE;
     }
 
-    public static void ToggleMusicOnOff() {IS_PLAY_MUSIC_ON = !IS_PLAY_MUSIC_ON; }
+    public static void ToggleMusicOnOff() { IS_PLAY_MUSIC_ON = !IS_PLAY_MUSIC_ON; }
 }

@@ -142,6 +142,8 @@ public class MapEditorState extends GameState {
 	}
 
 	private void DrawTexts(Graphics2D g) {
+		var font = new Font("Arial", Font.PLAIN, 12);
+		g.setFont(font);
 		g.setColor(Color.BLUE);
 		if(GridSelection) {
 			g.drawString("Press Enter to select", helpTextsLocationX, helpTextsLocationY + 80);

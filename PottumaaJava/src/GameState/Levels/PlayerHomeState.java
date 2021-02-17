@@ -1,27 +1,19 @@
-package GameState;
+package GameState.Levels;
 
-import Entity.Enemies.EnemyFactory;
-import Entity.Enemies.EnemySettings;
-import Entity.NPCs.MrPotatoGuy;
-import Entity.Obstacles.House;
-import Main.GamePanel;
+import GameState.*;
 import MapPoint.MapPoint;
-import TileMap.Background;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class PlayerHomeState extends BaseLevel {
 
-	private Background bg;
 
 	// TODO Piirrä talon sisätilat ja vaihda oikea tiedosto tähän.
 	public PlayerHomeState(GameStateManager gsm, int playerStartingPositionX, int playerStartingPositionY) {
 		super(gsm, playerStartingPositionX, playerStartingPositionY,
 				"/Tilesets/grasstileset.png",
 				"/Tilesets/obstacles.png",
-				"/Maps/map1.csv",
+				"/Maps/map3.csv",
 				"/Maps/map1_obstacles.csv",
 				"/Music/happymusic.wav"
 				);
