@@ -10,7 +10,7 @@ public class GameStateManager {
 	private GameState[] gameStates;
 	private int currentState;
 
-	public static final int NUMGAMESTATES = 6;
+	public static final int NUMGAMESTATES = 7;
 	//States
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
@@ -18,8 +18,10 @@ public class GameStateManager {
 	public static final int HELPSTATE = 3;
 	public static final int OPTIONSSTATE = 4;
 	public static final int MAPEDITORSTATE = 5;
-	public static final int LEVEL3STATE = 6;
-	
+	//public static final int LEVEL3STATE = 6;
+	public static final int INSIDEHOUSE = 6;
+
+
 	public GameStateManager() {
 		
 		gameStates = new GameState[NUMGAMESTATES];
@@ -52,12 +54,18 @@ public class GameStateManager {
 					playerStartingPointX = 880;
 					playerStartingPointY = 585;
 				}
+				if(previousState == INSIDEHOUSE) {
+					playerStartingPointX = 345;
+					playerStartingPointY = 200;
+				}
 				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
 			}
 			case LEVEL2STATE -> gameStates[state] = new Level2State(this, 80, 575);
 			case HELPSTATE -> gameStates[state] = new HelpState(this);
 			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
 			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
+			//case LEVEL3STATE -> gameStates[state] = new Level3State(this);
+			case INSIDEHOUSE -> gameStates[state] = new PlayerHomeState(this, 300, 300);
 			default -> throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
