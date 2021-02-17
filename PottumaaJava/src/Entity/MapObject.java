@@ -50,6 +50,7 @@ public abstract class MapObject {
 	protected int currentAction;
 	protected int previousAction;
 	protected boolean facingRight;
+	protected boolean facingUp;
 	
 	// movement
 	protected boolean left;
@@ -251,6 +252,8 @@ public abstract class MapObject {
 			);
 		}
 		else {
+			//todo: tämä tarkoitti ennen vasemmalle menoa, mutta nykyään tarkoittaa vasemalle, ylös ja alas menoa.
+			//todo: koodaa else iffit eri suuntiin menoille.
 			g.drawImage(
 				animation.getImage(),
 				(int)(x + xmap - width / 2 + width),

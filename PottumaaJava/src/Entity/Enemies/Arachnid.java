@@ -32,7 +32,10 @@ public class Arachnid extends Enemy {
 
 		animation.setFrames(sprites);
 		animation.setDelay(300);
-		
+
+		//suunta on yhtäaikaa ylös ja oikealle eli menee yläviistoon. MovingBall? :D
+		up = true;
+		facingUp = true;
 		right = true;
 		facingRight = true;
 
@@ -71,6 +74,19 @@ public class Arachnid extends Enemy {
 
 	@Override
 	protected void updatePosition() {
+
+		if(up) {
+			dy -= moveSpeed;
+			if(dy < -maxSpeed) {
+				dy = -maxSpeed;
+			}
+		}
+		else if(down) {
+			dy += moveSpeed;
+			if(dy > maxSpeed) {
+				dy = maxSpeed;
+			}
+		}
 		
 		// movement
 		if(left) {

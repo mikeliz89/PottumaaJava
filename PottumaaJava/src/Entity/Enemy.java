@@ -70,8 +70,9 @@ public abstract class Enemy extends MapObject {
 		updateAnimation();
 	}
 
+	//if it hits a wall, go other direction
 	private void checkWallHits() {
-		// if it hits a wall, go other direction
+		//right and left
 		if(right && dx == 0) {
 			right = false;
 			left = true;
@@ -81,6 +82,17 @@ public abstract class Enemy extends MapObject {
 			right = true;
 			left = false;
 			facingRight = true;
+		}
+		//up and down
+		if(up && dy == 0) {
+			up = false;
+			down = true;
+			facingUp = false;
+		}
+		else if(down && dy == 0) {
+			up = true;
+			down = false;
+			facingUp = true;
 		}
 	}
 
