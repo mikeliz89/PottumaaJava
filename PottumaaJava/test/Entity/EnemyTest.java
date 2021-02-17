@@ -1,7 +1,7 @@
 package Entity;
 
+import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
-import Entity.Enemies.Slugger;
 import org.junit.Test;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,11 +11,12 @@ public class EnemyTest {
 
     //private final int MAX_HEALTH = 10;
     private final ArrayList<TileMap> myTileMaps;
-    private final Slugger myEnemy;
+    private final Enemy myEnemy;
 
     public EnemyTest () {
         myTileMaps = new ArrayList<>();
-        myEnemy = new Slugger(myTileMaps, EnemySettings.SLUGGER_MAX_HEALTH);
+        var enemyFactory = new EnemyFactory(myTileMaps);
+        myEnemy = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER, 100, 100, EnemySettings.SLUGGER_MAX_HEALTH);
     }
 
     @Test

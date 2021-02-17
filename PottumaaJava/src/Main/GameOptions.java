@@ -3,6 +3,7 @@ package Main;
 public class GameOptions {
 
     public static boolean ISDEBUGMODE = false;
+    public static boolean IS_PLAY_MUSIC_ON = false;
 
     /*
      MENUSTATE = 0;
@@ -17,4 +18,6 @@ public class GameOptions {
     public static void ToggleDebugMode() {
         ISDEBUGMODE = !ISDEBUGMODE;
     }
+
+    public static void ToggleMusicOnOff() {IS_PLAY_MUSIC_ON = !IS_PLAY_MUSIC_ON; }
 }

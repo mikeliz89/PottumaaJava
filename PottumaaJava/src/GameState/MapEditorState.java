@@ -33,7 +33,7 @@ public class MapEditorState extends GameState {
 	
 	public void init() {
 
-		loadTiles("/Tilesets/grasstileset3.png");
+		loadTiles("/Tilesets/grasstileset.png");
 		keysPressed = new ArrayList<>();
 	}
 
@@ -83,7 +83,7 @@ public class MapEditorState extends GameState {
 		
 		// tiles: ground
 		TileMap tileMapGround = new TileMap(tileSize);
-		tileMapGround.loadTiles("/Tilesets/grasstileset3.png", false);
+		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
 		tileMapGround.loadMap("/Maps/map1.csv");
 		tileMapGround.setPosition(0, 0);
 		tileMapGround.setType(TileMap.GROUND);
@@ -143,7 +143,11 @@ public class MapEditorState extends GameState {
 
 	private void DrawTexts(Graphics2D g) {
 		g.setColor(Color.BLUE);
-		g.drawString("Press Enter to select", helpTextsLocationX, helpTextsLocationY + 80);
+		if(GridSelection) {
+			g.drawString("Press Enter to select", helpTextsLocationX, helpTextsLocationY + 80);
+		} else {
+			g.drawString("Press Enter start drawing", helpTextsLocationX, helpTextsLocationY + 80);
+		}
 		g.drawString("Press S to save map", helpTextsLocationX, helpTextsLocationY + 100);
 		g.drawString("Press Backspace to exit to menu", helpTextsLocationX, helpTextsLocationY + 120);
 	}
@@ -208,6 +212,10 @@ public class MapEditorState extends GameState {
 			gsm.setState(GameStateManager.MENUSTATE);
 		}
 
+		if(k == KeyEvent.VK_ENTER) {
+			ToggleGridSelection();
+		}
+
 		//Up and down keys
 		if(k == KeyEvent.VK_UP)
 			ChangeSelection(true);
@@ -217,6 +225,11 @@ public class MapEditorState extends GameState {
 		//S = Save
 		if(k == KeyEvent.VK_S)
 			SaveMap();
+	}
+
+	private boolean GridSelection = false;
+	private void ToggleGridSelection() {
+		GridSelection = !GridSelection;
 	}
 
 	private void SaveMap() {
@@ -240,6 +253,10 @@ public class MapEditorState extends GameState {
 			keysPressed.remove(keysPressed.indexOf(k));
 		}
 		
+	}
+
+	public void stopBackGroundMusic() {
+
 	}
 	
 }

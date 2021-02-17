@@ -1,11 +1,21 @@
 PottumaaJava
 ============
 
-Humorous RPG-styled Java game
+Humorous RPG-styled 2D Java game, Open Source
 
-IDE: Use IntelliJ Idea for development
+Recommended IDE: IntelliJ Idea for development
 
 Dependencies: 
+- JDK 15.0.2 (Java Development Kit)
 - Unit testing: JUnit.4.13
 
-Set Resources-folder as resources to images to work correctly
+In Project Structure settings
+add following Libraries from Maven:
+- junit:junit:4.13 (includes hamcrest-core)
+- org.junit.jupiter:junit-jupiter:5.6.0-M1
+
+Set src and test folders as Sources.
+Set Resources-folder as Resources to images to work correctly
+
+Project compiler output:
+- your bin -folder, for example D:\PottumaaJava\PottumaaJava\bin

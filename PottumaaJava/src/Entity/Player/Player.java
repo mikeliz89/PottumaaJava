@@ -1,13 +1,10 @@
 package Entity.Player;
 
 import Audio.AudioPlayer;
-import Entity.Animation;
-import Entity.Enemy;
-import Entity.FireBall;
-import Entity.MapObject;
+import Entity.*;
 import GameState.GameStateManager;
 import Main.GameOptions;
-import TileMap.MapPoint;
+import MapPoint.MapPoint;
 import TileMap.Tile;
 import TileMap.TileMap;
 
@@ -28,6 +25,7 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	private boolean charging;
+	private int experiencePoints;
 	
 	// fireball
 	private boolean firing;
@@ -59,13 +57,15 @@ public class Player extends MapObject {
 	private static final int SCRATCHING = 6;
 	
 	private HashMap<String, AudioPlayer> sfx;
-	
+
+	private Wallet wallet;
+
 	public Player(ArrayList<TileMap> tileMaps) {
 		this.tileMaps = tileMaps;
 		width = 30;
 		height = 30;
-		cwidth = 20;
-		cheight = 20;
+		collisionBoxWidth = 20;
+		collisionBoxHeight = 20;
 		
 		moveSpeed = 0.1;
 		maxSpeed = originalMaxSpeed = 0.6;
@@ -80,33 +80,75 @@ public class Player extends MapObject {
 		
 		health = maxHealth = 5;
 		fire = maxFire = 2500;
+
+		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
 		
 		fireCost = 200;
-		fireBallDamage = 5;
-		fireBalls = new ArrayList<FireBall>();
+		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
+		fireBalls = new ArrayList<>();
 		
-		scratchDamage = 8;
+		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
 		scratchRange = 40;
-		
-		// load sprites
+
+		loadSprites();
+
+		animation = new Animation();
+		currentAction = IDLE;
+		animation.setFrames(sprites.get(IDLE));
+		animation.setDelay(400);
+
+		createWallet();
+
+		setSoundEffects();
+	}
+
+	private void createWallet() {
+		wallet = new Wallet(PlayerSettings.PLAYER_START_MONEY_AMOUNT);
+	}
+
+	public int getMoneyInWallet() {
+		return wallet.GetMoneyAmount();
+	}
+
+	public void addMoney(int money) {
+		wallet.AddMoney(money);
+	}
+
+	public boolean hasLowHealth () {
+		if(health <= 2 && maxHealth >= 5)
+			return true;
+		else if(health == 1 && maxHealth < 5)
+			return true;
+		return false;
+	}
+
+	public void addExperience(int exp) {
+		experiencePoints += exp;
+	}
+
+	public int getExperiencePointsAmount() {
+		return experiencePoints;
+	}
+
+ 	private void loadSprites() {
 		try {
-			
-			BufferedImage spritesheet = ImageIO.read(
+
+			BufferedImage spriteSheet = ImageIO.read(
 				getClass().getResourceAsStream(
 					"/Sprites/Player/playersprites.gif"
 				)
 			);
-			
-			sprites = new ArrayList<BufferedImage[]>();
+
+			sprites = new ArrayList<>();
 			for(int i = 0; i < 7; i++) {
-				
+
 				BufferedImage[] bi =
 					new BufferedImage[numFrames[i]];
-				
+
 				for(int j = 0; j < numFrames[i]; j++) {
-					
+
 					if(i != SCRATCHING) {
-						bi[j] = spritesheet.getSubimage(
+						bi[j] = spriteSheet.getSubimage(
 								j * width,
 								i * height,
 								width,
@@ -114,38 +156,32 @@ public class Player extends MapObject {
 						);
 					}
 					else {
-						bi[j] = spritesheet.getSubimage(
+						bi[j] = spriteSheet.getSubimage(
 								j * width * 2,
 								i * height,
 								width * 2,
 								height
 						);
 					}
-					
+
 				}
-				
+
 				sprites.add(bi);
-				
+
 			}
-			
+
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		animation = new Animation();
-		currentAction = IDLE;
-		animation.setFrames(sprites.get(IDLE));
-		animation.setDelay(400);
-
-		setSoundEffects();
 	}
 
 	private void setSoundEffects() {
-		sfx = new HashMap<String, AudioPlayer>();
-		//sfx.put("jump", new AudioPlayer("/SFX/jump.mp3"));
-		//sfx.put("scratch", new AudioPlayer("/SFX/scratch.mp3"));
-		//sfx.put("fireball", new AudioPlayer("/SFX/fireball.mp3"));
+		sfx = new HashMap<>();
+		sfx.put("jump", new AudioPlayer("/SFX/jump.wav"));
+		sfx.put("scratch", new AudioPlayer("/SFX/scratch.wav"));
+		sfx.put("fireball", new AudioPlayer("/SFX/fireball.wav"));
+		sfx.put("playerGetsHit", new AudioPlayer("/SFX/playerGetsHit.wav"));
 	}
 	
 	public int getHealth() { return health; }
@@ -188,10 +224,10 @@ public class Player extends MapObject {
 //		System.out.println("x " + levelPoint.getx());
 //		System.out.println("y " + levelPoint.gety());
 		
-		if(x > levelPoint.getx() && 
-				x < levelPoint.getx() + levelPoint.getImage().getWidth() &&
-				y > levelPoint.gety() &&
-				y < levelPoint.gety() + levelPoint.getImage().getHeight()) {
+		if(x > levelPoint.getX() &&
+				x < levelPoint.getX() + levelPoint.getImage().getWidth() &&
+				y > levelPoint.getY() &&
+				y < levelPoint.getY() + levelPoint.getImage().getHeight()) {
 			gsm.setState(levelPoint.getGotoLevel());
 		}
 //		if(intersects(e)) {
@@ -208,43 +244,48 @@ public class Player extends MapObject {
 			if (scratching) {
 				if (facingRight) {
 					if (
-							e.getx() > x &&
-									e.getx() < x + scratchRange &&
-									e.gety() > y - height / 2 &&
-									e.gety() < y + height / 2
+							e.getX() > x &&
+									e.getX() < x + scratchRange &&
+									e.getY() > y - height / 2 &&
+									e.getY() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
 				} else {
 					if (
-							e.getx() < x &&
-									e.getx() > x - scratchRange &&
-									e.gety() > y - height / 2 &&
-									e.gety() < y + height / 2
+							e.getX() < x &&
+									e.getX() > x - scratchRange &&
+									e.getY() > y - height / 2 &&
+									e.getY() < y + height / 2
 					) {
 						e.hit(scratchDamage);
 					}
 				}
 			}
 
-			// fireballs
-			for (FireBall fireBall : fireBalls) {
-				if (fireBall.intersects(e)) {
-					e.hit(fireBallDamage);
-					fireBall.setHit();
-					break;
-				}
-			}
+			checkFireBallCollisions(e);
 
-			// check enemy collision
-			if (intersects(e)) {
-				hit(e.getDamage());
-			}
-
+			checkEnemyCollision(e);
 		}
 		
 	}
-	
+
+	private void checkFireBallCollisions(Enemy e) {
+		for (FireBall fireBall : fireBalls) {
+			if (fireBall.intersects(e)) {
+				e.hit(fireBallDamage);
+				fireBall.setHit();
+				break;
+			}
+		}
+	}
+
+	private void checkEnemyCollision(Enemy e) {
+		if (intersects(e)) {
+			hit(e.getDamage());
+		}
+	}
+
 	public void hit(int damage) {
 		if(flinching) return;
 		health -= damage;
@@ -252,6 +293,8 @@ public class Player extends MapObject {
 		if(health == 0) dead = true;
 		flinching = true;
 		flinchTimer = System.nanoTime();
+
+		playSoundEffect("playerGetsHit");
 	}
 	
 	private void getNextPosition() {
@@ -350,8 +393,7 @@ public class Player extends MapObject {
 	}
 
 	private void playSoundEffect(String soundEffectName) {
-		//todo: Korjaa ääniefektien soittaminen
-		//sfx.get(soundEffectName).play();
+		sfx.get(soundEffectName).play();
 	}
 	
 	public void update() {
@@ -363,16 +405,39 @@ public class Player extends MapObject {
 			checkTileMapCollision(tm);
 		}
 		setPosition(xtemp, ytemp);
-		
-		// check attack has stopped
+
+		checkAttackHasStopped();
+
+		fireBallAttack();
+
+		updateFireBalls();
+
+		// check done flinching
+		if(flinching) {
+			long elapsed =
+				(System.nanoTime() - flinchTimer) / 1000000;
+			if(elapsed > 1000) {
+				flinching = false;
+			}
+		}
+
+		setAnimation();
+
+		animation.update();
+
+		updateDirection();
+	}
+
+	private void checkAttackHasStopped() {
 		if(currentAction == SCRATCHING) {
 			if(animation.hasPlayedOnce()) scratching = false;
 		}
 		if(currentAction == FIREBALL) {
 			if(animation.hasPlayedOnce()) firing = false;
 		}
-		
-		// fireball attack
+	}
+
+	private void fireBallAttack() {
 		fire += 1;
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL) {
@@ -383,26 +448,9 @@ public class Player extends MapObject {
 				fireBalls.add(fb);
 			}
 		}
-		
-		// update fireballs
-		for(int i = 0; i < fireBalls.size(); i++) {
-			fireBalls.get(i).update();
-			if(fireBalls.get(i).shouldRemove()) {
-				fireBalls.remove(i);
-				i--;
-			}
-		}
-		
-		// check done flinching
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed > 1000) {
-				flinching = false;
-			}
-		}
-		
-		// set animation
+	}
+
+	private void setAnimation() {
 		if(scratching) { //scratch
 			if(currentAction != SCRATCHING) {
 				playSoundEffect("scratch");
@@ -454,17 +502,25 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		
-		animation.update();
-		
-		// set direction
+	}
+
+	private void updateFireBalls() {
+		for(int i = 0; i < fireBalls.size(); i++) {
+			fireBalls.get(i).update();
+			if(fireBalls.get(i).shouldRemove()) {
+				fireBalls.remove(i);
+				i--;
+			}
+		}
+	}
+
+	private void updateDirection() {
 		if(currentAction != SCRATCHING && currentAction != FIREBALL) {
 			if(right) facingRight = true;
 			if(left) facingRight = false;
 		}
-		
 	}
-	
+
 	public void draw(Graphics2D g) {
 		
 		setMapPosition();
@@ -477,7 +533,6 @@ public class Player extends MapObject {
 		DrawDebugArea(g);
 
 		super.draw(g);
-		
 	}
 
 	private void DrawDebugArea(Graphics2D g) {
@@ -519,6 +574,13 @@ public class Player extends MapObject {
 		}
 	}
 
+	public int getFireBallDamage() {
+		return fireBallDamage;
+	}
+
+	public int getScratchDamage(){
+		return scratchDamage;
+	}
 }
 
 

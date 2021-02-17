@@ -10,7 +10,7 @@ public class TileMapTest {
 
     public TileMapTest() {
         myTileMap = new TileMap(30);
-        myTileMap.loadTiles("/Tilesets/grasstileset3.png", false);
+        myTileMap.loadTiles("/Tilesets/grasstileset.png", false);
         myTileMap.loadMap("/Maps/map1.csv");
         myTileMap.setPosition(0, 0);
         myTileMap.setType(TileMap.GROUND);

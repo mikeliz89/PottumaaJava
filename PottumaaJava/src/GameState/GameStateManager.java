@@ -11,12 +11,14 @@ public class GameStateManager {
 	private int currentState;
 
 	public static final int NUMGAMESTATES = 6;
+	//States
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
 	public static final int LEVEL2STATE = 2;
 	public static final int HELPSTATE = 3;
 	public static final int OPTIONSSTATE = 4;
 	public static final int MAPEDITORSTATE = 5;
+	public static final int LEVEL3STATE = 6;
 	
 	public GameStateManager() {
 		
@@ -27,36 +29,49 @@ public class GameStateManager {
 		
 		loadState(currentState);
 	}
-	
+
 	private void loadState(int state) {
-		if(state == MENUSTATE) {
-			gameStates[state] = new MenuState(this);
-		}
-		if(state == LEVEL1STATE) {
-			gameStates[state] = new Level1State(this);
-		}
-		if(state == LEVEL2STATE) { 
-			gameStates[state] = new Level2State(this);
-		}
-		if(state == HELPSTATE) {
-			gameStates[state] = new HelpState(this);
-		}
-		if(state == OPTIONSSTATE) {
-			gameStates[state] = new OptionsState(this);
-		}
-		if(state == MAPEDITORSTATE) {
-			gameStates[state] = new MapEditorState(this);
+		loadState(state, -1);
+	}
+	
+	private void loadState(int state, int previousState) {
+
+		switch (state) {
+			case MENUSTATE -> gameStates[state] = new MenuState(this);
+			case LEVEL1STATE -> {
+
+				var playerStartingPointX = 0;
+				var playerStartingPointY = 0;
+				//Quick and dirty
+				if(previousState == MENUSTATE ||
+						previousState == LEVEL1STATE) {
+					playerStartingPointX = 40;
+					playerStartingPointY = 100;
+				}
+				if(previousState == LEVEL2STATE) {
+					playerStartingPointX = 880;
+					playerStartingPointY = 585;
+				}
+				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
+			}
+			case LEVEL2STATE -> gameStates[state] = new Level2State(this, 80, 575);
+			case HELPSTATE -> gameStates[state] = new HelpState(this);
+			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
+			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
+			default -> throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
 	
 	private void unloadState(int state) {
+		gameStates[state].stopBackGroundMusic();
 		gameStates[state] = null;
 	}
 	
 	public void setState(int state) {
 		unloadState(currentState);
+		int previousState = currentState;
 		currentState = state;
-		loadState(currentState);
+		loadState(currentState, previousState);
 	}
 	
 	public void update() {
@@ -86,9 +101,10 @@ public class GameStateManager {
 		
 		gameStates[currentState].keyPressed(k);
 		
-		if(k == KeyEvent.VK_ESCAPE) System.exit(0);
+		if(k == KeyEvent.VK_ESCAPE) setState(MENUSTATE);
 
 		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
+		if(k == KeyEvent.VK_T) GameOptions.ToggleMusicOnOff();
 	}
 	
 	public void keyReleased(int k) {

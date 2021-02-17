@@ -65,6 +65,8 @@ public class HelpState extends GameState {
 	}
 
 	private void DrawMenuOptions(Graphics2D g) {
+
+		var x = 175;
 		g.setFont(font);
 		for(int i = 0; i < options.length; i++) {
 			if(i == currentChoice) {
@@ -73,18 +75,20 @@ public class HelpState extends GameState {
 			else {
 				g.setColor(Color.RED);
 			}
-			g.drawString(options[i], 175, 140 + i * 15);
+			g.drawString(options[i], x, 140 + i * 15);
 		}
 
 		g.setColor(Color.BLACK);
 
-		g.drawString("Press D to toggle DebugMode", 175, 200);
-		g.drawString("Press R to claw attack", 175, 240);
-		g.drawString("Press F to shoot fireballs", 175, 260);
-		g.drawString("Press Left Shift to run", 175, 280);
-		g.drawString("Press Esc to exit game", 175, 300);
-
-
+		g.drawString("Press D to toggle DebugMode", x, 200);
+		g.drawString("Press T to toggle music on/off", x, 220);
+		g.drawString("Press R to use claw attack", x, 240);
+		g.drawString("Press F to shoot fireballs", x, 260);
+		g.drawString("Press Left Shift to run", x, 280);
+		g.drawString("Press I to open inventory", x, 300);
+		g.drawString("Press M to open map", x, 320);
+		g.drawString("Press Q to open quest log", x, 340);
+		g.drawString("Press Esc to exit to menu", x, 360);
 	}
 
 	private void select() {
@@ -112,7 +116,11 @@ public class HelpState extends GameState {
 	}
 	public void keyReleased(int k) {}
 
-	
+	public void stopBackGroundMusic() {
+
+	}
+
+
 }
 
 

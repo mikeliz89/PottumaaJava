@@ -1,6 +1,7 @@
 package GameState;
 
 import Audio.AudioPlayer;
+import Main.GameOptions;
 import Main.GamePanel;
 import TileMap.Background;
 
@@ -25,7 +26,7 @@ public class MenuState extends GameState {
 	
 	private Font font;
 	
-//	private AudioPlayer bgMusic;
+	private AudioPlayer bgMusic;
 	
 	public MenuState(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -33,8 +34,7 @@ public class MenuState extends GameState {
 	}
 	
 	public void init() {
-//		bgMusic = new AudioPlayer("/Music/menu-joesatriani.mp3");
-//		bgMusic.play();
+
 		try {
 			//Background image
 			bg = new Background("/Backgrounds/menubg.png", 0.1);
@@ -50,6 +50,17 @@ public class MenuState extends GameState {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		playMusic();
+	}
+
+	private void playMusic() {
+		if(!GameOptions.IS_PLAY_MUSIC_ON)
+			return;
+
+		//https://www.bensound.com/royalty-free-music/track/ukulele
+		bgMusic = new AudioPlayer("/Music/bensound-ukulele.wav");
+		bgMusic.play();
 	}
 	
 	public void update() {
@@ -91,7 +102,6 @@ public class MenuState extends GameState {
 	private void select() {
 		if(currentChoice == 0) {
 			gsm.setState(GameStateManager.LEVEL1STATE);
-//			bgMusic.stop();
 		}
 		if(currentChoice == 1) {
 			gsm.setState(GameStateManager.OPTIONSSTATE);
@@ -123,8 +133,22 @@ public class MenuState extends GameState {
 				currentChoice = 0;
 			}
 		}
+
+		if(k == KeyEvent.VK_F1) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume-0.1f);
+		}
+		if(k == KeyEvent.VK_F2) {
+			var currentVolume = bgMusic.getVolume();
+			bgMusic.setVolume(currentVolume+0.1f);
+		}
 	}
 	public void keyReleased(int k) {}
+
+	public void stopBackGroundMusic() {
+		if(bgMusic != null)
+			bgMusic.stop();
+	}
 	
 }
 

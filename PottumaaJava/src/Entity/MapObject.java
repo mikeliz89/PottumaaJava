@@ -11,7 +11,6 @@ public abstract class MapObject {
 	
 	// tile stuff
 	protected ArrayList<TileMap> tileMaps;
-//	protected int tileSize;
 	protected double xmap;
 	protected double ymap;
 	
@@ -26,8 +25,8 @@ public abstract class MapObject {
 	protected int height;
 	
 	// collision box
-	protected int cwidth;
-	protected int cheight;
+	protected int collisionBoxWidth;
+	protected int collisionBoxHeight;
 	
 	// collision
 	protected int currRow;
@@ -51,6 +50,7 @@ public abstract class MapObject {
 	protected int currentAction;
 	protected int previousAction;
 	protected boolean facingRight;
+	protected boolean facingUp;
 	
 	// movement
 	protected boolean left;
@@ -87,19 +87,19 @@ public abstract class MapObject {
 	
 	public Rectangle getRectangle() {
 		return new Rectangle(
-				(int)x - cwidth,
-				(int)y - cheight,
-				cwidth,
-				cheight
+				(int)x - collisionBoxWidth,
+				(int)y - collisionBoxHeight,
+				collisionBoxWidth,
+				collisionBoxHeight
 		);
 	}
 	
 	public void calculateCorners(double x, double y, TileMap tileMap) {
 		
-		 leftTile = (int)(x - cwidth / 2) / tileMap.getTileSize();
-		 rightTile = (int)(x + cwidth / 2 - 1) / tileMap.getTileSize();
-		 topTile = (int)(y - cheight / 2) / tileMap.getTileSize();
-		 bottomTile = (int)(y + cheight / 2 - 1) / tileMap.getTileSize();
+		 leftTile = (int)(x - collisionBoxWidth / 2) / tileMap.getTileSize();
+		 rightTile = (int)(x + collisionBoxWidth / 2 - 1) / tileMap.getTileSize();
+		 topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
+		 bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
 		 
 		int topleft = tileMap.getTileType(topTile, leftTile);
 		int topright = tileMap.getTileType(topTile, rightTile);
@@ -123,68 +123,62 @@ public abstract class MapObject {
 		
 		xtemp = x;
 		ytemp = y;
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tileMap = tileMaps.get(i);
-		
+
+		for (TileMap tileMap : tileMaps) {
 			calculateCorners(x, ydest, tileMap);
-			if(dy < 0) {
-				if(topLeft || topRight) {
+			if (dy < 0) {
+				if (topLeft || topRight) {
 					dy = 0;
-					ytemp = currRow * tm.getTileSize() + cheight / 2;
-				}
-				else {
+					ytemp = currRow * tm.getTileSize() + collisionBoxHeight / 2;
+				} else {
 					ytemp += dy;
 				}
 			}
-			if(dy > 0) {
-				if(bottomLeft || bottomRight) {
-	
+			if (dy > 0) {
+				if (bottomLeft || bottomRight) {
+
 					dy = 0;
 					falling = false;
-					ytemp = (currRow + 1) * tm.getTileSize() - cheight / 2;
-				}
-				else {
+					ytemp = (currRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
+				} else {
 					ytemp += dy;
 				}
 			}
-			
+
 			calculateCorners(xdest, y, tileMap);
-			if(dx < 0) {
-				if(topLeft || bottomLeft) {
+			if (dx < 0) {
+				if (topLeft || bottomLeft) {
 					dx = 0;
-					xtemp = currCol * tm.getTileSize() + cwidth / 2;
-				}
-				else {
+					xtemp = currCol * tm.getTileSize() + collisionBoxWidth / 2;
+				} else {
 					xtemp += dx;
 				}
 			}
-			if(dx > 0) {
-				if(topRight || bottomRight) {
+			if (dx > 0) {
+				if (topRight || bottomRight) {
 					dx = 0;
-					xtemp = (currCol + 1) * tm.getTileSize() - cwidth / 2;
-				}
-				else {
+					xtemp = (currCol + 1) * tm.getTileSize() - collisionBoxWidth / 2;
+				} else {
 					xtemp += dx;
 				}
 			}
-		
-			if(!falling) {
+
+			if (!falling) {
 				calculateCorners(x, ydest + 1, tileMap);
-				if(!bottomLeft && !bottomRight) {
-	//				falling = true;
-				}
+				//if (!bottomLeft && !bottomRight) {
+					//				falling = true;
+				//}
 			}
 		}
 		
 	}
 	
-	public int getx() { return (int)x; }
-	public int gety() { return (int)y; }
+	public int getX() { return (int)x; }
+	public int getY() { return (int)y; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
-	public int getCWidth() { return cwidth; }
-	public int getCHeight() { return cheight; }
+	public int getCollisionBoxWidth() { return collisionBoxWidth; }
+	public int getCollisionbBoxHeight() { return collisionBoxHeight; }
 	
 	protected void checkCharging() {
 		if(charging) {
@@ -222,9 +216,8 @@ public abstract class MapObject {
 	}
 	
 	public void setMapPosition() {
-		
-		for(int i = 0; i < tileMaps.size(); i++) {
-			TileMap tileMap = tileMaps.get(i);
+
+		for (TileMap tileMap : tileMaps) {
 			xmap = tileMap.getx();
 			ymap = tileMap.gety();
 		}
@@ -244,6 +237,12 @@ public abstract class MapObject {
 	}
 	
 	public void draw(java.awt.Graphics2D g) {
+
+		//todo: onko tämä turha tarkistus?
+		if(!animation.hasFrames()) {
+			return;
+		}
+
 		if(facingRight) {
 			g.drawImage(
 				animation.getImage(),
@@ -253,6 +252,8 @@ public abstract class MapObject {
 			);
 		}
 		else {
+			//todo: tämä tarkoitti ennen vasemmalle menoa, mutta nykyään tarkoittaa vasemalle, ylös ja alas menoa.
+			//todo: koodaa else iffit eri suuntiin menoille.
 			g.drawImage(
 				animation.getImage(),
 				(int)(x + xmap - width / 2 + width),

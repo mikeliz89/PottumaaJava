@@ -58,7 +58,6 @@ public class OptionsState extends GameState {
 	}
 
 	private void DrawBackground(Graphics2D g) {
-		// draw bg
 		bg.draw(g);
 	}
 
@@ -108,6 +107,10 @@ public class OptionsState extends GameState {
 		}
 	}
 	public void keyReleased(int k) {}
+
+	public void stopBackGroundMusic() {
+
+	}
 
 	
 }
