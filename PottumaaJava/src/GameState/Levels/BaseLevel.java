@@ -274,7 +274,7 @@ public abstract class BaseLevel extends GameState  {
 
         if(k == KeyEvent.VK_1) quickTravel(1);
         if(k == KeyEvent.VK_2) quickTravel(2);
-        //if(k == KeyEvent.VK_3) quickTravel(3);
+        if(k == KeyEvent.VK_3) quickTravel(6);
     }
 
     public void keyReleased(int k) {

@@ -38,6 +38,7 @@ public class AudioPlayer {
 	}
 	
 	public void play() {
+		//testikommentti
 		if(clip == null) return;
 		stop();
 		clip.setFramePosition(0);
