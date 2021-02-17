@@ -69,29 +69,6 @@ public class Slugger extends Enemy {
 		}
 	}
 
-	@Override
-	protected void updatePosition() {
-
-		// movement
-		if(left) {
-			dx -= moveSpeed;
-			if(dx < -maxSpeed) {
-				dx = -maxSpeed;
-			}
-		}
-		else if(right) {
-			dx += moveSpeed;
-			if(dx > maxSpeed) {
-				dx = maxSpeed;
-			}
-		}
-
-		// falling
-		if(falling) {
-			dy += fallSpeed;
-		}
-	}
-
 	private void setSoundEffects() {
 		sfx.put("deathCry", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
 		sfx.put("idleSound", new AudioPlayer("/SFX/slimy.wav"));

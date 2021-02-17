@@ -72,42 +72,6 @@ public class Arachnid extends Enemy {
 		}
 	}
 
-	@Override
-	protected void updatePosition() {
-
-		if(up) {
-			dy -= moveSpeed;
-			if(dy < -maxSpeed) {
-				dy = -maxSpeed;
-			}
-		}
-		else if(down) {
-			dy += moveSpeed;
-			if(dy > maxSpeed) {
-				dy = maxSpeed;
-			}
-		}
-		
-		// movement
-		if(left) {
-			dx -= moveSpeed;
-			if(dx < -maxSpeed) {
-				dx = -maxSpeed;
-			}
-		}
-		else if(right) {
-			dx += moveSpeed;
-			if(dx > maxSpeed) {
-				dx = maxSpeed;
-			}
-		}
-		
-		// falling
-		if(falling) {
-			dy += fallSpeed;
-		}
-	}
-
 	private void setSoundEffects() {
 		sfx.put("deathCry", new AudioPlayer("/SFX/arachnidDeathCry.wav"));
 		sfx.put("idleSound", new AudioPlayer("/SFX/eating.wav"));
