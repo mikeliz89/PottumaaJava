@@ -3,6 +3,7 @@ package GameState;
 import Audio.AudioPlayer;
 import GameState.Levels.Level1State;
 import GameState.Levels.Level2State;
+import GameState.Levels.PlayerHomeState;
 import GameState.Menu.HelpState;
 import GameState.Menu.MainMenuState;
 import GameState.Menu.OptionsState;
@@ -15,7 +16,7 @@ public class GameStateManager {
 	
 	private GameState[] gameStates;
 	private int currentState;
-	public static final int NUMGAMESTATES = 6;
+	public static final int NUMGAMESTATES = 7;
 	//States
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
@@ -23,7 +24,8 @@ public class GameStateManager {
 	public static final int HELPSTATE = 3;
 	public static final int OPTIONSSTATE = 4;
 	public static final int MAPEDITORSTATE = 5;
-	public static final int LEVEL3STATE = 6;
+	//public static final int LEVEL3STATE = 6;
+	public static final int INSIDEHOUSE = 6;
 
 	private AudioPlayer bgMusic;
 	//https://www.bensound.com/royalty-free-music/track/ukulele
@@ -67,6 +69,10 @@ public class GameStateManager {
 					playerStartingPointX = 880;
 					playerStartingPointY = 585;
 				}
+				if(previousState == INSIDEHOUSE) {
+					playerStartingPointX = 345;
+					playerStartingPointY = 200;
+				}
 				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
 				changeSong(songToPlay);
 			}
@@ -74,6 +80,8 @@ public class GameStateManager {
 			case HELPSTATE -> gameStates[state] = new HelpState(this);
 			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
 			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
+			//case LEVEL3STATE -> gameStates[state] = new Level3State(this);
+			case INSIDEHOUSE -> gameStates[state] = new PlayerHomeState( this, 300, 300);
 			default -> throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
@@ -180,6 +188,10 @@ public class GameStateManager {
 			return;
 		var currentVolume = bgMusic.getVolume();
 		bgMusic.setVolume(currentVolume - volumeStep);
+	}
+
+	public float getBackgroundMusicVolume() {
+		return bgMusic.getVolume();
 	}
 	
 }
