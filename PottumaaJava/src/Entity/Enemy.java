@@ -17,10 +17,8 @@ public abstract class Enemy extends MapObject {
 	protected boolean flinching;
 	protected long flinchTimer;
 	protected int enemyType;
-
-	HealthBar healthBar;
-
-	private HashMap<String, AudioPlayer> sfx;
+	private HealthBar healthBar;
+	protected HashMap<String, AudioPlayer> sfx;
 	
 	public Enemy(java.util.ArrayList<TileMap> tileMaps, int maxHealth) {
 		this.tileMaps = tileMaps;
@@ -29,8 +27,8 @@ public abstract class Enemy extends MapObject {
 
 		//todo: Tee vaihtuva healthBarin korkeus per enemy tyyppi
 		healthBar = new HealthBar(3, this.maxHealth);
-
-		setSoundEffects();
+		sfx = new HashMap<>();
+		animation = new Animation();
 	}
 
 	public int getEnemyType() {
@@ -58,16 +56,61 @@ public abstract class Enemy extends MapObject {
 		return this.health;
 	}
 	
-	public void update() {}
+	public void update() {
+		updatePosition();
+
+		checkCollisions();
+
+		setPosition(xtemp, ytemp);
+
+		updateFlinching();
+
+		checkWallHits();
+
+		updateAnimation();
+	}
+
+	private void checkWallHits() {
+		// if it hits a wall, go other direction
+		if(right && dx == 0) {
+			right = false;
+			left = true;
+			facingRight = false;
+		}
+		else if(left && dx == 0) {
+			right = true;
+			left = false;
+			facingRight = true;
+		}
+	}
+
+	private void updateFlinching() {
+		if(flinching) {
+			long elapsed =
+					(System.nanoTime() - flinchTimer) / 1000000;
+			if(elapsed > 400) {
+				flinching = false;
+			}
+		}
+	}
+
+	private void updateAnimation() {
+		animation.update();
+	}
+	
+	private void checkCollisions() {
+		for (TileMap tm : tileMaps) {
+			checkTileMapCollision(tm);
+		}
+	}
+
+	protected void updatePosition() {
+
+	}
 
 	private void Die() {
 		dead = true;
 		playSoundEffect("deathCry");
-	}
-
-	private void setSoundEffects() {
-		sfx = new HashMap<>();
-		sfx.put("deathCry", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
 	}
 
 	private void playSoundEffect(String soundEffectName) {
@@ -81,8 +124,23 @@ public abstract class Enemy extends MapObject {
 	public int getExperienceGainedWhenKilled() { return experienceGainedWhenKilled; }
 
 	public void draw(Graphics2D g) {
+		//Enemy is not drawn when flinching etc.
+		if (drawEnemy()) return;
+
 		super.draw(g);
+		setMapPosition();
 		drawHealthBar(g);
+	}
+
+	private boolean drawEnemy() {
+		if(flinching) {
+			long elapsed =
+					(System.nanoTime() - flinchTimer) / 1000000;
+			if(elapsed / 100 % 2 == 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void drawHealthBar(Graphics2D g) {

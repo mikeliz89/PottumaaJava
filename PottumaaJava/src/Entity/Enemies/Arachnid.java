@@ -1,20 +1,15 @@
 package Entity.Enemies;
 
 import Audio.AudioPlayer;
-import Entity.Animation;
 import Entity.Enemy;
 import TileMap.TileMap;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Arachnid extends Enemy {
 
 	private BufferedImage[] sprites;
-	private HashMap<String, AudioPlayer> sfx;
 
 	public Arachnid(ArrayList<TileMap> tileMaps, int maxHealth) {
 		
@@ -35,7 +30,6 @@ public class Arachnid extends Enemy {
 
 		loadSprites();
 
-		animation = new Animation();
 		animation.setFrames(sprites);
 		animation.setDelay(300);
 		
@@ -75,7 +69,8 @@ public class Arachnid extends Enemy {
 		}
 	}
 
-	private void getNextPosition() {
+	@Override
+	protected void updatePosition() {
 		
 		// movement
 		if(left) {
@@ -95,64 +90,11 @@ public class Arachnid extends Enemy {
 		if(falling) {
 			dy += fallSpeed;
 		}
-		
-	}
-	
-	public void update() {
-
-		//playSoundEffect("slimy");
-
-		// update position
-		getNextPosition();
-
-		for (TileMap tm : tileMaps) {
-			checkTileMapCollision(tm);
-		}
-		setPosition(xtemp, ytemp);
-		
-		// check flinching
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed > 400) {
-				flinching = false;
-			}
-		}
-		
-		// if it hits a wall, go other direction
-		if(right && dx == 0) {
-			right = false;
-			left = true;
-			facingRight = false;
-		}
-		else if(left && dx == 0) {
-			right = true;
-			left = false;
-			facingRight = true;
-		}
-		
-		// update animation
-		animation.update();
-		
-	}
-	
-	public void draw(Graphics2D g) {
-		
-		//if(notOnScreen()) return;
-		
-		setMapPosition();
-		
-		super.draw(g);
-		
 	}
 
 	private void setSoundEffects() {
-		sfx = new HashMap<>();
-		sfx.put("slimy", new AudioPlayer("/SFX/slimy.wav"));
-	}
-
-	private void playSoundEffect(String soundEffectName) {
-		sfx.get(soundEffectName).play();
+		sfx.put("deathCry", new AudioPlayer("/SFX/arachnidDeathCry.wav"));
+		sfx.put("idleSound", new AudioPlayer("/SFX/eating.wav"));
 	}
 	
 }
