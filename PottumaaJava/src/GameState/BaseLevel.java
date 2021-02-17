@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-public class BaseLevel extends GameState  {
+public abstract class BaseLevel extends GameState  {
     protected ArrayList<TileMap> tileMaps;
     private Player player;
     protected ArrayList<Enemy> enemies;
