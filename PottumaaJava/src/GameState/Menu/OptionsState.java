@@ -38,6 +38,10 @@ public class OptionsState extends BaseMenuState {
 		super.draw(g);
 		var musicValueRounded = MathHelper.roundFloat(gsm.getBackgroundMusicVolume(), 1);
 		g.drawString("music volume: " + musicValueRounded, 175, 250);
+
+		g.setColor(Color.GRAY);
+		g.setFont(new Font("Arial", Font.PLAIN, 14));
+		g.drawString("F1=volume down, F2=volume up", 175, 280);
 	}
 	
 }
