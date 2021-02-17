@@ -1,5 +1,11 @@
 package GameState;
 
+import Audio.AudioPlayer;
+import GameState.Levels.Level1State;
+import GameState.Levels.Level2State;
+import GameState.Menu.HelpState;
+import GameState.Menu.MainMenuState;
+import GameState.Menu.OptionsState;
 import Main.GameOptions;
 
 import java.awt.Graphics2D;
@@ -9,7 +15,6 @@ public class GameStateManager {
 	
 	private GameState[] gameStates;
 	private int currentState;
-
 	public static final int NUMGAMESTATES = 6;
 	//States
 	public static final int MENUSTATE = 0;
@@ -19,6 +24,11 @@ public class GameStateManager {
 	public static final int OPTIONSSTATE = 4;
 	public static final int MAPEDITORSTATE = 5;
 	public static final int LEVEL3STATE = 6;
+
+	private AudioPlayer bgMusic;
+	//https://www.bensound.com/royalty-free-music/track/ukulele
+	private String bgMusicFileName = "/Music/happymusic.wav";
+	private String songToPlay;
 	
 	public GameStateManager() {
 		
@@ -26,6 +36,8 @@ public class GameStateManager {
 
 		//Ensin menu
 		currentState = GameOptions.FIRSTSTATE;
+		bgMusic = new AudioPlayer(bgMusicFileName);
+		playMusic();
 		
 		loadState(currentState);
 	}
@@ -37,7 +49,10 @@ public class GameStateManager {
 	private void loadState(int state, int previousState) {
 
 		switch (state) {
-			case MENUSTATE -> gameStates[state] = new MenuState(this);
+			case MENUSTATE -> {
+				gameStates[state] = new MainMenuState(this);
+				changeSong(songToPlay);
+			}
 			case LEVEL1STATE -> {
 
 				var playerStartingPointX = 0;
@@ -53,6 +68,7 @@ public class GameStateManager {
 					playerStartingPointY = 585;
 				}
 				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
+				changeSong(songToPlay);
 			}
 			case LEVEL2STATE -> gameStates[state] = new Level2State(this, 80, 575);
 			case HELPSTATE -> gameStates[state] = new HelpState(this);
@@ -63,7 +79,6 @@ public class GameStateManager {
 	}
 	
 	private void unloadState(int state) {
-		gameStates[state].stopBackGroundMusic();
 		gameStates[state] = null;
 	}
 	
@@ -104,13 +119,67 @@ public class GameStateManager {
 		if(k == KeyEvent.VK_ESCAPE) setState(MENUSTATE);
 
 		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
-		if(k == KeyEvent.VK_T) GameOptions.ToggleMusicOnOff();
+		if(k == KeyEvent.VK_T) {
+			ToggleMusicOnOff();
+		}
 	}
 	
 	public void keyReleased(int k) {
 		if(gameStates[currentState] == null) return;
 		
 		gameStates[currentState].keyReleased(k);
+	}
+
+	private void ToggleMusicOnOff() {
+		GameOptions.ToggleMusicOnOff();
+
+		if(GameOptions.IS_PLAY_MUSIC_ON) {
+			playMusic();
+		} else {
+			stopMusic();
+		}
+	}
+	public void setSongToPlay(String songToPlay) {
+		this.songToPlay = songToPlay;
+	}
+
+	private void changeSong(String songToPlay) {
+		stopMusic();
+		createNewAudioPlayer(songToPlay);
+		playMusic();
+	}
+
+	private void createNewAudioPlayer(String songToPlay) {
+		bgMusic = null;
+		bgMusic = new AudioPlayer(songToPlay);
+	}
+
+	private void playMusic() {
+		if(!GameOptions.IS_PLAY_MUSIC_ON)
+			return;
+		bgMusic.play();
+	}
+
+	private void stopMusic() {
+		if(bgMusic == null)
+			return;
+		bgMusic.stop();
+	}
+
+	private final float volumeStep = 0.1f;
+
+	public void increaseVolume() {
+		if(bgMusic == null)
+			return;
+		var currentVolume = bgMusic.getVolume();
+		bgMusic.setVolume(currentVolume + volumeStep);
+	}
+
+	public void decreaseVolume() {
+		if(bgMusic == null)
+			return;
+		var currentVolume = bgMusic.getVolume();
+		bgMusic.setVolume(currentVolume - volumeStep);
 	}
 	
 }
