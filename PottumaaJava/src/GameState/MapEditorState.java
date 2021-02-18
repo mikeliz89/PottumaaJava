@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import GameState.*;
 
 public class MapEditorState extends GameState {
 
@@ -246,34 +247,36 @@ public class MapEditorState extends GameState {
 	}
 
 	private ArrayList<String> createRows(CsvFileWriter csvFileWriter) {
-
 		var rows = new ArrayList<String>();
 		var tileCount = 30;
+		addHeaderRows(csvFileWriter, rows, tileCount);
+		addTileMapRows(csvFileWriter, rows, tileCount);
+		return rows;
+	}
 
-
-		//create header rows
-		for(int j = 0; j < 2; j++) {
-			var headerRowValues = new ArrayList<String>();
-			headerRowValues.add("30");
-			for (int i = 0; i < tileCount - 1; i++) {
-				headerRowValues.add("");
-			}
-			var headerRow = csvFileWriter.convertArrayListIntoCommaSeparatedString(headerRowValues);
-			rows.add(headerRow);
-		}
-
+	private void addTileMapRows(CsvFileWriter csvFileWriter, ArrayList<String> rows, int tileCount) {
 		var rowValues = new ArrayList<String>();
 		for(int i = 0; i < tileCount; i++) {
 			//ruoho
 			rowValues.add("8");
 		}
-
-		//create rows
 		var row = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
 		for(int i = 0; i <  tileCount; i++) {
 			rows.add(row);
 		}
-		return rows;
+	}
+
+	private void addHeaderRows(CsvFileWriter csvFileWriter, ArrayList<String> rows, int tileCount) {
+		var headerRowCount = 2;
+		for(int j = 0; j < headerRowCount; j++) {
+			var rowValues = new ArrayList<String>();
+			rowValues.add(Integer.toString(tileCount));
+			for (int i = 0; i < tileCount - 1; i++) {
+				rowValues.add("");
+			}
+			var headerRow = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
+			rows.add(headerRow);
+		}
 	}
 
 	private void ChangeSelection(boolean goingUp) {
