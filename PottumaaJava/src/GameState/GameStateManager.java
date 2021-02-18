@@ -37,7 +37,7 @@ public class GameStateManager {
 		gameStates = new GameState[NUMGAMESTATES];
 
 		//Ensin menu
-		currentState = GameOptions.FIRSTSTATE;
+		currentState = GameOptions.FIRST_STATE;
 		bgMusic = new AudioPlayer(bgMusicFileName);
 		playMusic();
 		

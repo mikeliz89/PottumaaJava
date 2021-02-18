@@ -63,7 +63,7 @@ public class MapPoint {
 	}
 
 	private void DrawDebugRectangle(Graphics2D g) {
-		if(GameOptions.ISDEBUGMODE == false)
+		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
 		g.setColor(Color.RED);

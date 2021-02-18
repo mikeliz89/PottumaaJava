@@ -2,22 +2,14 @@ package Main;
 
 public class GameOptions {
 
-    public static boolean ISDEBUGMODE = false;
+    /* Flags */
+    public static boolean IS_DEBUG_MODE = false;
     public static boolean IS_PLAY_MUSIC_ON = false;
 
-    /*
-     MENUSTATE = 0;
-	 LEVEL1STATE = 1;
-	 LEVEL2STATE = 2;
-	 HELPSTATE = 3;
-	 OPTIONSSTATE = 4;
-	 MAPEDITORSTATE = 5;
-    */
-    public static int FIRSTSTATE = 0;
+    /* States */
+    public static int FIRST_STATE = 0;
 
-    public static void ToggleDebugMode() {
-        ISDEBUGMODE = !ISDEBUGMODE;
-    }
-
+    /* functions */
+    public static void ToggleDebugMode() { IS_DEBUG_MODE = !IS_DEBUG_MODE; }
     public static void ToggleMusicOnOff() { IS_PLAY_MUSIC_ON = !IS_PLAY_MUSIC_ON; }
 }

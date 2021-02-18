@@ -270,7 +270,7 @@ public class TileMap {
 
 	private void DrawDebugRectangles(Graphics2D g, int col, int row) {
 
-		if(GameOptions.ISDEBUGMODE == false)
+		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
 		//collision rectangles revealed

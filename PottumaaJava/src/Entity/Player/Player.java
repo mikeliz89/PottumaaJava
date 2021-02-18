@@ -537,7 +537,7 @@ public class Player extends MapObject {
 
 	private void DrawDebugArea(Graphics2D g) {
 
-		if(GameOptions.ISDEBUGMODE == false)
+		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
 		Font titleFont = new Font(
