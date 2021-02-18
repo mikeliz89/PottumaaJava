@@ -29,8 +29,8 @@ public abstract class MapObject {
 	protected int collisionBoxHeight;
 	
 	// collision
-	protected int currRow;
-	protected int currCol;
+	protected int currentRow;
+	protected int currentColumn;
 	protected double xdest;
 	protected double ydest;
 	protected double xtemp;
@@ -39,16 +39,15 @@ public abstract class MapObject {
 	protected boolean topRight;
 	protected boolean bottomLeft;
 	protected boolean bottomRight;
-	
+
+	//tiles
 	protected int bottomTile;
 	protected int rightTile;
 	protected int leftTile;
 	protected int topTile;
-	
+
 	// animation
 	protected Animation animation;
-	protected int currentAction;
-	protected int previousAction;
 	protected boolean facingRight;
 	protected boolean facingUp;
 	
@@ -59,9 +58,7 @@ public abstract class MapObject {
 	protected boolean down;
 	protected boolean jumping;
 	protected boolean falling;
-	
-	private boolean charging;
-	
+
 	// movement attributes
 	protected double moveSpeed;
 	protected double maxSpeed;
@@ -72,7 +69,6 @@ public abstract class MapObject {
 	protected double maxFallSpeed;
 	protected double jumpStart;
 	protected double stopJumpSpeed;
-	protected double chargeSpeed;
 	
 	// constructor
 	public MapObject() {
@@ -115,8 +111,8 @@ public abstract class MapObject {
 	
 	public void checkTileMapCollision(TileMap tm) {
 		
-		currCol = (int)x / tm.getTileSize();
-		currRow = (int)y / tm.getTileSize();
+		currentColumn = (int)x / tm.getTileSize();
+		currentRow = (int)y / tm.getTileSize();
 		
 		xdest = x + dx;
 		ydest = y + dy;
@@ -129,7 +125,7 @@ public abstract class MapObject {
 			if (dy < 0) {
 				if (topLeft || topRight) {
 					dy = 0;
-					ytemp = currRow * tm.getTileSize() + collisionBoxHeight / 2;
+					ytemp = currentRow * tm.getTileSize() + collisionBoxHeight / 2;
 				} else {
 					ytemp += dy;
 				}
@@ -139,7 +135,7 @@ public abstract class MapObject {
 
 					dy = 0;
 					falling = false;
-					ytemp = (currRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
+					ytemp = (currentRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
 				} else {
 					ytemp += dy;
 				}
@@ -149,7 +145,7 @@ public abstract class MapObject {
 			if (dx < 0) {
 				if (topLeft || bottomLeft) {
 					dx = 0;
-					xtemp = currCol * tm.getTileSize() + collisionBoxWidth / 2;
+					xtemp = currentColumn * tm.getTileSize() + collisionBoxWidth / 2;
 				} else {
 					xtemp += dx;
 				}
@@ -157,7 +153,7 @@ public abstract class MapObject {
 			if (dx > 0) {
 				if (topRight || bottomRight) {
 					dx = 0;
-					xtemp = (currCol + 1) * tm.getTileSize() - collisionBoxWidth / 2;
+					xtemp = (currentColumn + 1) * tm.getTileSize() - collisionBoxWidth / 2;
 				} else {
 					xtemp += dx;
 				}
@@ -179,16 +175,6 @@ public abstract class MapObject {
 	public int getHeight() { return height; }
 	public int getCollisionBoxWidth() { return collisionBoxWidth; }
 	public int getCollisionBoxHeight() { return collisionBoxHeight; }
-	
-	protected void checkCharging() {
-		if(charging) {
-			this.setStopSpeed(this.stopSpeed / 3);
-			this.setMaxSpeed(this.maxSpeed + chargeSpeed);
-		} 
-		else {
-			this.setMaxSpeed(this.originalMaxSpeed);
-		}
-	}
 
 	public double getMaxSpeed() {
 		return maxSpeed;
@@ -200,10 +186,6 @@ public abstract class MapObject {
 
 	protected boolean getBottomLeft() { return bottomLeft; }
 	protected boolean getBottomRight() { return bottomRight; }
-	
-	public void setCharging(boolean b) {
-		charging = b;
-	}
 	
 	public void setMaxSpeed(double maxSpeed) {
 		this.maxSpeed = maxSpeed;

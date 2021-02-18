@@ -26,6 +26,7 @@ public class Player extends MapObject {
 	private long flinchTimer;
 	private boolean charging;
 	private int experiencePoints;
+	private double chargeSpeed;
 	
 	// fireball
 	private boolean firing;
@@ -48,9 +49,9 @@ public class Player extends MapObject {
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
 	private static final int JUMPING = 2;
-
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
+	private int currentAction;
 	
 	private HashMap<String, AudioPlayer> sfx;
 
@@ -291,6 +292,20 @@ public class Player extends MapObject {
 		}
 
 		jumping();
+	}
+
+	public void setCharging(boolean isCharging) {
+		charging = isCharging;
+	}
+
+	private void checkCharging() {
+		if(charging) {
+			this.setStopSpeed(this.stopSpeed / 3);
+			this.setMaxSpeed(this.maxSpeed + chargeSpeed);
+		}
+		else {
+			this.setMaxSpeed(this.originalMaxSpeed);
+		}
 	}
 
 	private void jumping() {
