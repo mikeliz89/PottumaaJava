@@ -235,8 +235,45 @@ public class MapEditorState extends GameState {
 	}
 
 	private void SaveMap() {
-		//todo: koodaa mapin tallennus CSV:ksi
-		System.out.println("Map saved!");
+		var csvFileWriter = new CsvFileWriter("mapEditorCreatedFile");
+		ArrayList<String> rows = createRows(csvFileWriter);
+		try {
+			csvFileWriter.writeCsv(rows);
+			System.out.println("Map saved!");
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		}
+	}
+
+	private ArrayList<String> createRows(CsvFileWriter csvFileWriter) {
+
+		var rows = new ArrayList<String>();
+		var tileCount = 30;
+
+
+		//create header rows
+		for(int j = 0; j < 2; j++) {
+			var headerRowValues = new ArrayList<String>();
+			headerRowValues.add("30");
+			for (int i = 0; i < tileCount - 1; i++) {
+				headerRowValues.add("");
+			}
+			var headerRow = csvFileWriter.convertArrayListIntoCommaSeparatedString(headerRowValues);
+			rows.add(headerRow);
+		}
+
+		var rowValues = new ArrayList<String>();
+		for(int i = 0; i < tileCount; i++) {
+			//ruoho
+			rowValues.add("8");
+		}
+
+		//create rows
+		var row = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
+		for(int i = 0; i <  tileCount; i++) {
+			rows.add(row);
+		}
+		return rows;
 	}
 
 	private void ChangeSelection(boolean goingUp) {
