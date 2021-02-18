@@ -1,6 +1,5 @@
 package Entity.Enemies;
 
-import Entity.Enemy;
 import TileMap.TileMap;
 import java.util.ArrayList;
 

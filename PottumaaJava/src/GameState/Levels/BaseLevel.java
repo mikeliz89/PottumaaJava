@@ -1,9 +1,9 @@
 package GameState.Levels;
 
-import Entity.Enemy;
+import Entity.Enemies.Enemy;
 import Entity.Explosion;
 import Entity.HUD.HUD;
-import Entity.NPC;
+import Entity.NPCs.NPC;
 import Entity.Player.Player;
 import GameState.*;
 import Main.GamePanel;

@@ -2,8 +2,8 @@ package Entity.Player;
 
 import Audio.AudioPlayer;
 import Entity.*;
+import Entity.Enemies.Enemy;
 import GameState.GameStateManager;
-import Main.GameOptions;
 import MapPoint.MapPoint;
 import TileMap.Tile;
 import TileMap.TileMap;

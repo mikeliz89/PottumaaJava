@@ -1,5 +1,7 @@
-package Entity;
+package Entity.NPCs;
 
+import Entity.HealthBar;
+import Entity.MapObject;
 import TileMap.TileMap;
 
 import java.awt.*;

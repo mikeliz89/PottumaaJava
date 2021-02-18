@@ -1,9 +1,6 @@
 package Entity.Quests;
 
-import Entity.Enemy;
 import Entity.Player.Player;
-
-import java.util.ArrayList;
 
 public class KillQuest extends Quest {
 

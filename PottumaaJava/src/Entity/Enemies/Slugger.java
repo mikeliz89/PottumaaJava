@@ -1,7 +1,6 @@
 package Entity.Enemies;
 
 import Audio.AudioPlayer;
-import Entity.*;
 import TileMap.TileMap;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;

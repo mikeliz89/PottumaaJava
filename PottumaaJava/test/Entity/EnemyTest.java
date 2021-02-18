@@ -1,5 +1,6 @@
 package Entity;
 
+import Entity.Enemies.Enemy;
 import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import org.junit.Test;

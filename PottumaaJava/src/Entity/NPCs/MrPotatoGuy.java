@@ -1,7 +1,6 @@
 package Entity.NPCs;
 
 import Entity.Animation;
-import Entity.NPC;
 import TileMap.TileMap;
 
 import javax.imageio.ImageIO;
@@ -61,18 +60,17 @@ public class MrPotatoGuy extends NPC {
     }
 
     public void update() {
+        setMapPosition();
+        updateAnimation();
+    }
 
-        // update animation
+    private void updateAnimation() {
         animation.update();
     }
 
     public void draw(Graphics2D g) {
 
-        //if(notOnScreen()) return;
-
-        setMapPosition();
-
+        if(notOnScreen()) return;
         super.draw(g);
-
     }
 }

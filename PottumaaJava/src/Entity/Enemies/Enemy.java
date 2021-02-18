@@ -1,6 +1,9 @@
-package Entity;
+package Entity.Enemies;
 
 import Audio.AudioPlayer;
+import Entity.Animation;
+import Entity.HealthBar;
+import Entity.MapObject;
 import TileMap.TileMap;
 
 import java.awt.*;
