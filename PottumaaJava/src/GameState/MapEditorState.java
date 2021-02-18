@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import GameState.*;
 
 public class MapEditorState extends GameState {
 
@@ -289,16 +288,10 @@ public class MapEditorState extends GameState {
 	}
 	
 	public void keyReleased(int k) {
-		
 		// remove released keys from keysPressed arrayList
 		if(keysPressed.contains(k) == true) {
 			keysPressed.remove(keysPressed.indexOf(k));
 		}
-		
-	}
-
-	public void stopBackGroundMusic() {
-
 	}
 	
 }
