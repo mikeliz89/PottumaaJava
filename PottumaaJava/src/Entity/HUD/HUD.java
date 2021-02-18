@@ -4,6 +4,7 @@ import Audio.AudioPlayer;
 import Entity.Enemies.EnemySettings;
 import Entity.Player.Player;
 import Entity.Quests.*;
+import Main.GameOptions;
 import Main.GamePanel;
 
 import java.awt.*;
@@ -90,28 +91,56 @@ public class HUD {
 	
 	public void draw(Graphics2D g) {
 
-		DrawImage(g);
+		drawImage(g);
 
-		DrawTexts(g);
+		g.setFont(font);
+		g.setColor(Color.WHITE);
+		drawMoneyAmount(g);
+		drawHealthPointsToHUD(g);
+		drawManaPoints(g);
 
 		if(showDialogBox)
 			dialogBox.draw(g);
 
 		if(showMap)
-			DrawMap(g);
+			drawMap(g);
 
 		if(showInventory)
-			DrawInventory(g);
+			drawInventory(g);
 
 		if(showQuestLog)
-			DrawQuestLog(g);
+			drawQuestLog(g);
+
+		drawDebugArea(g);
 	}
 
-	private void DrawQuestLog(Graphics2D g) {
+	private void drawDebugArea(Graphics2D g) {
+
+		if(GameOptions.IS_DEBUG_MODE == false)
+			return;
+
+		Font titleFont = new Font(
+				"Century Gothic",
+				Font.PLAIN,
+				12);
+		g.setColor(Color.BLACK);
+		g.setFont(titleFont);
+		g.drawString("X: " + player.getX(), 400, 13);
+		g.drawString("Y: " + player.getY(), 400, 28);
+		g.drawString("MaxSpeed: " + player.getMaxSpeed(), 600, 13);
+		g.drawString("StopSpeed: " + player.getStopSpeed(), 600, 28);
+		g.setColor(Color.BLUE);
+		g.drawRect((int) (player.getX() + player.getXMap() - player.getWidth() / 2),
+				(int) (player.getY() + player.getYMap() - player.getHeight() / 2),
+				player.getWidth(),
+				player.getHeight());
+	}
+
+	private void drawQuestLog(Graphics2D g) {
 		questLog.draw(g);
 	}
 
-	private void DrawMap(Graphics2D g) {
+	private void drawMap(Graphics2D g) {
 		var x = 100;
 		var y = 100;
 		var width = GamePanel.WIDTH - 200;
@@ -130,7 +159,7 @@ public class HUD {
 		g.drawString("Map", shape.x + 10, shape.y + 20);
 	}
 
-	private void DrawInventory(Graphics2D g) {
+	private void drawInventory(Graphics2D g) {
 
 		var x = 100;
 		var y = 100;
@@ -155,69 +184,60 @@ public class HUD {
 		g.setColor(Color.BLACK);
 		g.drawRect(x, y, width, height);
 
-		DrawInventoryTitle(g, innerBox);
+		drawInventoryTitle(g, innerBox);
 
-		DrawGold(g, innerBox);
+		drawGold(g, innerBox);
 
-		DrawCharacterStatsTitle(g, innerBox);
+		drawCharacterStatsTitle(g, innerBox);
 
-		DrawExperiencePoints(g, innerBox);
+		drawExperiencePoints(g, innerBox);
 
-		DrawAttackStats(g, innerBox);
+		drawAttackStats(g, innerBox);
 
-		DrawHealthPoints(g, innerBox);
+		drawHealthPoints(g, innerBox);
 	}
 
 	private final int inventoryXPosition = 10;
 	private final int characterStatsXPosition = 480;
 
-	private void DrawHealthPoints(Graphics2D g, Rectangle innerBox) {
+	private void drawHealthPoints(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.drawString("HP : "+ player.getHealth() + " / " + player.getMaxHealth(), innerBox.x + characterStatsXPosition, innerBox.y + 100);
 	}
 
-	private void DrawCharacterStatsTitle(Graphics2D g, Rectangle innerBox) {
+	private void drawCharacterStatsTitle(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.drawString("Character stats", innerBox.x + characterStatsXPosition, innerBox.y + 20);
 	}
 
-	private void DrawExperiencePoints(Graphics2D g, Rectangle innerBox) {
+	private void drawExperiencePoints(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.CYAN);
 		g.drawString("Exp: " + player.getExperiencePointsAmount(), innerBox.x + characterStatsXPosition, innerBox.y + 40 );
 	}
 
-	private void DrawGold(Graphics2D g, Rectangle innerBox) {
+	private void drawGold(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.ORANGE);
 		g.drawString("Gold: " + player.getMoneyInWallet(), innerBox.x + inventoryXPosition, innerBox.y + 40);
 	}
 
-	private void DrawInventoryTitle(Graphics2D g, Rectangle innerBox) {
+	private void drawInventoryTitle(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.setFont(font);
 		g.drawString("Inventory", innerBox.x + inventoryXPosition, innerBox.y + 20);
 	}
 
-	private void DrawAttackStats(Graphics2D g, Rectangle innerBox) {
+	private void drawAttackStats(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.drawString("Scratch dmg: " + player.getScratchDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 60);
 		g.drawString("Fireball dmg: " + player.getFireBallDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 80);
 	}
 
-	private void DrawImage(Graphics2D g) {
+	private void drawImage(Graphics2D g) {
 		g.drawImage(image, 0, 10, null);
 	}
 	private final int textsXCoordinate = 25;
 
-	private void DrawTexts(Graphics2D g) {
-		g.setFont(font);
-		g.setColor(Color.WHITE);
-
-		DrawMoneyAmount(g);
-		DrawHealthPointsToHUD(g);
-		DrawManaPoints(g);
-	}
-
-	private void DrawMoneyAmount(Graphics2D g) {
+	private void drawMoneyAmount(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.drawString(player.getMoneyInWallet() + " g",
 				textsXCoordinate,
@@ -225,7 +245,7 @@ public class HUD {
 		);
 	}
 
-	private void DrawManaPoints(Graphics2D g) {
+	private void drawManaPoints(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.drawString(
 			player.getFire() / 100 + "/" + player.getMaxFire() / 100,
@@ -234,7 +254,7 @@ public class HUD {
 		);
 	}
 
-	private void DrawHealthPointsToHUD(Graphics2D g) {
+	private void drawHealthPointsToHUD(Graphics2D g) {
 		if(player.hasLowHealth())
 			g.setColor(Color.RED);
 		else

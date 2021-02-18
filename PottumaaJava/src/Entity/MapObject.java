@@ -191,6 +191,14 @@ public abstract class MapObject {
 		}
 	}
 
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public double getStopSpeed() {
+		return stopSpeed;
+	}
+
 	protected boolean getBottomLeft() { return bottomLeft; }
 	protected boolean getBottomRight() { return bottomRight; }
 	
@@ -234,6 +242,14 @@ public abstract class MapObject {
 			x + xmap - width > GamePanel.WIDTH ||
 			y + ymap + height < 0 ||
 			y + ymap - height > GamePanel.HEIGHT;
+	}
+
+	public double getXMap() {
+		return xmap;
+	}
+
+	public double getYMap() {
+		return ymap;
 	}
 	
 	public void draw(java.awt.Graphics2D g) {
