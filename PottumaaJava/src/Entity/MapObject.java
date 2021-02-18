@@ -4,7 +4,7 @@ import Main.GamePanel;
 import TileMap.TileMap;
 import TileMap.Tile;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class MapObject {
@@ -178,7 +178,7 @@ public abstract class MapObject {
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getCollisionBoxWidth() { return collisionBoxWidth; }
-	public int getCollisionbBoxHeight() { return collisionBoxHeight; }
+	public int getCollisionBoxHeight() { return collisionBoxHeight; }
 	
 	protected void checkCharging() {
 		if(charging) {
@@ -187,7 +187,6 @@ public abstract class MapObject {
 		} 
 		else {
 			this.setMaxSpeed(this.originalMaxSpeed);
-//			this.setStopSpeed(originalStopSpeed);
 		}
 	}
 
@@ -224,7 +223,6 @@ public abstract class MapObject {
 	}
 	
 	public void setMapPosition() {
-
 		for (TileMap tileMap : tileMaps) {
 			xmap = tileMap.getx();
 			ymap = tileMap.gety();
@@ -252,7 +250,7 @@ public abstract class MapObject {
 		return ymap;
 	}
 	
-	public void draw(java.awt.Graphics2D g) {
+	public void draw(Graphics2D g) {
 
 		//todo: onko tämä turha tarkistus?
 		if(!animation.hasFrames()) {

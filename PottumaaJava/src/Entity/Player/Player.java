@@ -37,10 +37,7 @@ public class Player extends MapObject {
 	private boolean scratching;
 	private int scratchDamage;
 	private int scratchRange;
-	
-	// gliding
-	private boolean gliding;
-	
+
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {
@@ -50,9 +47,8 @@ public class Player extends MapObject {
 	// animation actions
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
-	//private static final int JUMPING = 2;
-	//private static final int FALLING = 3;
-	//private static final int GLIDING = 4;
+	private static final int JUMPING = 2;
+
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
 	
@@ -62,11 +58,21 @@ public class Player extends MapObject {
 
 	public Player(ArrayList<TileMap> tileMaps) {
 		this.tileMaps = tileMaps;
+		init();
+		//damage & health
+		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
+		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
+		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
+		health = maxHealth = 5;
+		fire = maxFire = 2500;
+		fireCost = 200;
+		scratchRange = 40;
+		//size
 		width = 30;
 		height = 30;
 		collisionBoxWidth = 20;
 		collisionBoxHeight = 20;
-		
+		//speed
 		moveSpeed = 0.1;
 		maxSpeed = originalMaxSpeed = 0.6;
 		stopSpeed = originalStopSpeed = 0.4; //grass
@@ -75,31 +81,21 @@ public class Player extends MapObject {
 		jumpStart = -4.8;
 		stopJumpSpeed = 0.3;
 		chargeSpeed = 2.4;
-		
 		facingRight = true;
-		
-		health = maxHealth = 5;
-		fire = maxFire = 2500;
-
-		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
-		
-		fireCost = 200;
-		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
-		fireBalls = new ArrayList<>();
-		
-		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
-		scratchRange = 40;
-
+        //animation & sprites
 		loadSprites();
-
-		animation = new Animation();
 		currentAction = IDLE;
 		animation.setFrames(sprites.get(IDLE));
 		animation.setDelay(400);
-
+		//other
 		createWallet();
-
+		//audio
 		setSoundEffects();
+	}
+
+	private void init() {
+		fireBalls = new ArrayList<>();
+		animation = new Animation();
 	}
 
 	private void createWallet() {
@@ -195,9 +191,6 @@ public class Player extends MapObject {
 	public void setScratching() {
 		scratching = true;
 	}
-	public void setGliding(boolean b) { 
-		gliding = b;
-	}
 	private void checkIce() {
 
 		//check all grounds for ice
@@ -218,29 +211,17 @@ public class Player extends MapObject {
 	}
 	
 	public void checkLevelPoints(MapPoint levelPoint, GameStateManager gsm) {
-	
-//		System.out.println("player x " + x);
-//		System.out.println("player y " + y);
-//		System.out.println("x " + levelPoint.getx());
-//		System.out.println("y " + levelPoint.gety());
-		
 		if(x > levelPoint.getX() &&
 				x < levelPoint.getX() + levelPoint.getImage().getWidth() &&
 				y > levelPoint.getY() &&
 				y < levelPoint.getY() + levelPoint.getImage().getHeight()) {
 			gsm.setState(levelPoint.getGotoLevel());
 		}
-//		if(intersects(e)) {
-//			hit(e.getDamage());
-//		}
 	}
 	
 	public void checkAttack(ArrayList<Enemy> enemies) {
-		
-		// loop through enemies
-		for (Enemy e : enemies) {
 
-			// scratch attack
+		for (Enemy e : enemies) {
 			if (scratching) {
 				if (facingRight) {
 					if (
@@ -262,12 +243,9 @@ public class Player extends MapObject {
 					}
 				}
 			}
-
 			checkFireBallCollisions(e);
-
 			checkEnemyCollision(e);
 		}
-		
 	}
 
 	private void checkFireBallCollisions(Enemy e) {
@@ -297,26 +275,75 @@ public class Player extends MapObject {
 		playSoundEffect("playerGetsHit");
 	}
 	
-	private void getNextPosition() {
+	private void updatePosition() {
 		
 		checkIce();
 		checkCharging();
-		
-		// movement
-		
+
+		moveUpOrDown();
+		moveLeftOrRight();
+
+		//cannot move left or right while attacking
+		if(!PlayerSettings.PLAYER_CAN_MOVE_WHILE_ATTACKING) {
+			if (currentAction == SCRATCHING || currentAction == FIREBALL) {
+				dx = 0;
+			}
+		}
+
+		jumping();
+	}
+
+	private void jumping() {
+		if(jumping) {
+			playSoundEffect("jump");
+			dy = jumpStart;
+		}
+	}
+
+	private void moveLeftOrRight() {
+		if(left) {
+			dx -= moveSpeed;
+			if(dx < -maxSpeed) {
+				dx = -maxSpeed;
+			}
+		}
+		else if(right) {
+			dx += moveSpeed;
+			if(dx > maxSpeed) {
+				dx = maxSpeed;
+			}
+		}
+		else {
+			// left and right
+			if(dx > 0) {
+				dx -= stopSpeed;
+				if(dx < 0) {
+					dx = 0;
+				}
+			}
+			else if(dx < 0) {
+				dx += stopSpeed;
+				if(dx > 0) {
+					dx = 0;
+				}
+			}
+		}
+	}
+
+	private void moveUpOrDown() {
 		// up and down
 		if(up) {
 			dy -= moveSpeed;
 			if(dy < -maxSpeed) {
 				dy = -maxSpeed;
 			}
-		} 
+		}
 		else if(down) {
 			dy += moveSpeed;
 			if(dy > maxSpeed) {
 				dy = maxSpeed;
 			}
-		} 
+		}
 		else {
 			// up and down
 			if(dy > 0) {
@@ -332,64 +359,6 @@ public class Player extends MapObject {
 				}
 			}
 		}
-		
-		// left and right
-		if(left) {
-			dx -= moveSpeed;
-			if(dx < -maxSpeed) {
-				dx = -maxSpeed;
-			}
-		}
-		else if(right) {
-			dx += moveSpeed;
-			if(dx > maxSpeed) {
-				dx = maxSpeed;
-			}
-		}
-		else {
-
-			// left and right
-			if(dx > 0) {
-				dx -= stopSpeed;
-				if(dx < 0) {
-					dx = 0;
-				}
-			}
-			else if(dx < 0) {
-				dx += stopSpeed;
-				if(dx > 0) {
-					dx = 0;
-				}
-			}
-		}
-		
-		// cannot move while attacking, except in air
-		if(
-		(currentAction == SCRATCHING || currentAction == FIREBALL) &&
-		!(jumping || falling)) {
-			dx = 0;
-		}
-		
-		// jumping
-		if(jumping && !falling) {
-			playSoundEffect("jump");
-			dy = jumpStart;
-			falling = true;	
-		}
-		
-		// falling
-		if(falling) {
-			
-			if(dy > 0 && gliding) dy += fallSpeed * 0.1;
-			else dy += fallSpeed;
-			
-			if(dy > 0) jumping = false;
-			if(dy < 0 && !jumping) dy += stopJumpSpeed;
-			
-			if(dy > maxFallSpeed) dy = maxFallSpeed;
-			
-		}
-		
 	}
 
 	private void playSoundEffect(String soundEffectName) {
@@ -397,13 +366,11 @@ public class Player extends MapObject {
 	}
 	
 	public void update() {
-		
-		// update position
-		getNextPosition();
 
-		for (TileMap tm : tileMaps) {
-			checkTileMapCollision(tm);
-		}
+		updatePosition();
+
+		checkTileMapCollisions();
+
 		setPosition(xtemp, ytemp);
 
 		checkAttackHasStopped();
@@ -412,7 +379,20 @@ public class Player extends MapObject {
 
 		updateFireBalls();
 
-		// check done flinching
+		flinching();
+
+		setAnimation();
+
+		updateDirection();
+	}
+
+	private void checkTileMapCollisions() {
+		for (TileMap tm : tileMaps) {
+			checkTileMapCollision(tm);
+		}
+	}
+
+	private void flinching() {
 		if(flinching) {
 			long elapsed =
 				(System.nanoTime() - flinchTimer) / 1000000;
@@ -420,12 +400,6 @@ public class Player extends MapObject {
 				flinching = false;
 			}
 		}
-
-		setAnimation();
-
-		animation.update();
-
-		updateDirection();
 	}
 
 	private void checkAttackHasStopped() {
@@ -451,7 +425,7 @@ public class Player extends MapObject {
 	}
 
 	private void setAnimation() {
-		if(scratching) { //scratch
+		if(scratching) {
 			if(currentAction != SCRATCHING) {
 				playSoundEffect("scratch");
 				currentAction = SCRATCHING;
@@ -460,7 +434,7 @@ public class Player extends MapObject {
 				width = 60;
 			}
 		}
-		else if(firing) { //shooting
+		else if(firing) {
 			if(currentAction != FIREBALL) {
 				playSoundEffect("fireball");
 				currentAction = FIREBALL;
@@ -470,7 +444,6 @@ public class Player extends MapObject {
 			}
 		}
 		else if(dy > 0) { //going down
-			//System.out.println("going down");
 			if(currentAction != WALKING) {
 				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
@@ -502,6 +475,7 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
+		animation.update();
 	}
 
 	private void updateFireBalls() {
@@ -525,39 +499,15 @@ public class Player extends MapObject {
 		
 		setMapPosition();
 
-		DrawFireBalls(g);
+		drawFireBalls(g);
 
 		//Player is not drawn when flinching etc.
-		if (DrawPlayer()) return;
-
-		DrawDebugArea(g);
+		if (drawPlayer()) return;
 
 		super.draw(g);
 	}
 
-	private void DrawDebugArea(Graphics2D g) {
-
-		if(GameOptions.IS_DEBUG_MODE == false)
-			return;
-
-		Font titleFont = new Font(
-				"Century Gothic",
-				Font.PLAIN,
-				12);
-		g.setColor(Color.BLACK);
-		g.setFont(titleFont);
-		g.drawString("X: " + this.x, 400, 13);
-		g.drawString("Y: " + this.y, 400, 28);
-		g.drawString("MaxSpeed: " + this.maxSpeed, 600, 13);
-		g.drawString("StopSpeed: " + this.stopSpeed, 600, 28);
-		g.setColor(Color.BLUE);
-		g.drawRect((int) (x + xmap - width / 2),
-				(int) (y + ymap - height / 2),
-				width,
-				height);
-	}
-
-	private boolean DrawPlayer() {
+	private boolean drawPlayer() {
 		if(flinching) {
 			long elapsed =
 				(System.nanoTime() - flinchTimer) / 1000000;
@@ -568,7 +518,7 @@ public class Player extends MapObject {
 		return false;
 	}
 
-	private void DrawFireBalls(Graphics2D g) {
+	private void drawFireBalls(Graphics2D g) {
 		for (FireBall fireBall : fireBalls) {
 			fireBall.draw(g);
 		}
