@@ -8,6 +8,7 @@ import Main.GameOptions;
 import Main.GamePanel;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
@@ -112,6 +113,10 @@ public class HUD {
 			drawQuestLog(g);
 
 		drawDebugArea(g);
+
+		if(player.isDead()) {
+			drawDeathScreen(g);
+		}
 	}
 
 	private void drawDebugArea(Graphics2D g) {
@@ -199,6 +204,27 @@ public class HUD {
 
 	private final int inventoryXPosition = 10;
 	private final int characterStatsXPosition = 480;
+
+	private void drawDeathScreen(Graphics2D g) {
+
+		var positionX = 0;
+		var positionY = 100;
+		var width = GamePanel.WIDTH - (2 * positionX);
+		var height = GamePanel.HEIGHT - (2 * positionY);
+		var box = new Rectangle(positionX, positionY, width, height);
+		g.setColor(Color.BLACK);
+		g.fillRect(box.x, box.y, box.width, box.height);
+
+		//Centered teksti. Todo: tee tästä oma luokkansa esim HUD.CenteredText
+		g.setColor(Color.RED);
+		g.setFont(new Font("Arial", Font.BOLD, 20));
+		var string = "You died.";
+		FontMetrics fm = g.getFontMetrics();
+		Rectangle2D r = fm.getStringBounds(string, g);
+		int x = (GamePanel.WIDTH - (int)r.getWidth()) / 2;
+		int y = (GamePanel.HEIGHT - (int)r.getHeight()) /2 + fm.getAscent();
+		g.drawString(string, x, y);
+	}
 
 	private void drawHealthPoints(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);

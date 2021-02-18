@@ -1,16 +1,12 @@
 package Entity.NPCs;
 
-import Entity.Animation;
 import TileMap.TileMap;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class MrPotatoGuy extends NPC {
-
-    private BufferedImage[] sprites;
 
     public MrPotatoGuy(ArrayList<TileMap> tileMaps, int maxHealth) {
 
@@ -20,18 +16,14 @@ public class MrPotatoGuy extends NPC {
         height = 84;
         collisionBoxWidth = 20;
         collisionBoxHeight = 20;
-
         damage = 100;
-
-        loadSprites();
-
-        animation = new Animation();
-        animation.setFrames(sprites);
-        animation.setDelay(300);
-
         right = true;
         facingRight = true;
         name = "Mr. Potatoguy";
+        profession = "Fruitseller";
+        loadSprites();
+        animation.setFrames(sprites);
+        animation.setDelay(300);
     }
 
     private void loadSprites() {
@@ -57,20 +49,5 @@ public class MrPotatoGuy extends NPC {
         catch(Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void update() {
-        setMapPosition();
-        updateAnimation();
-    }
-
-    private void updateAnimation() {
-        animation.update();
-    }
-
-    public void draw(Graphics2D g) {
-
-        if(notOnScreen()) return;
-        super.draw(g);
     }
 }

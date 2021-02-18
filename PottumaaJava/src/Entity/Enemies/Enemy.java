@@ -7,6 +7,7 @@ import Entity.MapObject;
 import TileMap.TileMap;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Enemy extends MapObject {
@@ -23,7 +24,7 @@ public abstract class Enemy extends MapObject {
 	private HealthBar healthBar;
 	protected HashMap<String, AudioPlayer> sfx;
 	
-	public Enemy(java.util.ArrayList<TileMap> tileMaps, int maxHealth) {
+	public Enemy(ArrayList<TileMap> tileMaps, int maxHealth) {
 		this.tileMaps = tileMaps;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
@@ -46,7 +47,7 @@ public abstract class Enemy extends MapObject {
 		if(dead || flinching) return;
 		health -= damage;
 		if(health < 0) health = 0;
-		if(health == 0) Die();
+		if(health == 0) die();
 		flinching = true;
 		flinchTimer = System.nanoTime();
 	}
@@ -164,7 +165,7 @@ public abstract class Enemy extends MapObject {
 		}
 	}
 
-	private void Die() {
+	private void die() {
 		dead = true;
 		playSoundEffect("deathCry");
 	}

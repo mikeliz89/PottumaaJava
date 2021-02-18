@@ -179,6 +179,7 @@ public class Player extends MapObject {
 		sfx.put("scratch", new AudioPlayer("/SFX/scratch.wav"));
 		sfx.put("fireball", new AudioPlayer("/SFX/fireball.wav"));
 		sfx.put("playerGetsHit", new AudioPlayer("/SFX/playerGetsHit.wav"));
+		sfx.put("playerDeath", new AudioPlayer("/SFX/playerDeath.wav"));
 	}
 	
 	public int getHealth() { return health; }
@@ -260,6 +261,8 @@ public class Player extends MapObject {
 	}
 
 	private void checkEnemyCollision(Enemy e) {
+		if(dead) return;
+
 		if (intersects(e)) {
 			hit(e.getDamage());
 		}
@@ -269,10 +272,9 @@ public class Player extends MapObject {
 		if(flinching) return;
 		health -= damage;
 		if(health < 0) health = 0;
-		if(health == 0) dead = true;
+		if(health == 0) die();
 		flinching = true;
 		flinchTimer = System.nanoTime();
-
 		playSoundEffect("playerGetsHit");
 	}
 	
@@ -292,6 +294,15 @@ public class Player extends MapObject {
 		}
 
 		jumping();
+	}
+
+	private void die() {
+		dead = true;
+		playSoundEffect("playerDeath");
+	}
+
+	public boolean isDead() {
+		return dead;
 	}
 
 	public void setCharging(boolean isCharging) {
