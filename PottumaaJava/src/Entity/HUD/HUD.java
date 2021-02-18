@@ -18,6 +18,7 @@ public class HUD {
 	private BufferedImage image;
 	private Font font;
 	private QuestLog questLog;
+	private DialogBox dialogBox;
 	private boolean showMap;
 	private boolean showInventory;
 	private boolean showDialogBox;
@@ -37,6 +38,7 @@ public class HUD {
 			e.printStackTrace();
 		}
 		createQuestLog();
+		createDialogBox();
 		setSoundEffects();
 	}
 
@@ -49,6 +51,10 @@ public class HUD {
 				"Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
 		Quest killSluggersQuest = questFactory.getQuest(QuestSettings.QUEST_TYPE_KILLQUEST);
 		questLog.addQuest(killSluggersQuest);
+	}
+
+	private void createDialogBox() {
+		dialogBox = new DialogBox("Welcome", "Mr.PotatoGuy: Welcome to the land of the pottu");
 	}
 
 	public void KillOneEnemy (int EnemyType) {
@@ -89,7 +95,7 @@ public class HUD {
 		DrawTexts(g);
 
 		if(showDialogBox)
-			DrawDialogBox(g);
+			dialogBox.draw(g);
 
 		if(showMap)
 			DrawMap(g);
@@ -122,26 +128,6 @@ public class HUD {
 		g.setColor(Color.WHITE);
 		g.setFont(font);
 		g.drawString("Map", shape.x + 10, shape.y + 20);
-	}
-
-	private void DrawDialogBox(Graphics2D g) {
-		var x = 100;
-		var y = GamePanel.HEIGHT - 210;
-		var width = GamePanel.WIDTH - 200;
-		var height = 200;
-		var shape = new Rectangle(x, y, width, height);
-		int alpha = 127; // 50% transparent
-		Color semiTransParentColor = new Color(180, 150, 150, alpha);
-		g.setColor(semiTransParentColor);
-		g.fill(shape);
-
-		//Piirrä ääriviivat
-		g.setColor(Color.BLACK);
-		g.drawRect(x, y, width, height);
-
-		//Piirrä tekstiä
-		g.setColor(Color.BLACK);
-		g.drawString("Tähän tulee paljon tekstiä blaa blaa blaa", shape.x + 20, shape.y + 20);
 	}
 
 	private void DrawInventory(Graphics2D g) {
