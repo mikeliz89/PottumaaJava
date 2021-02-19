@@ -50,7 +50,4 @@ public abstract class Quest {
         sfx.get(soundEffectName).play();
     }
 
-    public void KillOneEnemy(int EnemyType, Player player) {
-
-    }
 }

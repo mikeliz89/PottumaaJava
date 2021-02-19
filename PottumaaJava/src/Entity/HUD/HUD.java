@@ -62,7 +62,8 @@ public class HUD {
 	public void KillOneEnemy (int EnemyType) {
 		for(Quest quest : questLog.getKillQuests()) {
 			if(quest instanceof  KillQuest) {
-				quest.KillOneEnemy(EnemyType, player);
+				var killQuest = (KillQuest)quest;
+				killQuest.KillOneEnemy(EnemyType, player);
 			}
 		}
  	}
