@@ -27,7 +27,7 @@ public class PlayerHomeState extends BaseLevel {
 			);
 
 			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(downArrow);
+			MapPoint mapPoint = new MapPoint(downArrow, "/SFX/homeDoorClose.wav");
 			mapPoint.setPosition(300, 300);
 			mapPoint.setGotoLevel(GameStateManager.LEVEL1STATE);
 			mapPoints.add(mapPoint);

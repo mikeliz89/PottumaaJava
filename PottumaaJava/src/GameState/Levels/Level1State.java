@@ -38,13 +38,13 @@ public class Level1State extends BaseLevel {
 			);
 
 			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(rightArrow);
+			MapPoint mapPoint = new MapPoint(rightArrow, "");
 			mapPoint.setPosition(885, 585);
 			mapPoint.setGotoLevel(GameStateManager.LEVEL2STATE);
 			mapPoints.add(mapPoint);
 
 			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
-			MapPoint mapPoint2 = new MapPoint(upArrow);
+			MapPoint mapPoint2 = new MapPoint(upArrow, "/SFX/homeDoorOpen.wav");
 			mapPoint2.setPosition(345, 195);
 			mapPoint2.setGotoLevel(GameStateManager.INSIDEHOUSE);
 			mapPoints.add(mapPoint2);

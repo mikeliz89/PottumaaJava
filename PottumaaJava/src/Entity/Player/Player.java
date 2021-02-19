@@ -217,6 +217,7 @@ public class Player extends MapObject {
 				x < levelPoint.getX() + levelPoint.getImage().getWidth() &&
 				y > levelPoint.getY() &&
 				y < levelPoint.getY() + levelPoint.getImage().getHeight()) {
+			levelPoint.playSoundEffect();
 			gsm.setState(levelPoint.getGotoLevel());
 		}
 	}

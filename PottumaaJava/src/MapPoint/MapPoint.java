@@ -1,10 +1,12 @@
 package MapPoint;
 
+import Audio.AudioPlayer;
 import Main.GameOptions;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Hashtable;
 
 public class MapPoint {
 
@@ -16,9 +18,27 @@ public class MapPoint {
 	private double xmap;
 	private double ymap;
 	private int gotoLevel;
+	private String mapPointSound;
+
+	private Hashtable<String, AudioPlayer> sfx;
 	
-	public MapPoint(BufferedImage image) {
+	public MapPoint(BufferedImage image, String mapPointSound) {
 		this.image = image;
+		this.mapPointSound = mapPointSound;
+		sfx = new Hashtable<>();
+		setSoundEffects();
+	}
+
+	private void setSoundEffects() {
+		if(mapPointSound == "")
+			return;
+		sfx.put(mapPointSound, new AudioPlayer(mapPointSound));
+	}
+
+	public void playSoundEffect() {
+		if(mapPointSound == "")
+			return;
+		sfx.get(mapPointSound).play();
 	}
 
 	public BufferedImage getImage() {

@@ -27,7 +27,7 @@ public class Level2State extends BaseLevel {
 			);
 
 			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(leftArrow);
+			MapPoint mapPoint = new MapPoint(leftArrow, "");
 			mapPoint.setPosition(leftArrow.getWidth() / 2, 585);
 			mapPoint.setGotoLevel(GameStateManager.LEVEL1STATE);
 			mapPoints.add(mapPoint);
