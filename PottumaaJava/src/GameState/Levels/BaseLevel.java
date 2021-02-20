@@ -271,6 +271,7 @@ public abstract class BaseLevel extends GameState  {
         if(k == KeyEvent.VK_M) hud.ToggleMap();
         if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
         if(k == KeyEvent.VK_Q) hud.ToggleQuestLog();
+        if(k == KeyEvent.VK_F5) hud.TogglePauseMenu(); //F5 = Tallentaa pelin
 
         if(k == KeyEvent.VK_1) quickTravel(1);
         if(k == KeyEvent.VK_2) quickTravel(2);

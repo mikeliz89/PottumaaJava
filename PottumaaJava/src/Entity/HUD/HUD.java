@@ -25,6 +25,7 @@ public class HUD {
 	private boolean showInventory;
 	private boolean showDialogBox;
 	private boolean showQuestLog;
+	private boolean showPauseMenu;
 	
 	public HUD(Player p) {
 		player = p;
@@ -56,7 +57,8 @@ public class HUD {
 	}
 
 	private void createDialogBox() {
-		dialogBox = new DialogBox("Welcome", "Mr.PotatoGuy: Welcome to the land of the pottu");
+		dialogBox = new DialogBox("Welcome " + player.getName(),
+				"Mr.PotatoGuy: Welcome to the land of the pottu");
 	}
 
 	public void KillOneEnemy (int EnemyType) {
@@ -67,6 +69,13 @@ public class HUD {
 			}
 		}
  	}
+
+ 	public void TogglePauseMenu() {
+		if(showPauseMenu == false) {
+			player.saveGame();
+		}
+		showPauseMenu = !showPauseMenu;
+	}
 
 	public void ToggleInventory() {
 		if(showInventory == false) {
@@ -117,6 +126,10 @@ public class HUD {
 
 		if(player.isDead()) {
 			drawDeathScreen(g);
+		}
+
+		if(showPauseMenu) {
+			drawPauseMenu(g);
 		}
 	}
 
@@ -217,14 +230,22 @@ public class HUD {
 		g.fillRect(box.x, box.y, box.width, box.height);
 
 		//Centered teksti. Todo: tee tästä oma luokkansa esim HUD.CenteredText
+		drawCenteredText(g, "You died.");
+	}
+
+	private void drawCenteredText(Graphics2D g, String s) {
 		g.setColor(Color.RED);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
-		var string = "You died.";
+		var string = s;
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle2D r = fm.getStringBounds(string, g);
-		int x = (GamePanel.WIDTH - (int)r.getWidth()) / 2;
-		int y = (GamePanel.HEIGHT - (int)r.getHeight()) /2 + fm.getAscent();
+		int x = (GamePanel.WIDTH - (int) r.getWidth()) / 2;
+		int y = (GamePanel.HEIGHT - (int) r.getHeight()) / 2 + fm.getAscent();
 		g.drawString(string, x, y);
+	}
+
+	private void drawPauseMenu(Graphics2D g) {
+		drawCenteredText(g, "Game saved.");
 	}
 
 	private void drawHealthPoints(Graphics2D g, Rectangle innerBox) {

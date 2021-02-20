@@ -27,7 +27,9 @@ public class HelpState extends BaseMenuState {
 		g.drawString("Press I to open inventory", x, 300);
 		g.drawString("Press M to open map", x, 320);
 		g.drawString("Press Q to open quest log", x, 340);
-		g.drawString("Press Esc to exit to menu", x, 360);
+		g.drawString("Press J to open dialog box", x, 360);
+		g.drawString("Press F5 to save game", x, 380);
+		g.drawString("Press Esc to exit to menu", x, 400);
 	}
 
 	protected void select() {

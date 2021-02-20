@@ -4,6 +4,8 @@ import Audio.AudioPlayer;
 import Entity.*;
 import Entity.Enemies.Enemy;
 import GameState.GameStateManager;
+import GameState.ResourceManager;
+import GameState.SaveData;
 import MapPoint.MapPoint;
 import TileMap.Tile;
 import TileMap.TileMap;
@@ -27,6 +29,8 @@ public class Player extends MapObject {
 	private boolean charging;
 	private int experiencePoints;
 	private double chargeSpeed;
+	//name
+	private String name;
 	
 	// fireball
 	private boolean firing;
@@ -64,7 +68,7 @@ public class Player extends MapObject {
 		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
-		health = maxHealth = 5;
+		health = maxHealth = PlayerSettings.PLAYER_START_HEALTH;
 		fire = maxFire = 2500;
 		fireCost = 200;
 		scratchRange = 40;
@@ -92,6 +96,8 @@ public class Player extends MapObject {
 		createWallet();
 		//audio
 		setSoundEffects();
+		//load game
+		loadGame();
 	}
 
 	private void init() {
@@ -99,8 +105,43 @@ public class Player extends MapObject {
 		animation = new Animation();
 	}
 
+	private void loadGame() {
+		try {
+			SaveData data = (SaveData) ResourceManager.load("1.save");
+			health = data.hp;
+			name = data.name;
+			experiencePoints = data.exp;
+			fire = data.fire;
+			wallet.AddMoney(data.money);
+			System.out.println("Loaded player. Name: " + data.name + " hp " + data.hp);
+		} catch (Exception e) {
+			System.out.println("Couldn't load save data: " + e.getMessage());
+		}
+
+		checkIfPlayerShouldBeDead();
+	}
+
+	public void saveGame() {
+		var saveData = new SaveData();
+		saveData.name = name;
+		saveData.hp = health;
+		saveData.exp = experiencePoints;
+		saveData.fire = fire;
+		saveData.money = getMoneyInWallet();
+		try {
+			ResourceManager.save(saveData, "1.save");
+			System.out.println("Save successful");
+		} catch(Exception e) {
+			System.out.println("Couldn't save: " + e.getMessage());
+		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	private void createWallet() {
-		wallet = new Wallet(PlayerSettings.PLAYER_START_MONEY_AMOUNT);
+		wallet = new Wallet();
 	}
 
 	public int getMoneyInWallet() {
@@ -272,13 +313,17 @@ public class Player extends MapObject {
 	public void hit(int damage) {
 		if(flinching) return;
 		health -= damage;
-		if(health < 0) health = 0;
-		if(health == 0) die();
+		checkIfPlayerShouldBeDead();
 		flinching = true;
 		flinchTimer = System.nanoTime();
 		playSoundEffect("playerGetsHit");
 	}
-	
+
+	private void checkIfPlayerShouldBeDead() {
+		if(health < 0) health = 0;
+		if(health == 0) die();
+	}
+
 	private void updatePosition() {
 		
 		checkIce();

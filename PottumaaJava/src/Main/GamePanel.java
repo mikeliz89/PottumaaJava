@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import GameState.GameStateManager;
 
@@ -59,7 +59,6 @@ public class GamePanel extends JPanel
 		running = true;
 		
 		gsm = new GameStateManager();
-		
 	}
 	
 	public void run() {
@@ -112,6 +111,7 @@ public class GamePanel extends JPanel
 	public void keyTyped(KeyEvent key) {}
 	public void keyPressed(KeyEvent key) {
 		if(gsm == null) return;
+		gsm.keyEventHappens(key);
 		gsm.keyPressed(key.getKeyCode());
 	}
 	public void keyReleased(KeyEvent key) {

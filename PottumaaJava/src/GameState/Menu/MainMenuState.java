@@ -13,36 +13,12 @@ public class MainMenuState extends BaseMenuState {
 				"Quit"
 		}, "/Backgrounds/menubg.png");
 		setTitleText("Pottumaa");
-
-		saveGame();
-		loadGame();
-	}
-
-	private void saveGame() {
-		SaveData data = new SaveData();
-		data.name = "Miika";
-		data.hp = 50;
-		try {
-			ResourceManager.save(data, "1.save");
-			System.out.println("Save successful");
-		} catch(Exception e) {
-			System.out.println("Couldn't save: " + e.getMessage());
-		}
-	}
-
-	private void loadGame() {
-		try {
-			SaveData data = (SaveData) ResourceManager.load("1.save");
-			System.out.println("Loaded player. Name: " + data.name + " hp " + data.hp);
-		} catch (Exception e) {
-			System.out.println("Couldn't load save data: " + e.getMessage());
-		}
 	}
 
 	@Override
 	protected void select() {
 		if(currentChoice == 0) {
-			gsm.setState(GameStateManager.LEVEL1STATE);
+			gsm.setState(GameStateManager.NEWGAMESTATE);
 		}
 		if(currentChoice == 1) {
 			gsm.setState(GameStateManager.OPTIONSSTATE);

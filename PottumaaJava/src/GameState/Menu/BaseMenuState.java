@@ -63,6 +63,12 @@ public abstract class BaseMenuState extends GameState {
     }
 
     private void drawTitle(Graphics2D g) {
+
+        if(titleText == null)
+            return;
+        if(titleText == "")
+            return;
+
         g.setColor(titleColor);
         g.setFont(titleFont);
         g.drawString(titleText, GamePanel.WIDTH / 3, GamePanel.HEIGHT / 3);
@@ -106,5 +112,4 @@ public abstract class BaseMenuState extends GameState {
     protected void select() {
 
     }
-
 }

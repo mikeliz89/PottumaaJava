@@ -6,17 +6,18 @@ import GameState.Levels.Level2State;
 import GameState.Levels.PlayerHomeState;
 import GameState.Menu.HelpState;
 import GameState.Menu.MainMenuState;
+import GameState.Menu.NewGameState;
 import GameState.Menu.OptionsState;
 import Main.GameOptions;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class GameStateManager {
 	
 	private GameState[] gameStates;
 	private int currentState;
-	public static final int NUMGAMESTATES = 7;
+	public static final int NUMGAMESTATES = 8;
 	//States
 	public static final int MENUSTATE = 0;
 	public static final int LEVEL1STATE = 1;
@@ -26,6 +27,7 @@ public class GameStateManager {
 	public static final int MAPEDITORSTATE = 5;
 	//public static final int LEVEL3STATE = 6;
 	public static final int INSIDEHOUSE = 6;
+	public static final int NEWGAMESTATE = 7;
 
 	private AudioPlayer bgMusic;
 	//https://www.bensound.com/royalty-free-music/track/ukulele
@@ -61,7 +63,8 @@ public class GameStateManager {
 				var playerStartingPointY = 0;
 				//Quick and dirty
 				if(previousState == MENUSTATE ||
-						previousState == LEVEL1STATE) {
+					previousState == LEVEL1STATE ||
+					previousState == NEWGAMESTATE) {
 					playerStartingPointX = 40;
 					playerStartingPointY = 100;
 				}
@@ -82,6 +85,7 @@ public class GameStateManager {
 			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
 			//case LEVEL3STATE -> gameStates[state] = new Level3State(this);
 			case INSIDEHOUSE -> gameStates[state] = new PlayerHomeState( this, 300, 300);
+			case NEWGAMESTATE -> gameStates[state] = new NewGameState(this);
 			default -> throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
@@ -117,6 +121,24 @@ public class GameStateManager {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		//Jos tarvii piirtää kaikkien ruutujen päälle jotain, se onnistuu tässä
+		/*
+		Font font1 = new Font("Courier", Font.BOLD, 24);
+		FontRenderContext frc = g.getFontRenderContext();
+		TextLayout tl = new TextLayout("test", font1, frc);
+		g.setColor(Color.GRAY);
+		tl.draw(g, 70, 150);
+		*/
+	}
+
+	KeyEvent lastKeyEvent;
+	public void keyEventHappens(KeyEvent k) {
+		lastKeyEvent = k;
+	}
+
+	public KeyEvent getLastKeyEvent() {
+		return lastKeyEvent;
 	}
 	
 	public void keyPressed(int k) {

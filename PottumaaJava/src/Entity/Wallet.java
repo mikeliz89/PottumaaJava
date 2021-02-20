@@ -4,8 +4,16 @@ public class Wallet {
     private int money;
     private int maxMoney;
 
+    public Wallet() {
+        init();
+    }
+
     public Wallet(int money) {
+        init();
         this.money = money;
+    }
+
+    public void init() {
         maxMoney = 1000;
     }
 
