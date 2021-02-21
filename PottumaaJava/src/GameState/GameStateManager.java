@@ -7,11 +7,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class GameStateManager {
-	
-	private GameState[] gameStates;
+	GameState currentGameState;
 	private int currentState;
 	private int previousState;
-	public static final int NUMBER_OF_GAMESTATES = 8;
 
 	//States
 	public static final int STATE_MAIN_MENU = 0;
@@ -29,7 +27,6 @@ public class GameStateManager {
 	private String songToPlay;
 	
 	public GameStateManager() {
-		gameStates = new GameState[NUMBER_OF_GAMESTATES];
 		currentState = STATE_MAIN_MENU;
 		bgMusic = new AudioPlayer(bgMusicFileName);
 		loadState();
@@ -38,15 +35,13 @@ public class GameStateManager {
 	
 	private void loadState() {
 		var gameStateFactory = new GameStateFactory();
-		var gameState = gameStateFactory.getGameState(currentState, previousState, this);
-		gameStates[currentState] = gameState;
-
-		if(gameStates[currentState].backgroundMusicShouldChange)
+		currentGameState = gameStateFactory.getGameState(currentState, previousState, this);
+		if(currentGameState.backgroundMusicShouldChange)
 			changeSong();
 	}
 	
 	private void unloadState() {
-		gameStates[currentState] = null;
+		currentGameState = null;
 	}
 	
 	public void setState(int state) {
@@ -58,9 +53,9 @@ public class GameStateManager {
 	
 	public void update() {
 		try {
-			if(gameStates[currentState] == null) return;
+			if(currentGameState == null) return;
 			
-			gameStates[currentState].update();
+			currentGameState.update();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -69,9 +64,9 @@ public class GameStateManager {
 	
 	public void draw(Graphics2D g) {
 		try {
-			if(gameStates[currentState] == null) return;
+			if(currentGameState == null) return;
 			
-			gameStates[currentState].draw(g);
+			currentGameState.draw(g);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -97,9 +92,9 @@ public class GameStateManager {
 	}
 	
 	public void keyPressed(int k) {
-		if(gameStates[currentState] == null) return;
+		if(currentGameState == null) return;
 		
-		gameStates[currentState].keyPressed(k);
+		currentGameState.keyPressed(k);
 		
 		if(k == KeyEvent.VK_ESCAPE) setState(STATE_MAIN_MENU);
 
@@ -110,9 +105,9 @@ public class GameStateManager {
 	}
 	
 	public void keyReleased(int k) {
-		if(gameStates[currentState] == null) return;
+		if(currentGameState == null) return;
 		
-		gameStates[currentState].keyReleased(k);
+        currentGameState.keyReleased(k);
 	}
 
 	private void ToggleMusicOnOff() {
