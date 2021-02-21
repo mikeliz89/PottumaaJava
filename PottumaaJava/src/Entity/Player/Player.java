@@ -3,6 +3,7 @@ package Entity.Player;
 import Audio.AudioPlayer;
 import Entity.*;
 import Entity.Enemies.Enemy;
+import Entity.Obstacles.Obstacle;
 import GameState.GameStateManager;
 import GameState.ResourceManager;
 import GameState.SaveData;
@@ -62,8 +63,9 @@ public class Player extends MapObject {
 
 	private Wallet wallet;
 
-	public Player(ArrayList<TileMap> tileMaps) {
+	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
 		this.tileMaps = tileMaps;
+		this.obstacles = obstacles;
 		init();
 		//damage & health
 		experience = PlayerSettings.PLAYER_START_EXP;
@@ -472,6 +474,8 @@ public class Player extends MapObject {
 
 		checkTileMapCollisions();
 
+		checkObstacleCollisions();
+
 		setPosition(xTemp, yTemp);
 
 		checkAttackHasStopped();
@@ -486,6 +490,12 @@ public class Player extends MapObject {
 
 		updateDirection();
 
+	}
+
+	private void checkObstacleCollisions() {
+		for(Obstacle obstacle : obstacles) {
+			checkObstacleCollision(obstacle);
+		}
 	}
 
 	private void checkTileMapCollisions() {

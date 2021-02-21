@@ -4,6 +4,7 @@ import Entity.Enemies.Enemy;
 import Entity.Explosion;
 import Entity.HUD.HUD;
 import Entity.NPCs.NPC;
+import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import GameState.*;
 import Main.GamePanel;
@@ -15,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public abstract class BaseLevel extends GameState  {
+    protected ArrayList<Obstacle> obstacles;
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
     protected ArrayList<Enemy> enemies;
@@ -53,22 +55,23 @@ public abstract class BaseLevel extends GameState  {
         keysPressed = new ArrayList<>();
         enemies = new ArrayList<>();
         NPCs = new ArrayList<>();
+        obstacles = new ArrayList<>();
 
         populateTileMaps();
         populateMapPoints();
 
-        createPlayer();
-
         populateEnemies();
         populateNPCs();
         populateObstacles();
+
+        createPlayer();
 
         //Note: Hud has to be created after Player!
         hud = new HUD(player);
     }
 
     private void createPlayer() {
-        player = new Player(tileMaps);
+        player = new Player(tileMaps, obstacles);
     }
 
     private void populateTileMaps() {

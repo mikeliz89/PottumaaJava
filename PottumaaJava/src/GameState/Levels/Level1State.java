@@ -6,9 +6,7 @@ import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.House;
 import GameState.*;
 import MapPoint.MapPoint;
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Level1State extends BaseLevel {
 
@@ -40,9 +38,9 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateObstacles() {
-
 		playerHome = new House(tileMaps);
 		playerHome.setPosition(527 - 180, 247 - 120);
+		obstacles.add(playerHome);
 	}
 
 	@Override

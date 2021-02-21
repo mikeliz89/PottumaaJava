@@ -1,5 +1,6 @@
 package Entity;
 
+import Entity.Obstacles.Obstacle;
 import Main.GamePanel;
 import TileMap.TileMap;
 import TileMap.Tile;
@@ -11,6 +12,7 @@ public abstract class MapObject {
 	
 	// tile stuff
 	protected ArrayList<TileMap> tileMaps;
+	protected ArrayList<Obstacle> obstacles;
 	protected double xMap;
 	protected double yMap;
 
@@ -70,6 +72,7 @@ public abstract class MapObject {
 	// constructor
 	public MapObject() {
 		tileMaps = new ArrayList<>();
+		obstacles = new ArrayList<>();
 	}
 	
 	public boolean intersects(MapObject o) {
@@ -104,6 +107,10 @@ public abstract class MapObject {
 		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
 		bottomRight = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
 		
+	}
+
+	public void checkObstacleCollision(Obstacle obstacle) {
+		//todo: Koodaa varsinainen collision detection
 	}
 	
 	public void checkTileMapCollision(TileMap tm) {
