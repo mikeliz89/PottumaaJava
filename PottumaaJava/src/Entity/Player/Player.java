@@ -234,23 +234,29 @@ public class Player extends MapObject {
 	public void setScratching() {
 		scratching = true;
 	}
-	private void checkIce() {
 
-		//check all grounds for ice
-		for (TileMap tileMapGround : tileMaps) {
-
+	private void setSpeedAccordingToGroundType() {
+		for (TileMap ground : getGroundTileMaps()) {
 			// On ice player goes faster and breaks slower
-			if (tileMapGround.getType() == TileMap.GROUND) {
-				if (tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.TILE_FRICTION_TYPE_ICE
-						|| tileMapGround.getTileFrictionType(bottomTile, rightTile) == Tile.TILE_FRICTION_TYPE_ICE) {
-					this.stopSpeed = originalStopSpeed / 100; //TODO: take these values to the tile class..
-					this.maxSpeed = originalMaxSpeed * 1.2; //TODO: take these values to the tile class..
-				} else {
-					this.stopSpeed = originalStopSpeed;
-					this.maxSpeed = originalMaxSpeed;
-				}
+			if (ground.getTileFrictionType(bottomTile, leftTile) == Tile.TILE_FRICTION_TYPE_ICE ||
+					ground.getTileFrictionType(bottomTile, rightTile) == Tile.TILE_FRICTION_TYPE_ICE) {
+				this.stopSpeed = originalStopSpeed / 100; //TODO: take these values to the tile class..
+				this.maxSpeed = originalMaxSpeed * 1.2; //TODO: take these values to the tile class..
+			} else {
+				this.stopSpeed = originalStopSpeed;
+				this.maxSpeed = originalMaxSpeed;
 			}
 		}
+	}
+
+	private ArrayList<TileMap> getGroundTileMaps() {
+		var groundTileMaps = new ArrayList<TileMap>();
+		for(TileMap tileMap : tileMaps) {
+			if(tileMap.getType() == TileMap.GROUND) {
+				groundTileMaps.add(tileMap);
+			}
+		}
+		return groundTileMaps;
 	}
 	
 	public void checkLevelPoints(MapPoint levelPoint, GameStateManager gsm) {
@@ -325,9 +331,6 @@ public class Player extends MapObject {
 	}
 
 	private void updatePosition() {
-		
-		checkIce();
-		checkCharging();
 
 		moveUpOrDown();
 		moveLeftOrRight();
@@ -440,6 +443,10 @@ public class Player extends MapObject {
 	public void update() {
 
 		super.update();
+
+		setSpeedAccordingToGroundType();
+
+		checkCharging();
 
 		updatePosition();
 

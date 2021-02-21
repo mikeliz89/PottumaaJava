@@ -13,7 +13,7 @@ public abstract class MapObject {
 	protected ArrayList<TileMap> tileMaps;
 	protected double xMap;
 	protected double yMap;
-	
+
 	// position and vector
 	protected double x;
 	protected double y;
@@ -31,8 +31,6 @@ public abstract class MapObject {
 	// collision
 	protected int currentRow;
 	protected int currentColumn;
-	protected double xdest;
-	protected double ydest;
 	protected double xtemp;
 	protected double ytemp;
 	protected boolean topLeft;
@@ -97,15 +95,15 @@ public abstract class MapObject {
 		 topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
 		 bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
 		 
-		int topleft = tileMap.getTileType(topTile, leftTile);
-		int topright = tileMap.getTileType(topTile, rightTile);
-		int bottomleft = tileMap.getTileType(bottomTile, leftTile);
-		int bottomright = tileMap.getTileType(bottomTile, rightTile);
+		int topLeftTileType = tileMap.getTileType(topTile, leftTile);
+		int topRightTileType = tileMap.getTileType(topTile, rightTile);
+		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
+		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
 		
-		topLeft = topleft == Tile.TILE_TYPE_BLOCKED;
-		topRight = topright == Tile.TILE_TYPE_BLOCKED;
-		bottomLeft = bottomleft == Tile.TILE_TYPE_BLOCKED;
-		bottomRight = bottomright == Tile.TILE_TYPE_BLOCKED;
+		topLeft = topLeftTileType == Tile.TILE_TYPE_BLOCKED;
+		topRight = topRightTileType == Tile.TILE_TYPE_BLOCKED;
+		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_BLOCKED;
+		bottomRight = bottomRightTileType == Tile.TILE_TYPE_BLOCKED;
 		
 	}
 	
@@ -113,15 +111,15 @@ public abstract class MapObject {
 		
 		currentColumn = (int)x / tm.getTileSize();
 		currentRow = (int)y / tm.getTileSize();
-		
-		xdest = x + dx;
-		ydest = y + dy;
+
+		double xDestination = x + dx;
+		double yDestination = y + dy;
 		
 		xtemp = x;
 		ytemp = y;
 
 		for (TileMap tileMap : tileMaps) {
-			calculateCorners(x, ydest, tileMap);
+			calculateCorners(x, yDestination, tileMap);
 			if (dy < 0) {
 				if (topLeft || topRight) {
 					dy = 0;
@@ -141,7 +139,7 @@ public abstract class MapObject {
 				}
 			}
 
-			calculateCorners(xdest, y, tileMap);
+			calculateCorners(xDestination, y, tileMap);
 			if (dx < 0) {
 				if (topLeft || bottomLeft) {
 					dx = 0;
@@ -160,7 +158,7 @@ public abstract class MapObject {
 			}
 
 			if (!falling) {
-				calculateCorners(x, ydest + 1, tileMap);
+				calculateCorners(x, yDestination + 1, tileMap);
 				//if (!bottomLeft && !bottomRight) {
 					//				falling = true;
 				//}

@@ -195,7 +195,7 @@ public abstract class Enemy extends MapObject {
 
 	private void drawHealthBar(Graphics2D g) {
 		healthBar.setX((int)this.x -10 + (int) xMap);
-		healthBar.setY((int)this.y-10 + (int) yMap);
+		healthBar.setY((int)this.y -10 + (int) yMap);
 		healthBar.setWidth(this.health);
 		healthBar.draw(g);
 	}
