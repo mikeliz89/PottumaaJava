@@ -108,34 +108,42 @@ public abstract class BaseLevel extends GameState  {
         // update player
         player.update();
 
-        for (MapPoint mapPoint : mapPoints) {
-            player.checkMapPointCollision(mapPoint, gsm);
-        }
+        checkMapPointCollisions();
 
+        updateTileMapPosition();
+
+        // attack enemies
+        player.checkAttack(enemies);
+
+        updateEnemies();
+
+        updateNPCs();
+
+        updateExplosions();
+    }
+
+    private void updateTileMapPosition() {
         for (TileMap tm : tileMaps) {
             tm.setPosition(
                     GamePanel.WIDTH / 2 - player.getX(),
                     GamePanel.HEIGHT / 2 - player.getY()
             );
         }
-
-        // attack enemies
-        player.checkAttack(enemies);
-
-        UpdateEnemies();
-
-        UpdateNPCs();
-
-        UpdateExplosions();
     }
 
-    private void UpdateNPCs() {
+    private void checkMapPointCollisions() {
+        for (MapPoint mapPoint : mapPoints) {
+            player.checkMapPointCollision(mapPoint);
+        }
+    }
+
+    private void updateNPCs() {
         for (NPC npc : NPCs) {
             npc.update();
         }
     }
 
-    private void UpdateEnemies() {
+    private void updateEnemies() {
         for(int i = 0; i < enemies.size(); i++) {
             Enemy e = enemies.get(i);
             e.update();
@@ -159,7 +167,7 @@ public abstract class BaseLevel extends GameState  {
         player.addMoney(e.getMoneyGainedWhenKilled());
     }
 
-    private void UpdateExplosions() {
+    private void updateExplosions() {
         for(int i = 0; i < explosions.size(); i++) {
             explosions.get(i).update();
             if(explosions.get(i).shouldRemove()) {
@@ -171,30 +179,41 @@ public abstract class BaseLevel extends GameState  {
 
     public void draw(Graphics2D g) {
 
-        DrawTileMaps(g);
+        drawTileMaps(g);
 
-        DrawMapPoints(g);
+        drawMapPoints(g);
 
-        DrawObstacles(g);
+        drawObstacles(g);
 
-        DrawNPCs(g);
+        drawNPCs(g);
 
-        DrawPlayer(g);
+        drawPlayer(g);
 
-        DrawEnemies(g);
+        drawEnemies(g);
 
-        DrawExplosions(g);
+        drawExplosions(g);
 
-        DrawHUD(g);
+        drawHUD(g);
+
+        drawInLevelZoneText(g);
     }
 
-    protected void DrawObstacles(Graphics2D g) {}
+    protected void drawObstacles(Graphics2D g) {}
 
-    private void DrawHUD(Graphics2D g) {
+    private void drawHUD(Graphics2D g) {
         hud.draw(g);
     }
 
-    private void DrawExplosions(Graphics2D g) {
+    private void drawInLevelZoneText(Graphics2D g) {
+        g.setFont(new Font("Arial", Font.PLAIN, 12));
+        g.setColor(Color.BLUE);
+        if(player.getIsInChangeLevelZone())
+            g.drawString("Press E",
+                    player.getX() + (int)player.getXMap(),
+                    player.getY() + (int)player.getYMap());
+    }
+
+    private void drawExplosions(Graphics2D g) {
         for (Explosion explosion : explosions) {
             TileMap tileMap = tileMaps.get(0);
             explosion.setMapPosition((int) tileMap.getX(), (int) tileMap.getY());
@@ -202,23 +221,23 @@ public abstract class BaseLevel extends GameState  {
         }
     }
 
-    private void DrawEnemies(Graphics2D g) {
+    private void drawEnemies(Graphics2D g) {
         for (Enemy enemy : enemies) {
             enemy.draw(g);
         }
     }
 
-    private void DrawNPCs(Graphics2D g) {
+    private void drawNPCs(Graphics2D g) {
         for(NPC npc : NPCs) {
             npc.draw(g);
         }
     }
 
-    private void DrawPlayer(Graphics2D g) {
+    private void drawPlayer(Graphics2D g) {
         player.draw(g);
     }
 
-    private void DrawMapPoints(Graphics2D g) {
+    private void drawMapPoints(Graphics2D g) {
         for (MapPoint mp : mapPoints) {
             TileMap tileMap = tileMaps.get(0);
             mp.setMapPosition((int) tileMap.getX(), (int) tileMap.getY());
@@ -226,7 +245,7 @@ public abstract class BaseLevel extends GameState  {
         }
     }
 
-    private void DrawTileMaps(Graphics2D g) {
+    private void drawTileMaps(Graphics2D g) {
         for (TileMap tm : tileMaps) {
             tm.draw(g);
         }
@@ -272,6 +291,12 @@ public abstract class BaseLevel extends GameState  {
         if(k == KeyEvent.VK_1) quickTravel(1);
         if(k == KeyEvent.VK_2) quickTravel(2);
         if(k == KeyEvent.VK_3) quickTravel(6);
+
+        if(player.getIsInChangeLevelZone()) {
+            if(k == KeyEvent.VK_E) {
+                player.changeLevel(gsm);
+            }
+        }
     }
 
     public void keyReleased(int k) {

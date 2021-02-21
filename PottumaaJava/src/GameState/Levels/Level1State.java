@@ -96,7 +96,7 @@ public class Level1State extends BaseLevel {
 	}
 
 	@Override
-	protected void DrawObstacles(Graphics2D g) {
+	protected void drawObstacles(Graphics2D g) {
 		playerHome.draw(g);
 	}
 	

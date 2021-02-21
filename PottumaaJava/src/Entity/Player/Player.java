@@ -6,7 +6,7 @@ import Entity.Enemies.Enemy;
 import GameState.GameStateManager;
 import GameState.ResourceManager;
 import GameState.SaveData;
-import MapPoint.MapPoint;
+import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
 
@@ -258,18 +258,34 @@ public class Player extends MapObject {
 		}
 		return groundTileMaps;
 	}
+
+	MapPoint mapPointForLevelChange;
+	private boolean isInChangeLevelZone = false;
 	
-	public void checkMapPointCollision(MapPoint mapPoint, GameStateManager gsm) {
+	public void checkMapPointCollision(MapPoint mapPoint) {
+		//todo: korjaa collision detection.
+		//todo: tällähetkellä vertaa pelaajan vasenta ylänurkkaa (0,0) mapPointin vaikutusalueeseen
 		if(x > mapPoint.getX() &&
 				x < mapPoint.getX() + mapPoint.getImage().getWidth() &&
 				y > mapPoint.getY() &&
 				y < mapPoint.getY() + mapPoint.getImage().getHeight()) {
-			mapPoint.playSoundEffect();
-			saveGame();
-			gsm.setState(mapPoint.getGotoLevel());
+			isInChangeLevelZone  = true;
+			mapPointForLevelChange = mapPoint;
+			return;
 		}
+		isInChangeLevelZone = false;
 	}
-	
+
+	public boolean getIsInChangeLevelZone() {
+		return isInChangeLevelZone;
+	}
+
+	public void changeLevel(GameStateManager gsm) {
+		mapPointForLevelChange.playSoundEffect();
+		saveGame();
+		gsm.setState(mapPointForLevelChange.getGotoLevel());
+	}
+
 	public void checkAttack(ArrayList<Enemy> enemies) {
 
 		for (Enemy e : enemies) {
