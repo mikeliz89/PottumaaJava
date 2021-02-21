@@ -15,7 +15,6 @@ public class GamePanel extends JPanel
 	// dimensions
 	public static final int WIDTH = 820;
 	public static final int HEIGHT = 480;
-
 	public static final int SCALE = 2;
 	
 	// game thread
@@ -26,10 +25,10 @@ public class GamePanel extends JPanel
 	
 	// image
 	private BufferedImage image;
-	private Graphics2D g;
-	
+	private Graphics2D graphics2D;
+
 	// game state manager
-	private GameStateManager gsm;
+	private GameStateManager gameStateManager;
 	
 	public GamePanel() {
 		super();
@@ -49,74 +48,86 @@ public class GamePanel extends JPanel
 	}
 	
 	private void init() {
-		
+		createImage();
+		createGraphics();
+		running = true;
+		createGameStateManager();
+	}
+
+	private void createGraphics() {
+		graphics2D = (Graphics2D) image.getGraphics();
+	}
+
+	private void createGameStateManager() {
+		gameStateManager = new GameStateManager();
+	}
+
+	private void createImage() {
 		image = new BufferedImage(
 					WIDTH, HEIGHT,
 					BufferedImage.TYPE_INT_RGB
 				);
-		g = (Graphics2D) image.getGraphics();
-		
-		running = true;
-		
-		gsm = new GameStateManager();
 	}
-	
+
 	public void run() {
-		
 		init();
-		
-		long start;
-		long elapsed;
-		long wait;
-		
-		// game loop
+		gameLoop();
+	}
+
+	private void gameLoop() {
+
 		while(running) {
-			
-			start = System.nanoTime();
-			
+
+			long start = System.nanoTime();
+
 			update();
 			draw();
 			drawToScreen();
-			
-			elapsed = System.nanoTime() - start;
-			
-			wait = targetTime - elapsed / 1000000;
-			if(wait < 0) wait = 5;
-			
+
+			long elapsed = getElapsed(start);
+			long wait = getWait(elapsed);
+
 			try {
 				Thread.sleep(wait);
-			}
-			catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
-		
 	}
-	
+
+	private long getElapsed(long start) {
+		return System.nanoTime() - start;
+	}
+
+	private long getWait(long elapsed) {
+		long wait = targetTime - elapsed / 1000000;
+		if(wait < 0) wait = 5;
+		return wait;
+	}
+
 	private void update() {
-		gsm.update();
+		gameStateManager.update();
 	}
 	private void draw() {
-		gsm.draw(g);
+		gameStateManager.draw(graphics2D);
 	}
 	private void drawToScreen() {
-		Graphics g2 = getGraphics();
-		g2.drawImage(image, 0, 0,
+		Graphics gamePanelGraphics = getGraphics();
+		gamePanelGraphics.drawImage(image, 0, 0,
 				WIDTH * SCALE, HEIGHT * SCALE,
 				null);
-		g2.dispose();
+		gamePanelGraphics.dispose();
 	}
 	
 	public void keyTyped(KeyEvent key) {}
 	public void keyPressed(KeyEvent key) {
-		if(gsm == null) return;
-		gsm.keyEventHappens(key);
-		gsm.keyPressed(key.getKeyCode());
+		if(gameStateManager == null) return;
+		gameStateManager.keyEventHappens(key);
+		gameStateManager.keyPressed(key.getKeyCode());
 	}
 	public void keyReleased(KeyEvent key) {
-		if(gsm == null) return;
-		gsm.keyReleased(key.getKeyCode());
+		if(gameStateManager == null) return;
+		gameStateManager.keyReleased(key.getKeyCode());
 	}
 
 }
