@@ -202,7 +202,7 @@ public abstract class BaseLevel extends GameState  {
     private void DrawExplosions(Graphics2D g) {
         for (Explosion explosion : explosions) {
             explosion.setMapPosition(
-                    (int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
+                    (int) tileMaps.get(0).getX(), (int) tileMaps.get(0).getY());
             explosion.draw(g);
         }
     }
@@ -225,7 +225,7 @@ public abstract class BaseLevel extends GameState  {
 
     private void DrawMapPoints(Graphics2D g) {
         for (MapPoint mp : mapPoints) {
-            mp.setMapPosition((int) tileMaps.get(0).getx(), (int) tileMaps.get(0).gety());
+            mp.setMapPosition((int) tileMaps.get(0).getX(), (int) tileMaps.get(0).getY());
             mp.draw(g);
         }
     }

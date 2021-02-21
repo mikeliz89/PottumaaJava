@@ -16,10 +16,10 @@ public class TileMap {
 	private double y;
 	
 	// bounds
-	private int xmin;
-	private int ymin;
-	private int xmax;
-	private int ymax;
+	private int xMin;
+	private int yMin;
+	private int xMax;
+	private int yMax;
 	
 	private double tween;
 	
@@ -49,7 +49,6 @@ public class TileMap {
 	public static final int OBSTACLE = 1;
 	
 	public TileMap(int tileSize) {
-		
 		this.tileSize = tileSize;
 		numRowsToDraw = GamePanel.HEIGHT / tileSize + 2;
 		numColsToDraw = GamePanel.WIDTH / tileSize + 2;
@@ -59,7 +58,6 @@ public class TileMap {
 	public void loadTiles(String s, boolean allBlocked) {
 		
 		try {
-
 			tileset = ImageIO.read(
 				getClass().getResourceAsStream(s)
 			);
@@ -79,12 +77,12 @@ public class TileMap {
 							tileSize,
 							tileSize
 						);
-					int tileFrictionType = Tile.NORMAL;
-					int type = Tile.NORMAL;
+					int tileFrictionType = Tile.TILE_TYPE_NORMAL;
+					int type = Tile.TILE_TYPE_NORMAL;
 					
 					if(allBlocked == true) {
 						if(count != 0) {
-							type = Tile.BLOCKED;
+							type = Tile.TILE_TYPE_BLOCKED;
 						}
 					} 
 					else {
@@ -92,10 +90,10 @@ public class TileMap {
 							count == 32 ||
 							count == 33 ||
 							count == 34) {
-							tileFrictionType = Tile.ICE;
+							tileFrictionType = Tile.TILE_FRICTION_TYPE_ICE;
 						}
 						if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
-							type = Tile.BLOCKED;
+							type = Tile.TILE_TYPE_BLOCKED;
 						}
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
@@ -104,12 +102,10 @@ public class TileMap {
 					count ++;
 				}
 			}
-
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public void loadMap(String s) {
@@ -120,9 +116,7 @@ public class TileMap {
 			BufferedReader br = new BufferedReader(
 						new InputStreamReader(in)
 					);
-			
-//			String delims = "\\t";
-//			String delims = "\\s+";
+
 			String delims = ";";
 			String firstRowValue = br.readLine();
 			String secondRowValue = br.readLine();
@@ -134,10 +128,10 @@ public class TileMap {
 			width = numCols * tileSize;
 			height = numRows * tileSize;
 			
-			xmin = GamePanel.WIDTH - width;
-			xmax = 0;
-			ymin = GamePanel.HEIGHT - height;
-			ymax = 0;
+			xMin = GamePanel.WIDTH - width;
+			xMax = 0;
+			yMin = GamePanel.HEIGHT - height;
+			yMax = 0;
 			
 			for(int row = 0; row < numRows; row++) {
 				String line = br.readLine();
@@ -151,18 +145,15 @@ public class TileMap {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	
-	
-	public double getx() { return x; }
-	public double gety() { return y; }
+
+	public double getX() { return x; }
+	public double getY() { return y; }
 	public double getTween() { return tween; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getTileSize() { return tileSize; }
 	public int getType() { return this.type; }
-	
 	public BufferedImage getTileSet() { return tileset; }
 	public Tile[][] getTiles() { return tiles; }
 	
@@ -172,7 +163,7 @@ public class TileMap {
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
-		return tiles[r][c].getType();
+		return tiles[r][c].getTileType();
 	}
 	
 	public int getTileFrictionType(int row, int col) {
@@ -213,7 +204,6 @@ public class TileMap {
 	public void setType(int type) { this.type = type; }
 	
 	public void setPosition(double x, double y) {
-		
 		this.x += (x - this.x); // * tween;
 		this.y += (y - this.y); // * tween;
 		
@@ -221,29 +211,22 @@ public class TileMap {
 		
 		colOffset = (int)-this.x / tileSize;
 		rowOffset = (int)-this.y / tileSize;
-		
 	}
 	
 	private void fixBounds() {
-		if(x < xmin) x = xmin;
-		if(y < ymin) y = ymin;
-		if(x > xmax) x = xmax;
-		if(y > ymax) y = ymax;
+		if(x < xMin) x = xMin;
+		if(y < yMin) y = yMin;
+		if(x > xMax) x = xMax;
+		if(y > yMax) y = yMax;
 	}
 	
 	public void draw(Graphics2D g) {
 		
-		for(
-			int row = rowOffset;
-			row < rowOffset + numRowsToDraw;
-			row++) {
+		for(int row = rowOffset; row < rowOffset + numRowsToDraw; row++) {
 			
 			if(row >= numRows) break;
 			
-			for(
-				int col = colOffset;
-				col < colOffset + numColsToDraw;
-				col++) {
+			for(int col = colOffset; col < colOffset + numColsToDraw; col++) {
 				
 				if(col >= numCols) break;
 				
@@ -260,15 +243,12 @@ public class TileMap {
 					null
 				);
 				
-				DrawDebugRectangles(g, col, row);
-				
+				drawDebugRectangle(g, col, row);
 			}
-			
 		}
-		
 	}
 
-	private void DrawDebugRectangles(Graphics2D g, int col, int row) {
+	private void drawDebugRectangle(Graphics2D g, int col, int row) {
 
 		if(GameOptions.IS_DEBUG_MODE == false)
 			return;

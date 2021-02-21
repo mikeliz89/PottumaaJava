@@ -69,7 +69,7 @@ public class Player extends MapObject {
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
 		health = maxHealth = PlayerSettings.PLAYER_START_HEALTH;
-		fire = maxFire = 2500;
+		fire = maxFire = PlayerSettings.PLAYER_START_FIRE;
 		fireCost = 200;
 		scratchRange = 40;
 		//size
@@ -241,8 +241,8 @@ public class Player extends MapObject {
 
 			// On ice player goes faster and breaks slower
 			if (tileMapGround.getType() == TileMap.GROUND) {
-				if (tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.ICE
-						|| tileMapGround.getTileFrictionType(bottomTile, rightTile) == Tile.ICE) {
+				if (tileMapGround.getTileFrictionType(bottomTile, leftTile) == Tile.TILE_FRICTION_TYPE_ICE
+						|| tileMapGround.getTileFrictionType(bottomTile, rightTile) == Tile.TILE_FRICTION_TYPE_ICE) {
 					this.stopSpeed = originalStopSpeed / 100; //TODO: take these values to the tile class..
 					this.maxSpeed = originalMaxSpeed * 1.2; //TODO: take these values to the tile class..
 				} else {

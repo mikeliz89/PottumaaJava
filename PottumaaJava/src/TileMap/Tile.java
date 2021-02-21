@@ -9,14 +9,14 @@ public class Tile {
 	private BufferedImage image;
 	
 	// tile types
-	private int type;
-	public static final int NORMAL = 0;
-	public static final int BLOCKED = 1;
+	private int tileType;
+	public static final int TILE_TYPE_NORMAL = 0;
+	public static final int TILE_TYPE_BLOCKED = 1;
 	
 	// tile friction types
 	private int frictionType; 
-	public static final int GRASS = 0;
-	public static final int ICE = 1;
+	public static final int TILE_FRICTION_TYPE_GRASS = 0;
+	public static final int TILE_FRICTION_TYPE_ICE = 1;
 	
 	// position
 	private double x;
@@ -26,7 +26,7 @@ public class Tile {
 	
 	public Tile(BufferedImage image, int type, int frictionType) {
 		this.image = image;
-		this.type = type;
+		this.tileType = type;
 		
 		this.frictionType = frictionType;
 	}
@@ -35,8 +35,8 @@ public class Tile {
 		return image;
 	}
 
-	public int getType() {
-		return type;
+	public int getTileType() {
+		return tileType;
 	}
 	
 	public int getFrictionType() {
@@ -51,8 +51,8 @@ public class Tile {
 		return this.y;
 	}
 	
-	public void setType(int type) {
-		this.type = type;
+	public void setTileType(int tileType) {
+		this.tileType = tileType;
 	}
 	
 	public void setFrictionType(int frictionType) {

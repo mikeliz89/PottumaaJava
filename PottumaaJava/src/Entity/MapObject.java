@@ -102,10 +102,10 @@ public abstract class MapObject {
 		int bottomleft = tileMap.getTileType(bottomTile, leftTile);
 		int bottomright = tileMap.getTileType(bottomTile, rightTile);
 		
-		topLeft = topleft == Tile.BLOCKED;
-		topRight = topright == Tile.BLOCKED;
-		bottomLeft = bottomleft == Tile.BLOCKED;
-		bottomRight = bottomright == Tile.BLOCKED;
+		topLeft = topleft == Tile.TILE_TYPE_BLOCKED;
+		topRight = topright == Tile.TILE_TYPE_BLOCKED;
+		bottomLeft = bottomleft == Tile.TILE_TYPE_BLOCKED;
+		bottomRight = bottomright == Tile.TILE_TYPE_BLOCKED;
 		
 	}
 	
@@ -206,8 +206,8 @@ public abstract class MapObject {
 	
 	public void setMapPosition() {
 		for (TileMap tileMap : tileMaps) {
-			xmap = tileMap.getx();
-			ymap = tileMap.gety();
+			xmap = tileMap.getX();
+			ymap = tileMap.getY();
 		}
 	}
 	

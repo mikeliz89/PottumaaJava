@@ -79,10 +79,10 @@ public class MapPoint {
 				null
 			);
 
-		DrawDebugRectangle(g);
+		drawDebugRectangle(g);
 	}
 
-	private void DrawDebugRectangle(Graphics2D g) {
+	private void drawDebugRectangle(Graphics2D g) {
 		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
