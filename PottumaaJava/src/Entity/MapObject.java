@@ -31,8 +31,8 @@ public abstract class MapObject {
 	// collision
 	protected int currentRow;
 	protected int currentColumn;
-	protected double xtemp;
-	protected double ytemp;
+	protected double xTemp;
+	protected double yTemp;
 	protected boolean topLeft;
 	protected boolean topRight;
 	protected boolean bottomLeft;
@@ -55,7 +55,6 @@ public abstract class MapObject {
 	protected boolean up;
 	protected boolean down;
 	protected boolean jumping;
-	protected boolean falling;
 
 	// movement attributes
 	protected double moveSpeed;
@@ -100,10 +99,10 @@ public abstract class MapObject {
 		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
 		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
 		
-		topLeft = topLeftTileType == Tile.TILE_TYPE_BLOCKED;
-		topRight = topRightTileType == Tile.TILE_TYPE_BLOCKED;
-		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_BLOCKED;
-		bottomRight = bottomRightTileType == Tile.TILE_TYPE_BLOCKED;
+		topLeft = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		topRight = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomRight = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
 		
 	}
 	
@@ -115,27 +114,26 @@ public abstract class MapObject {
 		double xDestination = x + dx;
 		double yDestination = y + dy;
 		
-		xtemp = x;
-		ytemp = y;
+		xTemp = x;
+		yTemp = y;
 
 		for (TileMap tileMap : tileMaps) {
 			calculateCorners(x, yDestination, tileMap);
 			if (dy < 0) {
 				if (topLeft || topRight) {
 					dy = 0;
-					ytemp = currentRow * tm.getTileSize() + collisionBoxHeight / 2;
+					yTemp = currentRow * tm.getTileSize() + collisionBoxHeight / 2;
 				} else {
-					ytemp += dy;
+					yTemp += dy;
 				}
 			}
 			if (dy > 0) {
 				if (bottomLeft || bottomRight) {
 
 					dy = 0;
-					falling = false;
-					ytemp = (currentRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
+					yTemp = (currentRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
 				} else {
-					ytemp += dy;
+					yTemp += dy;
 				}
 			}
 
@@ -143,26 +141,22 @@ public abstract class MapObject {
 			if (dx < 0) {
 				if (topLeft || bottomLeft) {
 					dx = 0;
-					xtemp = currentColumn * tm.getTileSize() + collisionBoxWidth / 2;
+					xTemp = currentColumn * tm.getTileSize() + collisionBoxWidth / 2;
 				} else {
-					xtemp += dx;
+					xTemp += dx;
 				}
 			}
 			if (dx > 0) {
 				if (topRight || bottomRight) {
 					dx = 0;
-					xtemp = (currentColumn + 1) * tm.getTileSize() - collisionBoxWidth / 2;
+					xTemp = (currentColumn + 1) * tm.getTileSize() - collisionBoxWidth / 2;
 				} else {
-					xtemp += dx;
+					xTemp += dx;
 				}
 			}
 
-			if (!falling) {
-				calculateCorners(x, yDestination + 1, tileMap);
-				//if (!bottomLeft && !bottomRight) {
-					//				falling = true;
-				//}
-			}
+			calculateCorners(x, yDestination + 1, tileMap);
+
 		}
 		
 	}

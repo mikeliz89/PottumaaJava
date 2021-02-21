@@ -1,8 +1,7 @@
 package Entity;
 
-import TileMap.TileMap;
+import TileMap.*;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -87,7 +86,7 @@ public class FireBall extends MapObject {
 		super.update();
 
 		checkTileMapCollisions();
-		setPosition(xtemp, ytemp);
+		setPosition(xTemp, yTemp);
 		
 		if(dx == 0 && !hit) {
 			setHit();
@@ -99,8 +98,8 @@ public class FireBall extends MapObject {
 	}
 
 	private void checkTileMapCollisions() {
-		for (TileMap tm : tileMaps) {
-			checkTileMapCollision(tm);
+		for (TileMap tileMap : tileMaps) {
+			checkTileMapCollision(tileMap);
 		}
 	}
 	

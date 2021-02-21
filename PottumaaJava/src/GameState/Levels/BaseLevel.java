@@ -85,7 +85,7 @@ public abstract class BaseLevel extends GameState  {
         tileMapGround.loadTiles(groundTileSetName, false);
         tileMapGround.loadMap(groundTileMapName);
         tileMapGround.setPosition(0, 0);
-        tileMapGround.setType(TileMap.GROUND);
+        tileMapGround.setType(Tile.TILE_TYPE_GROUND);
         tileMapGround.setTween(tileMapTween);
 
         // tiles: obstacles
@@ -93,7 +93,7 @@ public abstract class BaseLevel extends GameState  {
         tileMapObstacles.loadTiles(obstacleTileSetName, true);
         tileMapObstacles.loadMap(obstacleTileMapName);
         tileMapObstacles.setPosition(0, 0);
-        tileMapObstacles.setType(TileMap.OBSTACLE);
+        tileMapObstacles.setType(Tile.TILE_TYPE_OBSTACLE);
         tileMapObstacles.setTween(tileMapTween);
 
         tileMaps.add(tileMapGround);

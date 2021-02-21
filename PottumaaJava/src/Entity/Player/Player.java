@@ -252,7 +252,7 @@ public class Player extends MapObject {
 	private ArrayList<TileMap> getGroundTileMaps() {
 		var groundTileMaps = new ArrayList<TileMap>();
 		for(TileMap tileMap : tileMaps) {
-			if(tileMap.getType() == TileMap.GROUND) {
+			if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
 				groundTileMaps.add(tileMap);
 			}
 		}
@@ -452,7 +452,7 @@ public class Player extends MapObject {
 
 		checkTileMapCollisions();
 
-		setPosition(xtemp, ytemp);
+		setPosition(xTemp, yTemp);
 
 		checkAttackHasStopped();
 
@@ -469,8 +469,8 @@ public class Player extends MapObject {
 	}
 
 	private void checkTileMapCollisions() {
-		for (TileMap tm : tileMaps) {
-			checkTileMapCollision(tm);
+		for (TileMap tileMap : tileMaps) {
+			checkTileMapCollision(tileMap);
 		}
 	}
 

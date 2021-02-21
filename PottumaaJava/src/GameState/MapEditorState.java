@@ -86,7 +86,7 @@ public class MapEditorState extends GameState {
 		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
 		tileMapGround.loadMap("/Maps/map1.csv");
 		tileMapGround.setPosition(0, 0);
-		tileMapGround.setType(TileMap.GROUND);
+		tileMapGround.setType(Tile.TILE_TYPE_GROUND);
 		tileMapGround.setTween(tileMapTween);
 		
 		tileMaps.add(tileMapGround);

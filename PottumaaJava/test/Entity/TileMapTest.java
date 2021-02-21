@@ -1,6 +1,6 @@
 package Entity;
 
-import TileMap.TileMap;
+import TileMap.*;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +13,7 @@ public class TileMapTest {
         myTileMap.loadTiles("/Tilesets/grasstileset.png", false);
         myTileMap.loadMap("/Maps/map1.csv");
         myTileMap.setPosition(0, 0);
-        myTileMap.setType(TileMap.GROUND);
+        myTileMap.setType(Tile.TILE_TYPE_GROUND);
     }
 
     @Test

@@ -10,8 +10,8 @@ public class Tile {
 	
 	// tile types
 	private int tileType;
-	public static final int TILE_TYPE_NORMAL = 0;
-	public static final int TILE_TYPE_BLOCKED = 1;
+	public static final int TILE_TYPE_GROUND = 0;
+	public static final int TILE_TYPE_OBSTACLE = 1;
 	
 	// tile friction types
 	private int frictionType; 

@@ -4,7 +4,7 @@ import Audio.AudioPlayer;
 import Entity.Animation;
 import Entity.HealthBar;
 import Entity.MapObject;
-import TileMap.TileMap;
+import TileMap.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,9 +63,9 @@ public abstract class Enemy extends MapObject {
 	public void update() {
 		updatePosition();
 
-		checkCollisions();
+		checkTileMapCollisions();
 
-		setPosition(xtemp, ytemp);
+		setPosition(xTemp, yTemp);
 
 		updateFlinching();
 
@@ -108,25 +108,15 @@ public abstract class Enemy extends MapObject {
 		}
 	}
 
-	private void checkCollisions() {
+	private void checkTileMapCollisions() {
 		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
 		}
 	}
 
 	protected void updatePosition() {
-
 		moveUpOrDown();
-
 		moveLeftOrRight();
-
-		falling();
-	}
-
-	private void falling() {
-		if(falling) {
-			dy += fallSpeed;
-		}
 	}
 
 	private void moveUpOrDown() {

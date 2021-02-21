@@ -26,8 +26,8 @@ public class TileMap {
 	// map
 	private int[][] map;
 	private int tileSize;
-	private int numRows;
-	private int numCols;
+	private int numberOfRows;
+	private int numberOfColumns;
 	private int width;
 	private int height;
 	
@@ -44,9 +44,6 @@ public class TileMap {
 	private int colOffset;
 	private int numRowsToDraw;
 	private int numColsToDraw;
-	
-	public static final int GROUND = 0;
-	public static final int OBSTACLE = 1;
 	
 	public TileMap(int tileSize) {
 		this.tileSize = tileSize;
@@ -77,12 +74,12 @@ public class TileMap {
 							tileSize,
 							tileSize
 						);
-					int tileFrictionType = Tile.TILE_TYPE_NORMAL;
-					int type = Tile.TILE_TYPE_NORMAL;
+					int tileFrictionType = Tile.TILE_TYPE_GROUND;
+					int type = Tile.TILE_TYPE_GROUND;
 					
 					if(allBlocked == true) {
 						if(count != 0) {
-							type = Tile.TILE_TYPE_BLOCKED;
+							type = Tile.TILE_TYPE_OBSTACLE;
 						}
 					} 
 					else {
@@ -93,7 +90,7 @@ public class TileMap {
 							tileFrictionType = Tile.TILE_FRICTION_TYPE_ICE;
 						}
 						if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
-							type = Tile.TILE_TYPE_BLOCKED;
+							type = Tile.TILE_TYPE_OBSTACLE;
 						}
 					}
 					Tile newTile = new Tile(subimage, type, tileFrictionType);
@@ -117,26 +114,26 @@ public class TileMap {
 						new InputStreamReader(in)
 					);
 
-			String delims = ";";
+			String delimeters = ";";
 			String firstRowValue = br.readLine();
 			String secondRowValue = br.readLine();
 			
-			numCols = Integer.parseInt(firstRowValue.substring(0, firstRowValue.indexOf(';'))); 
-			numRows = Integer.parseInt(secondRowValue.substring(0, secondRowValue.indexOf(';')));
+			numberOfColumns = Integer.parseInt(firstRowValue.substring(0, firstRowValue.indexOf(';')));
+			numberOfRows = Integer.parseInt(secondRowValue.substring(0, secondRowValue.indexOf(';')));
 			
-			map = new int[numRows][numCols];
-			width = numCols * tileSize;
-			height = numRows * tileSize;
+			map = new int[numberOfRows][numberOfColumns];
+			width = numberOfColumns * tileSize;
+			height = numberOfRows * tileSize;
 			
 			xMin = GamePanel.WIDTH - width;
 			xMax = 0;
 			yMin = GamePanel.HEIGHT - height;
 			yMax = 0;
 			
-			for(int row = 0; row < numRows; row++) {
+			for(int row = 0; row < numberOfRows; row++) {
 				String line = br.readLine();
-				String[] tokens = line.split(delims, -1);
-				for(int col = 0; col < numCols; col++) {
+				String[] tokens = line.split(delimeters, -1);
+				for(int col = 0; col < numberOfColumns; col++) {
 					map[row][col] = Integer.parseInt(tokens[col]);
 				}
 			}
@@ -167,19 +164,18 @@ public class TileMap {
 	}
 	
 	public int getTileFrictionType(int row, int col) {
-
 		row = makeRowValueSafe(row);
 		col = makeColumnValueSafe(col);
-
 		int rc = map[row][col];
 		int r = rc / numTilesX;
 		int c = rc % numTilesX;
-		return tiles[r][c].getFrictionType();
+		var tile = tiles[r][c];
+		return tile.getFrictionType();
 	}
 
 	private int makeColumnValueSafe(int col) {
-		if(col >= numCols)
-			col = numCols -1;
+		if(col >= numberOfColumns)
+			col = numberOfColumns -1;
 
 		if(col <= 0)
 			col = 0;
@@ -190,8 +186,8 @@ public class TileMap {
 		if(row <= 0)
 			row = 0;
 
-		if(row >= numRows)
-			row = numRows -1;
+		if(row >= numberOfRows)
+			row = numberOfRows -1;
 		return row;
 	}
 
@@ -224,11 +220,11 @@ public class TileMap {
 		
 		for(int row = rowOffset; row < rowOffset + numRowsToDraw; row++) {
 			
-			if(row >= numRows) break;
+			if(row >= numberOfRows) break;
 			
 			for(int col = colOffset; col < colOffset + numColsToDraw; col++) {
 				
-				if(col >= numCols) break;
+				if(col >= numberOfColumns) break;
 				
 				if(map[row][col] == 0) continue;
 				
