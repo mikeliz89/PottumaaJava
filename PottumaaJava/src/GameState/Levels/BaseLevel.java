@@ -110,7 +110,12 @@ public abstract class BaseLevel extends GameState  {
 
         checkMapPointCollisions();
 
-        updateTileMapPosition();
+        for (TileMap tm : tileMaps) {
+            tm.setPosition(
+                    GamePanel.WIDTH / 2 - player.getX(),
+                    GamePanel.HEIGHT / 2 - player.getY()
+            );
+        }
 
         // attack enemies
         player.checkAttack(enemies);
@@ -120,15 +125,6 @@ public abstract class BaseLevel extends GameState  {
         updateNPCs();
 
         updateExplosions();
-    }
-
-    private void updateTileMapPosition() {
-        for (TileMap tm : tileMaps) {
-            tm.setPosition(
-                    GamePanel.WIDTH / 2 - player.getX(),
-                    GamePanel.HEIGHT / 2 - player.getY()
-            );
-        }
     }
 
     private void checkMapPointCollisions() {

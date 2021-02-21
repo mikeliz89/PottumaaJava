@@ -9,6 +9,7 @@ import GameState.SaveData;
 import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
+import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -263,16 +264,18 @@ public class Player extends MapObject {
 	private boolean isInChangeLevelZone = false;
 	
 	public void checkMapPointCollision(MapPoint mapPoint) {
-		//todo: korjaa collision detection.
-		//todo: tällähetkellä vertaa pelaajan vasenta ylänurkkaa (0,0) mapPointin vaikutusalueeseen
-		if(x > mapPoint.getX() &&
-				x < mapPoint.getX() + mapPoint.getImage().getWidth() &&
-				y > mapPoint.getY() &&
-				y < mapPoint.getY() + mapPoint.getImage().getHeight()) {
+
+		var mapPointRectangle = new Rectangle((int)mapPoint.getX(), (int)mapPoint.getY(),
+				mapPoint.getImage().getWidth(), mapPoint.getImage().getHeight());
+
+		var playerRectangle = new Rectangle((int)x, (int)y, width, height);
+
+		if(playerRectangle.intersects(mapPointRectangle)) {
 			isInChangeLevelZone  = true;
 			mapPointForLevelChange = mapPoint;
 			return;
 		}
+
 		isInChangeLevelZone = false;
 	}
 
