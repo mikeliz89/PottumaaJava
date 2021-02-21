@@ -259,13 +259,14 @@ public class Player extends MapObject {
 		return groundTileMaps;
 	}
 	
-	public void checkLevelPoints(MapPoint levelPoint, GameStateManager gsm) {
-		if(x > levelPoint.getX() &&
-				x < levelPoint.getX() + levelPoint.getImage().getWidth() &&
-				y > levelPoint.getY() &&
-				y < levelPoint.getY() + levelPoint.getImage().getHeight()) {
-			levelPoint.playSoundEffect();
-			gsm.setState(levelPoint.getGotoLevel());
+	public void checkMapPointCollision(MapPoint mapPoint, GameStateManager gsm) {
+		if(x > mapPoint.getX() &&
+				x < mapPoint.getX() + mapPoint.getImage().getWidth() &&
+				y > mapPoint.getY() &&
+				y < mapPoint.getY() + mapPoint.getImage().getHeight()) {
+			mapPoint.playSoundEffect();
+			saveGame();
+			gsm.setState(mapPoint.getGotoLevel());
 		}
 	}
 	

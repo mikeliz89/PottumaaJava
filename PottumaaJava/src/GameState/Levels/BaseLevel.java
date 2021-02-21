@@ -109,7 +109,7 @@ public abstract class BaseLevel extends GameState  {
         player.update();
 
         for (MapPoint mapPoint : mapPoints) {
-            player.checkLevelPoints(mapPoint, gsm);
+            player.checkMapPointCollision(mapPoint, gsm);
         }
 
         for (TileMap tm : tileMaps) {
