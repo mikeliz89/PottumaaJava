@@ -3,6 +3,7 @@ package MapPoint;
 import Audio.AudioPlayer;
 import Main.GameOptions;
 
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -19,14 +20,61 @@ public class MapPoint {
 	private double yMap;
 	private int gotoLevel;
 	private String mapPointSound;
-
+	private int mapPointType;
 	private Hashtable<String, AudioPlayer> sfx;
+
+	public static final int MAP_POINT_TYPE_ARROW_UP = 1;
+	public static final int MAP_POINT_TYPE_ARROW_DOWN = 2;
+	public static final int MAP_POINT_TYPE_ARROW_LEFT = 3;
+	public static final int MAP_POINT_TYPE_ARROW_RIGHT = 4;
 	
-	public MapPoint(BufferedImage image, String mapPointSound) {
-		this.image = image;
+	public MapPoint(int mapPointType, String mapPointSound) {
+		this.mapPointType = mapPointType;
 		this.mapPointSound = mapPointSound;
 		sfx = new Hashtable<>();
+		setImage();
 		setSoundEffects();
+	}
+
+	private void setImage() {
+		try {
+			var imageName = getImageName();
+			BufferedImage tileset = ImageIO.read(
+					getClass().getResourceAsStream(imageName)
+			);
+
+			BufferedImage subImage = getSubImage(tileset);
+
+			image = subImage;
+
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	private BufferedImage getSubImage(BufferedImage tileset) {
+		switch(this.mapPointType) {
+			case MAP_POINT_TYPE_ARROW_RIGHT:
+				return tileset.getSubimage(30, 0, 30, 30);
+			case MAP_POINT_TYPE_ARROW_DOWN:
+				return tileset.getSubimage(60, 0, 30, 30);
+			case MAP_POINT_TYPE_ARROW_LEFT:
+				return tileset.getSubimage(90, 0, 30, 30);
+			case MAP_POINT_TYPE_ARROW_UP:
+				return tileset.getSubimage(0, 0, 30, 30);
+			default: throw new IllegalStateException("ImageName not configured for mapPointType" + this.mapPointType);
+		}
+	}
+
+	private String getImageName() {
+		switch(this.mapPointType) {
+			case MAP_POINT_TYPE_ARROW_DOWN:
+			case MAP_POINT_TYPE_ARROW_LEFT:
+			case MAP_POINT_TYPE_ARROW_RIGHT:
+			case MAP_POINT_TYPE_ARROW_UP:
+				return "/Tiles/arrows.png";
+			default: throw new IllegalStateException("ImageName not configured for mapPointType" + this.mapPointType);
+		}
 	}
 
 	private void setSoundEffects() {
