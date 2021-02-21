@@ -165,6 +165,10 @@ public class GameStateManager {
 	public float getBackgroundMusicVolume() {
 		return bgMusic.getVolume();
 	}
+
+	public int getCurrentState() {
+		return currentState;
+	}
 	
 }
 

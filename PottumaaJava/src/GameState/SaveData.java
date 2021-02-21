@@ -9,4 +9,5 @@ public class SaveData implements java.io.Serializable {
     public int money;
     public int experience;
     public int fire;
+    public int level;
 }
