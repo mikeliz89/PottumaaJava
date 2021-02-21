@@ -84,6 +84,8 @@ public class FireBall extends MapObject {
 	
 	public void update() {
 
+		super.update();
+
 		checkTileMapCollisions();
 		setPosition(xtemp, ytemp);
 		
@@ -91,7 +93,6 @@ public class FireBall extends MapObject {
 			setHit();
 		}
 
-		animation.update();
 		if(hit && animation.hasPlayedOnce()) {
 			remove = true;
 		}
@@ -101,11 +102,6 @@ public class FireBall extends MapObject {
 		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
 		}
-	}
-
-	public void draw(Graphics2D g) {
-		setMapPosition();
-		super.draw(g);
 	}
 	
 }

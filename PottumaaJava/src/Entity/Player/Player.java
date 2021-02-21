@@ -439,6 +439,8 @@ public class Player extends MapObject {
 	
 	public void update() {
 
+		super.update();
+
 		updatePosition();
 
 		checkTileMapCollisions();
@@ -456,6 +458,7 @@ public class Player extends MapObject {
 		setAnimation();
 
 		updateDirection();
+
 	}
 
 	private void checkTileMapCollisions() {
@@ -547,7 +550,6 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		animation.update();
 	}
 
 	private void updateFireBalls() {
@@ -568,8 +570,6 @@ public class Player extends MapObject {
 	}
 
 	public void draw(Graphics2D g) {
-		
-		setMapPosition();
 
 		drawFireBalls(g);
 

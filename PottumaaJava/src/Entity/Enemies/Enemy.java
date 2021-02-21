@@ -70,8 +70,6 @@ public abstract class Enemy extends MapObject {
 		updateFlinching();
 
 		checkWallHits();
-
-		updateAnimation();
 	}
 
 	//if it hits a wall, go other direction
@@ -110,10 +108,6 @@ public abstract class Enemy extends MapObject {
 		}
 	}
 
-	private void updateAnimation() {
-		animation.update();
-	}
-	
 	private void checkCollisions() {
 		for (TileMap tm : tileMaps) {
 			checkTileMapCollision(tm);
@@ -185,7 +179,6 @@ public abstract class Enemy extends MapObject {
 		if (drawEnemy()) return;
 
 		super.draw(g);
-		setMapPosition();
 		drawHealthBar(g);
 	}
 
@@ -201,8 +194,8 @@ public abstract class Enemy extends MapObject {
 	}
 
 	private void drawHealthBar(Graphics2D g) {
-		healthBar.setX((int)this.x -10 + (int)xmap);
-		healthBar.setY((int)this.y-10 + (int)ymap);
+		healthBar.setX((int)this.x -10 + (int) xMap);
+		healthBar.setY((int)this.y-10 + (int) yMap);
 		healthBar.setWidth(this.health);
 		healthBar.draw(g);
 	}

@@ -50,15 +50,8 @@ public abstract class NPC extends MapObject {
 	public int getHealth() {
 		return this.health;
 	}
-	
-	public void update() {
-		setMapPosition();
-		animation.update();
-	}
 
 	public void draw(Graphics2D g) {
-
-		if(notOnScreen()) return;
 
 		super.draw(g);
 		drawHealthBar(g);
@@ -66,8 +59,8 @@ public abstract class NPC extends MapObject {
 	}
 
 	private void drawHealthBar(Graphics2D g) {
-		healthBar.setX((int)this.x -10 + (int)xmap);
-		healthBar.setY((int)this.y -20 + (int)ymap);
+		healthBar.setX((int)this.x -10 + (int) xMap);
+		healthBar.setY((int)this.y -20 + (int) yMap);
 		healthBar.setWidth(this.health);
 		healthBar.draw(g);
 	}
@@ -75,9 +68,9 @@ public abstract class NPC extends MapObject {
 	private void drawName(Graphics2D g) {
 		g.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
 		g.setColor(Color.BLACK);
-		g.drawString(name, (int)this.x-20 + (int)xmap, (int)this.y - 25 + (int) ymap);
+		g.drawString(name, (int)this.x-20 + (int) xMap, (int)this.y - 25 + (int) yMap);
 		g.setColor(Color.CYAN);
-		g.drawString(profession, (int)this.x-20 +(int)xmap, (int)this.y -10 + (int) ymap);
+		g.drawString(profession, (int)this.x-20 +(int) xMap, (int)this.y -10 + (int) yMap);
 	}
 	
 }

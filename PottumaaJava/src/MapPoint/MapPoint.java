@@ -15,8 +15,8 @@ public class MapPoint {
 	// position
 	private double x;
 	private double y;
-	private double xmap;
-	private double ymap;
+	private double xMap;
+	private double yMap;
 	private int gotoLevel;
 	private String mapPointSound;
 
@@ -58,9 +58,9 @@ public class MapPoint {
 		this.y = y;
 	}
 	
-	public void setMapPosition(int xmap, int ymap) {
-		this.xmap = xmap;
-		this.ymap = ymap;
+	public void setMapPosition(int xMap, int yMap) {
+		this.xMap = xMap;
+		this.yMap = yMap;
 	}
 	
 	public void setGotoLevel(int gotoLevel) { 
@@ -74,8 +74,8 @@ public class MapPoint {
 	public void draw(Graphics2D g) {
 		g.drawImage(
 			this.image,
-			(int)(x + xmap - this.image.getWidth() / 2),
-			(int)(y + ymap - this.image.getHeight() / 2),
+			(int)(x + xMap - this.image.getWidth() / 2),
+			(int)(y + yMap - this.image.getHeight() / 2),
 				null
 			);
 
@@ -88,8 +88,8 @@ public class MapPoint {
 
 		g.setColor(Color.RED);
 		g.drawRect(
-				(int)(x + xmap - this.image.getWidth() / 2),
-				(int)(y + ymap - this.image.getHeight() / 2),
+				(int)(x + xMap - this.image.getWidth() / 2),
+				(int)(y + yMap - this.image.getHeight() / 2),
 				this.image.getWidth(),
 				this.image.getHeight()
 		);

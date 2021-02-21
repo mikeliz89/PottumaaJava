@@ -21,8 +21,8 @@ public class Tile {
 	// position
 	private double x;
 	private double y;
-	private double xmap;
-	private double ymap;
+	private double xMap;
+	private double yMap;
 	
 	public Tile(BufferedImage image, int type, int frictionType) {
 		this.image = image;
@@ -64,16 +64,16 @@ public class Tile {
 		this.y = y;
 	}
 	
-	public void setMapPosition(int xmap, int ymap) {
-		this.xmap = xmap;
-		this.ymap = ymap;
+	public void setMapPosition(int xMap, int yMap) {
+		this.xMap = xMap;
+		this.yMap = yMap;
 	}
 	
 	public void draw(Graphics2D g) {
 		g.drawImage(
 			this.image,
-			(int)(x + xmap - this.image.getWidth() / 2),
-			(int)(y + ymap - this.image.getHeight() / 2),
+			(int)(x + xMap - this.image.getWidth() / 2),
+			(int)(y + yMap - this.image.getHeight() / 2),
 				null
 			);
 
@@ -83,8 +83,8 @@ public class Tile {
 	private void DrawRectangle(Graphics2D g) {
 		g.setColor(Color.RED);
 		g.drawRect(
-				(int)(x + xmap - this.image.getWidth() / 2),
-				(int)(y + ymap - this.image.getHeight() / 2),
+				(int)(x + xMap - this.image.getWidth() / 2),
+				(int)(y + yMap - this.image.getHeight() / 2),
 				this.image.getWidth(),
 				this.image.getHeight()
 		);

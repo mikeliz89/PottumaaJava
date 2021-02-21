@@ -11,8 +11,8 @@ public abstract class MapObject {
 	
 	// tile stuff
 	protected ArrayList<TileMap> tileMaps;
-	protected double xmap;
-	protected double ymap;
+	protected double xMap;
+	protected double yMap;
 	
 	// position and vector
 	protected double x;
@@ -206,8 +206,8 @@ public abstract class MapObject {
 	
 	public void setMapPosition() {
 		for (TileMap tileMap : tileMaps) {
-			xmap = tileMap.getX();
-			ymap = tileMap.getY();
+			xMap = tileMap.getX();
+			yMap = tileMap.getY();
 		}
 	}
 	
@@ -218,21 +218,29 @@ public abstract class MapObject {
 	public void setJumping(boolean b) { jumping = b; }
 	
 	public boolean notOnScreen() {
-		return x + xmap + width < 0 ||
-			x + xmap - width > GamePanel.WIDTH ||
-			y + ymap + height < 0 ||
-			y + ymap - height > GamePanel.HEIGHT;
+		return x + xMap + width < 0 ||
+			x + xMap - width > GamePanel.WIDTH ||
+			y + yMap + height < 0 ||
+			y + yMap - height > GamePanel.HEIGHT;
 	}
 
 	public double getXMap() {
-		return xmap;
+		return xMap;
 	}
 
 	public double getYMap() {
-		return ymap;
+		return yMap;
+	}
+
+	public void update() {
+		animation.update();
 	}
 	
 	public void draw(Graphics2D g) {
+
+		setMapPosition();
+
+		if(notOnScreen()) return;
 
 		//todo: onko tämä turha tarkistus?
 		if(!animation.hasFrames()) {
@@ -242,8 +250,8 @@ public abstract class MapObject {
 		if(facingRight) {
 			g.drawImage(
 				animation.getImage(),
-				(int)(x + xmap - width / 2),
-				(int)(y + ymap - height / 2),
+				(int)(x + xMap - width / 2),
+				(int)(y + yMap - height / 2),
 				null
 			);
 		}
@@ -252,8 +260,8 @@ public abstract class MapObject {
 			//todo: koodaa else iffit eri suuntiin menoille.
 			g.drawImage(
 				animation.getImage(),
-				(int)(x + xmap - width / 2 + width),
-				(int)(y + ymap - height / 2),
+				(int)(x + xMap - width / 2 + width),
+				(int)(y + yMap - height / 2),
 				-width,
 				height,
 				null

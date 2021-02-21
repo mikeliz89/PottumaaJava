@@ -44,11 +44,16 @@ public class HealthBar {
             maxWidth = maximumLength;
         }
 
-        //piirrä healthbarin sisältö
+        drawHealth(g);
+        drawOuterLines(g);
+    }
+
+    private void drawHealth(Graphics2D g) {
         g.setColor(Color.RED);
         g.fillRect(x, y , width, height);
+    }
 
-        //piirrä ääriviivat
+    private void drawOuterLines(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.drawRect(x, y, maxWidth, height);
     }

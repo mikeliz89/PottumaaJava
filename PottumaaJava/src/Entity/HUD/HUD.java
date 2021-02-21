@@ -27,8 +27,15 @@ public class HUD {
 	private boolean showQuestLog;
 	private boolean showPauseMenu;
 	
-	public HUD(Player p) {
-		player = p;
+	public HUD(Player player) {
+		this.player = player;
+		getImage();
+		createQuestLog();
+		createDialogBox();
+		setSoundEffects();
+	}
+
+	private void getImage() {
 		try {
 			image = ImageIO.read(
 				getClass().getResourceAsStream(
@@ -40,9 +47,6 @@ public class HUD {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		createQuestLog();
-		createDialogBox();
-		setSoundEffects();
 	}
 
 	private void createQuestLog() {
@@ -103,15 +107,12 @@ public class HUD {
 	public void draw(Graphics2D g) {
 
 		drawImage(g);
-
-		g.setFont(font);
-		g.setColor(Color.WHITE);
 		drawMoney(g);
 		drawHealth(g);
 		drawManaPoints(g);
 
 		if(showDialogBox)
-			dialogBox.draw(g);
+			drawDialogBox(g);
 
 		if(showMap)
 			drawMap(g);
@@ -131,6 +132,10 @@ public class HUD {
 		if(showPauseMenu) {
 			drawPauseMenu(g);
 		}
+	}
+
+	private void drawDialogBox(Graphics2D g) {
+		dialogBox.draw(g);
 	}
 
 	private void drawDebugArea(Graphics2D g) {
@@ -160,31 +165,8 @@ public class HUD {
 	}
 
 	private void drawMap(Graphics2D g) {
-		var x = 100;
-		var y = 100;
-		var width = GamePanel.WIDTH - 200;
-		var height = GamePanel.HEIGHT - 200;
-		var shape = new Rectangle(x, y, width, height);
 
-		//Piirrä läpinäkyvä neliö
-		int alpha = 127; // 50% transparent
-		Color semiTransParentColor = new Color(180, 150, 150, alpha);
-		g.setColor(semiTransParentColor);
-		g.fill(shape);
-
-		//Piirrä teksti
-		g.setColor(Color.WHITE);
-		g.setFont(font);
-		g.drawString("Map", shape.x + 10, shape.y + 20);
-	}
-
-	private void drawInventory(Graphics2D g) {
-
-		var x = 100;
-		var y = 100;
-		var width = GamePanel.WIDTH - 200;
-		var height = GamePanel.HEIGHT - 200;
-		var outerBox = new Rectangle(x, y, width, height);
+		var outerBox = getOuterBox();
 
 		//Piirrä läpinäkyvä neliö
 		int alpha = 127; // 50% transparent
@@ -192,16 +174,28 @@ public class HUD {
 		g.setColor(semiTransParentColor);
 		g.fill(outerBox);
 
-		//Piirrä sisempi läpinäkyvä neliö
-		alpha = 100; // vähemmän kuin 50% transparent
-		semiTransParentColor = new Color(0, 0, 0, alpha);
-		g.setColor(semiTransParentColor);
-		var innerBox = new Rectangle(x + 10, y + 10, width-20, height-20);
-		g.fill(innerBox);
+		//Piirrä teksti
+		g.setColor(Color.WHITE);
+		g.setFont(font);
+		g.drawString("Map", outerBox.x + 10, outerBox.y + 20);
+	}
 
-		//Piirrä ääriviivat
-		g.setColor(Color.BLACK);
-		g.drawRect(x, y, width, height);
+	private Rectangle getOuterBox() {
+		var x = 100;
+		var y = 100;
+		var width = GamePanel.WIDTH - 200;
+		var height = GamePanel.HEIGHT - 200;
+		return new Rectangle(x, y, width, height);
+	}
+
+	private void drawInventory(Graphics2D g) {
+
+		var outerBox = getOuterBox();
+		var innerBox = getInnerBox(outerBox);
+
+		drawInventoryInnerBox(g, innerBox);
+
+		drawOuterLines(g, outerBox);
 
 		drawInventoryTitle(g, innerBox);
 
@@ -214,6 +208,24 @@ public class HUD {
 		drawAttackStats(g, innerBox);
 
 		drawHealth(g, innerBox);
+	}
+
+	private Rectangle getInnerBox(Rectangle outerBox) {
+		return new Rectangle(outerBox.x + 10, outerBox.y + 10,
+				outerBox.width-20, outerBox.height-20);
+	}
+
+	private void drawInventoryInnerBox(Graphics2D g, Rectangle innerBox) {
+		int alpha = 100; // vähemmän kuin 50% transparent
+		Color semiTransParentColor = new Color(0, 0, 0, alpha);
+		g.setColor(semiTransParentColor);
+		g.fill(innerBox);
+	}
+
+	private void drawOuterLines(Graphics2D g, Rectangle rectangle) {
+		g.setColor(Color.BLACK);
+		g.drawRect(rectangle.x, rectangle.y,
+				rectangle.width, rectangle.height);
 	}
 
 	private final int inventoryXPosition = 10;
@@ -229,19 +241,17 @@ public class HUD {
 		g.setColor(Color.BLACK);
 		g.fillRect(box.x, box.y, box.width, box.height);
 
-		//Centered teksti. Todo: tee tästä oma luokkansa esim HUD.CenteredText
 		drawCenteredText(g, "You died.");
 	}
 
-	private void drawCenteredText(Graphics2D g, String s) {
+	private void drawCenteredText(Graphics2D g, String text) {
 		g.setColor(Color.RED);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
-		var string = s;
 		FontMetrics fm = g.getFontMetrics();
-		Rectangle2D r = fm.getStringBounds(string, g);
+		Rectangle2D r = fm.getStringBounds(text, g);
 		int x = (GamePanel.WIDTH - (int) r.getWidth()) / 2;
 		int y = (GamePanel.HEIGHT - (int) r.getHeight()) / 2 + fm.getAscent();
-		g.drawString(string, x, y);
+		g.drawString(text, x, y);
 	}
 
 	private void drawPauseMenu(Graphics2D g) {
@@ -286,6 +296,7 @@ public class HUD {
 	private final int textsXCoordinate = 25;
 
 	private void drawMoney(Graphics2D g) {
+		g.setFont(font);
 		g.setColor(Color.BLACK);
 		g.drawString(player.getMoneyInWallet() + " g",
 				textsXCoordinate,
@@ -294,6 +305,7 @@ public class HUD {
 	}
 
 	private void drawManaPoints(Graphics2D g) {
+		g.setFont(font);
 		g.setColor(Color.BLACK);
 		g.drawString(
 			player.getFire() / 100 + "/" + player.getMaxFire() / 100,
@@ -303,6 +315,7 @@ public class HUD {
 	}
 
 	private void drawHealth(Graphics2D g) {
+		g.setFont(font);
 		if(player.hasLowHealth())
 			g.setColor(Color.RED);
 		else

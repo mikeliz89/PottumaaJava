@@ -40,12 +40,4 @@ public class House extends Obstacle {
             e.printStackTrace();
         }
     }
-
-    public void update() {}
-
-    public void draw(Graphics2D g) {
-        setMapPosition();
-
-        super.draw(g);
-    }
 }
