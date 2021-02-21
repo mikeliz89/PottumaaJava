@@ -10,7 +10,6 @@ import GameState.SaveData;
 import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
-import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -62,6 +61,7 @@ public class Player extends MapObject {
 	private HashMap<String, AudioPlayer> sfx;
 
 	private Wallet wallet;
+	private int currentLevel;
 
 	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
 		this.tileMaps = tileMaps;
@@ -124,6 +124,10 @@ public class Player extends MapObject {
 		checkIfPlayerShouldBeDead();
 	}
 
+	public void setCurrentLevel(int level) {
+		currentLevel = level;
+	}
+
 	public void saveGame() {
 		var saveData = new SaveData();
 		saveData.name = name;
@@ -131,6 +135,8 @@ public class Player extends MapObject {
 		saveData.experience = experience;
 		saveData.fire = fire;
 		saveData.money = getMoneyInWallet();
+		saveData.level = currentLevel;
+
 		try {
 			ResourceManager.save(saveData, "1.save");
 			System.out.println("Save successful");
@@ -287,8 +293,10 @@ public class Player extends MapObject {
 
 	public void changeLevel(GameStateManager gsm) {
 		mapPointForLevelChange.playSoundEffect();
+		var nextLevel = mapPointForLevelChange.getGotoLevel();
+		setCurrentLevel(nextLevel);
 		saveGame();
-		gsm.setState(mapPointForLevelChange.getGotoLevel());
+		gsm.setState(nextLevel);
 	}
 
 	public void checkAttack(ArrayList<Enemy> enemies) {

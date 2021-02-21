@@ -72,6 +72,7 @@ public abstract class BaseLevel extends GameState  {
 
     private void createPlayer() {
         player = new Player(tileMaps, obstacles);
+        player.setCurrentLevel(gsm.getCurrentState());
     }
 
     private void populateTileMaps() {
