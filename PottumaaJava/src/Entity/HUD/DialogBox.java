@@ -23,26 +23,44 @@ public class DialogBox {
     }
 
     public void draw(Graphics2D g) {
+        Rectangle shape = getShape();
+
+        drawRectangle(g, shape);
+
+        drawOuterLines(g, shape);
+
+        drawHeader(g, shape);
+
+        drawText(g, text, shape.x + 20, shape.y + 20);
+    }
+
+    private Rectangle getShape() {
         var x = 100;
         var y = GamePanel.HEIGHT - 210;
         var width = GamePanel.WIDTH - 200;
         var height = 200;
         var shape = new Rectangle(x, y, width, height);
+        return shape;
+    }
+
+    private void drawRectangle(Graphics2D g, Rectangle shape) {
         int alpha = 127; // 50% transparent
         Color semiTransParentColor = new Color(180, 150, 150, alpha);
         g.setColor(semiTransParentColor);
         g.fill(shape);
+    }
 
-        //Piirrä ääriviivat
+    private void drawText(Graphics2D g, String text, int x, int y) {
         g.setColor(Color.BLACK);
-        g.drawRect(x, y, width, height);
+        g.drawString(text, x, y);
+    }
 
-        //Piirrä otsikko
-        g.setColor(Color.BLACK);
-        g.drawString(title, shape.x, shape.y);
+    private void drawHeader(Graphics2D g, Rectangle shape) {
+        drawText(g, title, shape.x, shape.y);
+    }
 
-        //Piirrä tekstiä
+    private void drawOuterLines(Graphics2D g, Rectangle shape) {
         g.setColor(Color.BLACK);
-        g.drawString(text, shape.x + 20, shape.y + 20);
+        g.drawRect(shape.x, shape.y, shape.width, shape.height);
     }
 }
