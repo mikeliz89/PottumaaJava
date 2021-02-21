@@ -17,30 +17,30 @@ public class Wallet {
         maxMoney = 1000;
     }
 
-    public int GetMoneyAmount() {
+    public int getMoney() {
         return money;
     }
 
-    public int GetMaxMoneyAmount() {
+    public int getMaxMoney() {
         return maxMoney;
     }
 
-    public void AddMoney(int amount) {
-        if(this.money + amount > this.maxMoney) {
+    public void addMoney(int money) {
+        if(this.money + money > this.maxMoney) {
             this.money = this.maxMoney;
             return;
         }
-        this.money += amount;
+        this.money += money;
     }
 
-    public void TakeMoney(int amount) {
-        if(this.money - amount < 0)
+    public void reduceMoney(int money) {
+        if(this.money - money < 0)
             this.money = 0;
         else
-            this.money -= amount;
+            this.money -= money;
     }
 
-    public void IncreaseMax() {
+    public void increaseMaxMoney() {
         maxMoney += 100;
     }
 }

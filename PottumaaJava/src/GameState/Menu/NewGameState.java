@@ -82,9 +82,9 @@ public class NewGameState extends BaseMenuState {
     private void saveGame() {
         var saveData = new SaveData();
         saveData.name = text;
-        saveData.hp = PlayerSettings.PLAYER_START_HEALTH;
-        saveData.money = PlayerSettings.PLAYER_START_MONEY_AMOUNT;
-        saveData.exp = PlayerSettings.PLAYER_START_EXP_AMOUNT;
+        saveData.health = PlayerSettings.PLAYER_START_HEALTH;
+        saveData.money = PlayerSettings.PLAYER_START_MONEY;
+        saveData.experience = PlayerSettings.PLAYER_START_EXP;
         try {
             ResourceManager.save(saveData, "1.save");
             System.out.println("Save successful");

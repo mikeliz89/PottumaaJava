@@ -27,7 +27,7 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	private boolean charging;
-	private int experiencePoints;
+	private int experience;
 	private double chargeSpeed;
 	//name
 	private String name;
@@ -65,7 +65,7 @@ public class Player extends MapObject {
 		this.tileMaps = tileMaps;
 		init();
 		//damage & health
-		experiencePoints = PlayerSettings.PLAYER_START_EXP_AMOUNT;
+		experience = PlayerSettings.PLAYER_START_EXP;
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
 		health = maxHealth = PlayerSettings.PLAYER_START_HEALTH;
@@ -108,12 +108,12 @@ public class Player extends MapObject {
 	private void loadGame() {
 		try {
 			SaveData data = (SaveData) ResourceManager.load("1.save");
-			health = data.hp;
+			health = data.health;
 			name = data.name;
-			experiencePoints = data.exp;
+			experience = data.experience;
 			fire = data.fire;
-			wallet.AddMoney(data.money);
-			System.out.println("Loaded player. Name: " + data.name + " hp " + data.hp);
+			wallet.addMoney(data.money);
+			System.out.println("Loaded player. Name: " + data.name + " health " + data.health);
 		} catch (Exception e) {
 			System.out.println("Couldn't load save data: " + e.getMessage());
 		}
@@ -124,8 +124,8 @@ public class Player extends MapObject {
 	public void saveGame() {
 		var saveData = new SaveData();
 		saveData.name = name;
-		saveData.hp = health;
-		saveData.exp = experiencePoints;
+		saveData.health = health;
+		saveData.experience = experience;
 		saveData.fire = fire;
 		saveData.money = getMoneyInWallet();
 		try {
@@ -145,11 +145,11 @@ public class Player extends MapObject {
 	}
 
 	public int getMoneyInWallet() {
-		return wallet.GetMoneyAmount();
+		return wallet.getMoney();
 	}
 
 	public void addMoney(int money) {
-		wallet.AddMoney(money);
+		wallet.addMoney(money);
 	}
 
 	public boolean hasLowHealth () {
@@ -161,11 +161,11 @@ public class Player extends MapObject {
 	}
 
 	public void addExperience(int exp) {
-		experiencePoints += exp;
+		experience += exp;
 	}
 
-	public int getExperiencePointsAmount() {
-		return experiencePoints;
+	public int getExperience() {
+		return experience;
 	}
 
  	private void loadSprites() {

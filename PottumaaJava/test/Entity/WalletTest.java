@@ -14,62 +14,62 @@ public class WalletTest {
     }
 
     @Test
-    void getMaxMoneyAmount() {
-        var maxMoneyAmount = myWallet.GetMaxMoneyAmount();
-        assertEquals(1000, maxMoneyAmount);
+    void getMaxMoney() {
+        var maxMoney = myWallet.getMaxMoney();
+        assertEquals(1000, maxMoney);
     }
 
     @Test
-    void getMoneyAmount() {
-        var moneyAmount = myWallet.GetMoneyAmount();
-        assertEquals(500, moneyAmount);
+    void getMoney() {
+        var money = myWallet.getMoney();
+        assertEquals(500, money);
     }
 
     @Test
     void IncreaseMaxShouldReturnMaxPlus100() {
-        var maxMoneyAmount =  myWallet.GetMaxMoneyAmount();
-        myWallet.IncreaseMax();
-        var newMaxAmount = myWallet.GetMaxMoneyAmount();
-        assertTrue(newMaxAmount == maxMoneyAmount+100);
-        myWallet.IncreaseMax();
-        newMaxAmount = myWallet.GetMaxMoneyAmount();
-        assertTrue(newMaxAmount == maxMoneyAmount+200);
+        var maxMoney =  myWallet.getMaxMoney();
+        myWallet.increaseMaxMoney();
+        var newMaxMoney = myWallet.getMaxMoney();
+        assertTrue(newMaxMoney == maxMoney+100);
+        myWallet.increaseMaxMoney();
+        newMaxMoney = myWallet.getMaxMoney();
+        assertTrue(newMaxMoney == maxMoney+200);
     }
 
     @Test
     void Taking100MoneyFromWalletShouldRemove100FromWallet() {
-        myWallet.TakeMoney(100);
-        var newMoney = myWallet.GetMoneyAmount();
+        myWallet.reduceMoney(100);
+        var newMoney = myWallet.getMoney();
         assertEquals(400, newMoney);
     }
 
     @Test
     void TakeMoney100ShouldRemove100FromWallet() {
-        myWallet.TakeMoney(40);
-        var newMoney = myWallet.GetMoneyAmount();
+        myWallet.reduceMoney(40);
+        var newMoney = myWallet.getMoney();
         assertEquals(460, newMoney);
     }
 
     @Test
     void TryingToTakeMoreFromWalletThanThereActuallyIs_WalletShouldHaveZeroMoney() {
-        myWallet.TakeMoney(myWallet.GetMoneyAmount() + 10);
-        var moneyInWallet = myWallet.GetMoneyAmount();
+        myWallet.reduceMoney(myWallet.getMoney() + 10);
+        var moneyInWallet = myWallet.getMoney();
         assertEquals(0, moneyInWallet);
     }
 
     @Test
     void AddMoneyToWalletShouldWork() {
-        var moneyInWalletAtTheStart = myWallet.GetMoneyAmount();
-        myWallet.AddMoney(100);
-        var moneyInWalletAfterAdding = myWallet.GetMoneyAmount();
+        var moneyInWalletAtTheStart = myWallet.getMoney();
+        myWallet.addMoney(100);
+        var moneyInWalletAfterAdding = myWallet.getMoney();
         assertEquals(moneyInWalletAfterAdding, moneyInWalletAtTheStart + 100);
     }
 
     @Test
     void AddMoreManyToWalletThanItsMaxAmountIs_WalletShouldHaveMaxAmountOfMoney() {
-        myWallet.AddMoney(1500);
-        var moneyInWalletAfterAdding = myWallet.GetMoneyAmount();
-        assertEquals(moneyInWalletAfterAdding, myWallet.GetMaxMoneyAmount());
+        myWallet.addMoney(1500);
+        var moneyInWalletAfterAdding = myWallet.getMoney();
+        assertEquals(moneyInWalletAfterAdding, myWallet.getMaxMoney());
     }
 
 }

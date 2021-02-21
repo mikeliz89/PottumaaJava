@@ -106,8 +106,8 @@ public class HUD {
 
 		g.setFont(font);
 		g.setColor(Color.WHITE);
-		drawMoneyAmount(g);
-		drawHealthPointsToHUD(g);
+		drawMoney(g);
+		drawHealth(g);
 		drawManaPoints(g);
 
 		if(showDialogBox)
@@ -209,11 +209,11 @@ public class HUD {
 
 		drawCharacterStatsTitle(g, innerBox);
 
-		drawExperiencePoints(g, innerBox);
+		drawExperience(g, innerBox);
 
 		drawAttackStats(g, innerBox);
 
-		drawHealthPoints(g, innerBox);
+		drawHealth(g, innerBox);
 	}
 
 	private final int inventoryXPosition = 10;
@@ -248,7 +248,7 @@ public class HUD {
 		drawCenteredText(g, "Game saved.");
 	}
 
-	private void drawHealthPoints(Graphics2D g, Rectangle innerBox) {
+	private void drawHealth(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.WHITE);
 		g.drawString("HP : "+ player.getHealth() + " / " + player.getMaxHealth(), innerBox.x + characterStatsXPosition, innerBox.y + 100);
 	}
@@ -258,9 +258,9 @@ public class HUD {
 		g.drawString("Character stats", innerBox.x + characterStatsXPosition, innerBox.y + 20);
 	}
 
-	private void drawExperiencePoints(Graphics2D g, Rectangle innerBox) {
+	private void drawExperience(Graphics2D g, Rectangle innerBox) {
 		g.setColor(Color.CYAN);
-		g.drawString("Exp: " + player.getExperiencePointsAmount(), innerBox.x + characterStatsXPosition, innerBox.y + 40 );
+		g.drawString("Exp: " + player.getExperience(), innerBox.x + characterStatsXPosition, innerBox.y + 40 );
 	}
 
 	private void drawGold(Graphics2D g, Rectangle innerBox) {
@@ -285,7 +285,7 @@ public class HUD {
 	}
 	private final int textsXCoordinate = 25;
 
-	private void drawMoneyAmount(Graphics2D g) {
+	private void drawMoney(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.drawString(player.getMoneyInWallet() + " g",
 				textsXCoordinate,
@@ -302,7 +302,7 @@ public class HUD {
 		);
 	}
 
-	private void drawHealthPointsToHUD(Graphics2D g) {
+	private void drawHealth(Graphics2D g) {
 		if(player.hasLowHealth())
 			g.setColor(Color.RED);
 		else
