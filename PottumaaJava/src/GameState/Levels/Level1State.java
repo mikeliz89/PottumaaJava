@@ -13,14 +13,29 @@ import java.awt.image.BufferedImage;
 public class Level1State extends BaseLevel {
 
 	private House playerHome;
-	public Level1State(GameStateManager gsm, int playerStartingPositionX, int playerStartingPositionY) {
-		super(gsm, playerStartingPositionX, playerStartingPositionY,
+	public Level1State(GameStateManager gsm, int previousState) {
+		super(gsm,
 				"/Tilesets/grasstileset.png",
 				"/Tilesets/obstacles.png",
 				"/Maps/map1.csv",
 				"/Maps/map1_obstacles.csv",
 				"/Music/bensound-ukulele.wav"
 				);
+		changeBackgroundMusic(previousState);
+		setPlayerStartingPosition(previousState);
+	}
+
+	private void changeBackgroundMusic(int previousState) {
+		if(previousState == GameStateManager.STATE_NEW_GAME)
+			backgroundMusicShouldChange = true;
+	}
+
+	private void setPlayerStartingPosition(int previousState) {
+		if(previousState == GameStateManager.STATE_LEVEL_2) {
+			player.setPosition(880, 585);
+			return;
+		}
+		player.setPosition(345, 200);
 	}
 
 	@Override
@@ -40,13 +55,13 @@ public class Level1State extends BaseLevel {
 			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
 			MapPoint mapPoint = new MapPoint(rightArrow, "");
 			mapPoint.setPosition(885, 585);
-			mapPoint.setGotoLevel(GameStateManager.LEVEL2STATE);
+			mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_2);
 			mapPoints.add(mapPoint);
 
 			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
 			MapPoint mapPoint2 = new MapPoint(upArrow, "/SFX/homeDoorOpen.wav");
 			mapPoint2.setPosition(345, 195);
-			mapPoint2.setGotoLevel(GameStateManager.INSIDEHOUSE);
+			mapPoint2.setGotoLevel(GameStateManager.STATE_PLAYER_HOME);
 			mapPoints.add(mapPoint2);
 		}
 		catch(Exception e) {

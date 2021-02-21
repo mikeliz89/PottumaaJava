@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public abstract class BaseLevel extends GameState  {
     protected ArrayList<TileMap> tileMaps;
-    private Player player;
+    protected Player player;
     protected ArrayList<Enemy> enemies;
     protected ArrayList<NPC> NPCs;
     private ArrayList<Explosion> explosions;
@@ -31,7 +31,7 @@ public abstract class BaseLevel extends GameState  {
     private String obstacleTileMapName;
     private String bgMusicSoundFileName;
 
-    public BaseLevel(GameStateManager gameStateManager, int playerStartingPositionX, int playerStartingPositionY,
+    public BaseLevel(GameStateManager gameStateManager,
                      String groundTileSetName, String obstacleTileSetName,
                      String groundTileMapName, String obstacleTileMapName,
                      String bgMusicSoundFileName) {
@@ -41,14 +41,10 @@ public abstract class BaseLevel extends GameState  {
         this.groundTileMapName = groundTileMapName;
         this.obstacleTileMapName = obstacleTileMapName;
         this.bgMusicSoundFileName = bgMusicSoundFileName;
-        init(playerStartingPositionX, playerStartingPositionY);
+        init();
     }
 
     public void init() {
-
-    }
-
-    public void init(int playerStartingPositionX, int playerStartingPositionY) {
 
         gsm.setSongToPlay(bgMusicSoundFileName);
 
@@ -61,7 +57,7 @@ public abstract class BaseLevel extends GameState  {
         populateTileMaps();
         populateMapPoints();
 
-        createPlayer(playerStartingPositionX, playerStartingPositionY);
+        createPlayer();
 
         populateEnemies();
         populateNPCs();
@@ -71,9 +67,8 @@ public abstract class BaseLevel extends GameState  {
         hud = new HUD(player);
     }
 
-    private void createPlayer(int playerStartingPositionX, int playerStartingPositionY) {
+    private void createPlayer() {
         player = new Player(tileMaps);
-        player.setPosition(playerStartingPositionX, playerStartingPositionY);
     }
 
     private void populateTileMaps() {

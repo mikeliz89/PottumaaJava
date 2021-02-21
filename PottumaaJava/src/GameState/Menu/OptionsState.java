@@ -29,7 +29,7 @@ public class OptionsState extends BaseMenuState {
 
 	protected void select() {
 		if(currentChoice == 0) {
-			gsm.setState(GameStateManager.MENUSTATE);
+			gsm.setState(GameStateManager.STATE_MAIN_MENU);
 		}
 	}
 

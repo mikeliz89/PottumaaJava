@@ -10,13 +10,17 @@ import java.awt.image.BufferedImage;
 
 public class Level2State extends BaseLevel {
 
-	public Level2State(GameStateManager gsm, int playerStartingPositionX, int playerStartingPositionY) {
-		super(gsm, playerStartingPositionX, playerStartingPositionY,
-				"/Tilesets/grasstileset.png",
+	public Level2State(GameStateManager gsm, int previousState) {
+		super(gsm,"/Tilesets/grasstileset.png",
 				"/Tilesets/obstacles.png",
 				"/Maps/map2.csv",
 				"/Maps/map2_obstacles.csv",
 				"/Music/happymusic.wav");
+		setPlayerStartingPosition(previousState);
+	}
+
+	private void setPlayerStartingPosition(int previousState) {
+		player.setPosition(80, 575);
 	}
 
 	@Override
@@ -29,7 +33,7 @@ public class Level2State extends BaseLevel {
 			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
 			MapPoint mapPoint = new MapPoint(leftArrow, "");
 			mapPoint.setPosition(leftArrow.getWidth() / 2, 585);
-			mapPoint.setGotoLevel(GameStateManager.LEVEL1STATE);
+			mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
 			mapPoints.add(mapPoint);
 		}
 		catch(Exception e) {

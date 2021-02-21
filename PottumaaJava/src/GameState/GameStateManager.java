@@ -1,13 +1,6 @@
 package GameState;
 
 import Audio.AudioPlayer;
-import GameState.Levels.Level1State;
-import GameState.Levels.Level2State;
-import GameState.Levels.PlayerHomeState;
-import GameState.Menu.HelpState;
-import GameState.Menu.MainMenuState;
-import GameState.Menu.NewGameState;
-import GameState.Menu.OptionsState;
 import Main.GameOptions;
 
 import java.awt.*;
@@ -17,17 +10,18 @@ public class GameStateManager {
 	
 	private GameState[] gameStates;
 	private int currentState;
-	public static final int NUMGAMESTATES = 8;
+	private int previousState;
+	public static final int NUMBER_OF_GAMESTATES = 8;
+
 	//States
-	public static final int MENUSTATE = 0;
-	public static final int LEVEL1STATE = 1;
-	public static final int LEVEL2STATE = 2;
-	public static final int HELPSTATE = 3;
-	public static final int OPTIONSSTATE = 4;
-	public static final int MAPEDITORSTATE = 5;
-	//public static final int LEVEL3STATE = 6;
-	public static final int INSIDEHOUSE = 6;
-	public static final int NEWGAMESTATE = 7;
+	public static final int STATE_MAIN_MENU = 0;
+	public static final int STATE_LEVEL_1 = 1;
+	public static final int STATE_LEVEL_2 = 2;
+	public static final int STATE_HELP = 3;
+	public static final int STATE_OPTIONS = 4;
+	public static final int STATE_MAP_EDITOR = 5;
+	public static final int STATE_PLAYER_HOME = 6;
+	public static final int STATE_NEW_GAME = 7;
 
 	private AudioPlayer bgMusic;
 	//https://www.bensound.com/royalty-free-music/track/ukulele
@@ -35,70 +29,31 @@ public class GameStateManager {
 	private String songToPlay;
 	
 	public GameStateManager() {
-		
-		gameStates = new GameState[NUMGAMESTATES];
-
-		//Ensin menu
-		currentState = GameOptions.FIRST_STATE;
+		gameStates = new GameState[NUMBER_OF_GAMESTATES];
+		currentState = STATE_MAIN_MENU;
 		bgMusic = new AudioPlayer(bgMusicFileName);
+		loadState();
 		playMusic();
-		
-		loadState(currentState);
-	}
-
-	private void loadState(int state) {
-		loadState(state, -1);
 	}
 	
-	private void loadState(int state, int previousState) {
+	private void loadState() {
+		var gameStateFactory = new GameStateFactory();
+		var gameState = gameStateFactory.getGameState(currentState, previousState, this);
+		gameStates[currentState] = gameState;
 
-		switch (state) {
-			case MENUSTATE -> {
-				gameStates[state] = new MainMenuState(this);
-				changeSong(songToPlay);
-			}
-			case LEVEL1STATE -> {
-
-				var playerStartingPointX = 0;
-				var playerStartingPointY = 0;
-				//Quick and dirty
-				if(previousState == MENUSTATE ||
-					previousState == LEVEL1STATE ||
-					previousState == NEWGAMESTATE) {
-					playerStartingPointX = 40;
-					playerStartingPointY = 100;
-				}
-				if(previousState == LEVEL2STATE) {
-					playerStartingPointX = 880;
-					playerStartingPointY = 585;
-				}
-				if(previousState == INSIDEHOUSE) {
-					playerStartingPointX = 345;
-					playerStartingPointY = 200;
-				}
-				gameStates[state] = new Level1State(this, playerStartingPointX, playerStartingPointY);
-				changeSong(songToPlay);
-			}
-			case LEVEL2STATE -> gameStates[state] = new Level2State(this, 80, 575);
-			case HELPSTATE -> gameStates[state] = new HelpState(this);
-			case OPTIONSSTATE -> gameStates[state] = new OptionsState(this);
-			case MAPEDITORSTATE -> gameStates[state] = new MapEditorState(this);
-			//case LEVEL3STATE -> gameStates[state] = new Level3State(this);
-			case INSIDEHOUSE -> gameStates[state] = new PlayerHomeState( this, 300, 300);
-			case NEWGAMESTATE -> gameStates[state] = new NewGameState(this);
-			default -> throw new IllegalStateException("Unexpected value: " + state);
-		}
+		if(gameStates[currentState].backgroundMusicShouldChange)
+			changeSong();
 	}
 	
-	private void unloadState(int state) {
-		gameStates[state] = null;
+	private void unloadState() {
+		gameStates[currentState] = null;
 	}
 	
 	public void setState(int state) {
-		unloadState(currentState);
-		int previousState = currentState;
+		unloadState();
+		previousState = currentState;
 		currentState = state;
-		loadState(currentState, previousState);
+		loadState();
 	}
 	
 	public void update() {
@@ -146,7 +101,7 @@ public class GameStateManager {
 		
 		gameStates[currentState].keyPressed(k);
 		
-		if(k == KeyEvent.VK_ESCAPE) setState(MENUSTATE);
+		if(k == KeyEvent.VK_ESCAPE) setState(STATE_MAIN_MENU);
 
 		if(k == KeyEvent.VK_D) GameOptions.ToggleDebugMode();
 		if(k == KeyEvent.VK_T) {
@@ -173,7 +128,7 @@ public class GameStateManager {
 		this.songToPlay = songToPlay;
 	}
 
-	private void changeSong(String songToPlay) {
+	private void changeSong() {
 		stopMusic();
 		createNewAudioPlayer(songToPlay);
 		playMusic();

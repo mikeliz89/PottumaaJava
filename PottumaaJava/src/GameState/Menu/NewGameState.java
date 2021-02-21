@@ -30,7 +30,7 @@ public class NewGameState extends BaseMenuState {
 
     protected void select() {
         if(currentChoice == 0) {
-            gsm.setState(GameStateManager.MENUSTATE);
+            gsm.setState(GameStateManager.STATE_MAIN_MENU);
         }
     }
 
@@ -58,7 +58,7 @@ public class NewGameState extends BaseMenuState {
 
         if(k == KeyEvent.VK_ENTER) {
             saveGame();
-            gsm.setState(GameStateManager.LEVEL1STATE);
+            gsm.setState(GameStateManager.STATE_LEVEL_1);
         }
 
         if(keyChar == KeyEvent.VK_BACK_SPACE) {

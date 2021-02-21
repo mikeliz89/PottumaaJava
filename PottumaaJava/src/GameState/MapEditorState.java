@@ -211,7 +211,7 @@ public class MapEditorState extends GameState {
 
 		//back
 		if(k == KeyEvent.VK_BACK_SPACE) {
-			gsm.setState(GameStateManager.MENUSTATE);
+			gsm.setState(GameStateManager.STATE_MAIN_MENU);
 		}
 
 		if(k == KeyEvent.VK_ENTER) {
