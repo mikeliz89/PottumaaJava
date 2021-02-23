@@ -6,9 +6,7 @@ import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.House;
 import GameState.*;
 import MapPoint.MapPoint;
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Level1State extends BaseLevel {
 
@@ -40,33 +38,22 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateObstacles() {
-
 		playerHome = new House(tileMaps);
 		playerHome.setPosition(527 - 180, 247 - 120);
+		obstacles.add(playerHome);
 	}
 
 	@Override
 	protected void populateMapPoints() {
-		try {
-			BufferedImage tileset = ImageIO.read(
-					getClass().getResourceAsStream("/Tiles/arrows.png")
-			);
+		var level2 = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_RIGHT, "");
+		level2.setPosition(885, 585);
+		level2.setGotoLevel(GameStateManager.STATE_LEVEL_2);
+		mapPoints.add(level2);
 
-			BufferedImage rightArrow =  tileset.getSubimage(30, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(rightArrow, "");
-			mapPoint.setPosition(885, 585);
-			mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_2);
-			mapPoints.add(mapPoint);
-
-			BufferedImage upArrow =  tileset.getSubimage(0, 0, 30, 30);
-			MapPoint mapPoint2 = new MapPoint(upArrow, "/SFX/homeDoorOpen.wav");
-			mapPoint2.setPosition(345, 195);
-			mapPoint2.setGotoLevel(GameStateManager.STATE_PLAYER_HOME);
-			mapPoints.add(mapPoint2);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		var playerHome = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_UP, "/SFX/homeDoorOpen.wav");
+		playerHome.setPosition(345, 195);
+		playerHome.setGotoLevel(GameStateManager.STATE_PLAYER_HOME);
+		mapPoints.add(playerHome);
 	}
 
 	@Override
@@ -107,7 +94,7 @@ public class Level1State extends BaseLevel {
 	}
 
 	@Override
-	protected void DrawObstacles(Graphics2D g) {
+	protected void drawObstacles(Graphics2D g) {
 		playerHome.draw(g);
 	}
 	

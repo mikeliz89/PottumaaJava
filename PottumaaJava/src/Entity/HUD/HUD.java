@@ -143,6 +143,12 @@ public class HUD {
 		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
+		drawDebugPlayerInfo(g);
+
+		drawDebugPlayerRectangle(g);
+	}
+
+	private void drawDebugPlayerInfo(Graphics2D g) {
 		Font titleFont = new Font(
 				"Century Gothic",
 				Font.PLAIN,
@@ -153,6 +159,9 @@ public class HUD {
 		g.drawString("Y: " + player.getY(), 400, 28);
 		g.drawString("MaxSpeed: " + player.getMaxSpeed(), 600, 13);
 		g.drawString("StopSpeed: " + player.getStopSpeed(), 600, 28);
+	}
+
+	private void drawDebugPlayerRectangle(Graphics2D g) {
 		g.setColor(Color.BLUE);
 		g.drawRect((int) (player.getX() + player.getXMap() - player.getWidth() / 2),
 				(int) (player.getY() + player.getYMap() - player.getHeight() / 2),

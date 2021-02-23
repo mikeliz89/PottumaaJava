@@ -1,9 +1,11 @@
 package Entity;
 
+import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import TileMap.TileMap;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,12 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerTest {
 
     private final ArrayList<TileMap> myTileMaps;
-
+    private final ArrayList<Obstacle> myObstacles;
     Player myPlayer;
 
     public PlayerTest() {
         myTileMaps = new ArrayList<>();
-        myPlayer = new Player(myTileMaps);
+        myObstacles = new ArrayList<>();
+        myPlayer = new Player(myTileMaps, myObstacles);
     }
 
     @Test

@@ -25,20 +25,10 @@ public class Level2State extends BaseLevel {
 
 	@Override
 	protected void populateMapPoints() {
-		try {
-			BufferedImage tileset = ImageIO.read(
-					getClass().getResourceAsStream("/Tiles/arrows.png")
-			);
-
-			BufferedImage leftArrow =  tileset.getSubimage(90, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(leftArrow, "");
-			mapPoint.setPosition(leftArrow.getWidth() / 2, 585);
-			mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
-			mapPoints.add(mapPoint);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		MapPoint mapPoint = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_LEFT, "");
+		mapPoint.setPosition(mapPoint.getImage().getWidth() / 2, 585);
+		mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
+		mapPoints.add(mapPoint);
 	}
 
 	@Override

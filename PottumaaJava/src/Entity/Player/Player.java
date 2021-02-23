@@ -3,10 +3,11 @@ package Entity.Player;
 import Audio.AudioPlayer;
 import Entity.*;
 import Entity.Enemies.Enemy;
+import Entity.Obstacles.Obstacle;
 import GameState.GameStateManager;
 import GameState.ResourceManager;
 import GameState.SaveData;
-import MapPoint.MapPoint;
+import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
 
@@ -60,9 +61,11 @@ public class Player extends MapObject {
 	private HashMap<String, AudioPlayer> sfx;
 
 	private Wallet wallet;
+	private int currentLevel;
 
-	public Player(ArrayList<TileMap> tileMaps) {
+	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
 		this.tileMaps = tileMaps;
+		this.obstacles = obstacles;
 		init();
 		//damage & health
 		experience = PlayerSettings.PLAYER_START_EXP;
@@ -121,6 +124,10 @@ public class Player extends MapObject {
 		checkIfPlayerShouldBeDead();
 	}
 
+	public void setCurrentLevel(int level) {
+		currentLevel = level;
+	}
+
 	public void saveGame() {
 		var saveData = new SaveData();
 		saveData.name = name;
@@ -128,6 +135,8 @@ public class Player extends MapObject {
 		saveData.experience = experience;
 		saveData.fire = fire;
 		saveData.money = getMoneyInWallet();
+		saveData.level = currentLevel;
+
 		try {
 			ResourceManager.save(saveData, "1.save");
 			System.out.println("Save successful");
@@ -258,18 +267,38 @@ public class Player extends MapObject {
 		}
 		return groundTileMaps;
 	}
+
+	MapPoint mapPointForLevelChange;
+	private boolean isInChangeLevelZone = false;
 	
-	public void checkMapPointCollision(MapPoint mapPoint, GameStateManager gsm) {
-		if(x > mapPoint.getX() &&
-				x < mapPoint.getX() + mapPoint.getImage().getWidth() &&
-				y > mapPoint.getY() &&
-				y < mapPoint.getY() + mapPoint.getImage().getHeight()) {
-			mapPoint.playSoundEffect();
-			saveGame();
-			gsm.setState(mapPoint.getGotoLevel());
+	public void checkMapPointCollision(MapPoint mapPoint) {
+
+		var mapPointRectangle = new Rectangle((int)mapPoint.getX(), (int)mapPoint.getY(),
+				mapPoint.getImage().getWidth(), mapPoint.getImage().getHeight());
+
+		var playerRectangle = new Rectangle((int)x, (int)y, width, height);
+
+		if(playerRectangle.intersects(mapPointRectangle)) {
+			isInChangeLevelZone  = true;
+			mapPointForLevelChange = mapPoint;
+			return;
 		}
+
+		isInChangeLevelZone = false;
 	}
-	
+
+	public boolean getIsInChangeLevelZone() {
+		return isInChangeLevelZone;
+	}
+
+	public void changeLevel(GameStateManager gsm) {
+		mapPointForLevelChange.playSoundEffect();
+		var nextLevel = mapPointForLevelChange.getGotoLevel();
+		setCurrentLevel(nextLevel);
+		saveGame();
+		gsm.setState(nextLevel);
+	}
+
 	public void checkAttack(ArrayList<Enemy> enemies) {
 
 		for (Enemy e : enemies) {
@@ -453,6 +482,8 @@ public class Player extends MapObject {
 
 		checkTileMapCollisions();
 
+		checkObstacleCollisions();
+
 		setPosition(xTemp, yTemp);
 
 		checkAttackHasStopped();
@@ -467,6 +498,12 @@ public class Player extends MapObject {
 
 		updateDirection();
 
+	}
+
+	private void checkObstacleCollisions() {
+		for(Obstacle obstacle : obstacles) {
+			checkObstacleCollision(obstacle);
+		}
 	}
 
 	private void checkTileMapCollisions() {

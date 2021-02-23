@@ -22,20 +22,10 @@ public class PlayerHomeState extends BaseLevel {
 
 	@Override
 	protected void populateMapPoints() {
-		try {
-			BufferedImage tileset = ImageIO.read(
-					getClass().getResourceAsStream("/Tiles/arrows.png")
-			);
-
-			BufferedImage downArrow =  tileset.getSubimage(60, 0, 30, 30);
-			MapPoint mapPoint = new MapPoint(downArrow, "/SFX/homeDoorClose.wav");
-			mapPoint.setPosition(450, 490);
-			mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
-			mapPoints.add(mapPoint);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		MapPoint mapPoint = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_DOWN, "/SFX/homeDoorClose.wav");
+		mapPoint.setPosition(450, 490);
+		mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
+		mapPoints.add(mapPoint);
 	}
 
 }
