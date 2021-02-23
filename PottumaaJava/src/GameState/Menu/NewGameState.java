@@ -6,26 +6,23 @@ import GameState.ResourceManager;
 import GameState.SaveData;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
+import java.util.ArrayList;
 
 public class NewGameState extends BaseMenuState {
 
+    private int playerNameMaxLength = 20;
+    private int playerNameMinLength = 3;
+    private ArrayList<String> validationErrors;
+    private boolean invalidInputsGiven = false;
     private String text = "";
-    Rectangle r = new Rectangle(200,200,250,30);
+    Rectangle customTextField = new Rectangle(200,200,300,30);
 
     public NewGameState(GameStateManager gsm) {
         super(gsm, new String[]{
-                "Enter player name"
+                "Start new game"
         }, "/Backgrounds/menubg.png");
-
-        addKeyListener(new KeyAdapter(){
-            public void keyPressed(KeyEvent e){
-                text+=e.getKeyChar();
-            }
-        });
+        validationErrors = new ArrayList<String>();
     }
 
     protected void select() {
@@ -39,17 +36,35 @@ public class NewGameState extends BaseMenuState {
 
         super.draw(g);
 
-        g.setColor(Color.blue);
-        g.fillRect(r.x, r.y, r.width, r.height);
-        g.setColor(Color.black);
-        g.setFont(new Font("Arial", Font.PLAIN, 18));
-        g.drawString(text, r.x, r.y + r.height - 9);
-        //help text
-        g.setFont(new Font("Arial", Font.PLAIN, 12));
-        g.drawString("Press Enter to start the game",  220, 320);
+        drawPlayerNameTextField(g);
+        drawHelpTexts(g);
+
+        if(invalidInputsGiven)
+            drawValidationErrors(g);
     }
 
-    private int playerNameMaxLength = 20;
+    private void drawValidationErrors(Graphics2D g) {
+        for(String text : validationErrors) {
+            g.setColor(Color.RED);
+            g.drawString(text, 220, 260);
+        }
+    }
+
+    private void drawPlayerNameTextField(Graphics2D g) {
+        g.setColor(Color.blue);
+        g.fillRect(customTextField.x, customTextField.y, customTextField.width, customTextField.height);
+        g.setColor(Color.black);
+        g.setFont(new Font("Arial", Font.PLAIN, 18));
+        g.drawString(text, customTextField.x, customTextField.y + customTextField.height - 9);
+    }
+
+    private void drawHelpTexts(Graphics2D g) {
+        g.setFont(new Font("Arial", Font.PLAIN, 12));
+        g.setColor(Color.BLACK);
+        g.drawString("Type name:", 180, 180);
+        g.drawString("Press Enter to start the game",  220, 310);
+        g.drawString("Press Escape to cancel",  220, 330);
+    }
 
     @Override
     public void keyPressed(int k) {
@@ -57,6 +72,10 @@ public class NewGameState extends BaseMenuState {
         var keyChar= event.getKeyChar();
 
         if(k == KeyEvent.VK_ENTER) {
+            validateInputs();
+            if(invalidInputsGiven) {
+                return;
+            }
             saveGame();
             gsm.setState(GameStateManager.STATE_LEVEL_1);
         }
@@ -64,6 +83,7 @@ public class NewGameState extends BaseMenuState {
         if(keyChar == KeyEvent.VK_BACK_SPACE) {
             if(text.length() >= 1) {
                 text = removeLastChar(text);
+                validateInputs();
             }
         } else {
             if(text.length() < playerNameMaxLength) {
@@ -74,9 +94,19 @@ public class NewGameState extends BaseMenuState {
                     k != KeyEvent.VK_ALT &&
                     k != KeyEvent.VK_ALT_GRAPH) {
                     text += keyChar;
+                    validateInputs();
                 }
             }
         }
+    }
+
+    private void validateInputs() {
+        if(text.length() < playerNameMinLength) {
+            invalidInputsGiven = true;
+            validationErrors.add("Name must be at least " + playerNameMinLength +" characters long");
+            return;
+        }
+        invalidInputsGiven = false;
     }
 
     private void saveGame() {
@@ -86,6 +116,7 @@ public class NewGameState extends BaseMenuState {
         saveData.money = PlayerSettings.PLAYER_START_MONEY;
         saveData.experience = PlayerSettings.PLAYER_START_EXP;
         saveData.fire = PlayerSettings.PLAYER_START_FIRE;
+        saveData.level = GameStateManager.STATE_LEVEL_1;
         try {
             ResourceManager.save(saveData, "1.save");
             System.out.println("Save successful");

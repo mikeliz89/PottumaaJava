@@ -77,26 +77,18 @@ public abstract class BaseLevel extends GameState  {
 
     private void populateTileMaps() {
         tileMaps = new ArrayList<>();
-        double tileMapTween = 0.11;
+        addTileMap(groundTileSetName, false, groundTileMapName, Tile.TILE_TYPE_GROUND);
+        addTileMap(obstacleTileSetName, true, obstacleTileMapName, Tile.TILE_TYPE_OBSTACLE);
+    }
 
-        // tiles: ground
+    private void addTileMap(String groundTileSetName, boolean allBlocked, String groundTileMapName, int tileTypeGround) {
         TileMap tileMapGround = new TileMap(30);
-        tileMapGround.loadTiles(groundTileSetName, false);
+        tileMapGround.loadTiles(groundTileSetName, allBlocked);
         tileMapGround.loadMap(groundTileMapName);
         tileMapGround.setPosition(0, 0);
-        tileMapGround.setType(Tile.TILE_TYPE_GROUND);
-        tileMapGround.setTween(tileMapTween);
-
-        // tiles: obstacles
-        TileMap tileMapObstacles = new TileMap(30);
-        tileMapObstacles.loadTiles(obstacleTileSetName, true);
-        tileMapObstacles.loadMap(obstacleTileMapName);
-        tileMapObstacles.setPosition(0, 0);
-        tileMapObstacles.setType(Tile.TILE_TYPE_OBSTACLE);
-        tileMapObstacles.setTween(tileMapTween);
-
+        tileMapGround.setType(tileTypeGround);
+        tileMapGround.setTween(0.11);
         tileMaps.add(tileMapGround);
-        tileMaps.add(tileMapObstacles);
     }
 
     protected void populateMapPoints() {}

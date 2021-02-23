@@ -118,7 +118,7 @@ public class Player extends MapObject {
 			experience = data.experience;
 			fire = data.fire;
 			wallet.addMoney(data.money);
-			System.out.println("Loaded player. Name: " + data.name + " health " + data.health);
+			System.out.println("Loaded player. Name: " + data.name + ", health: " + data.health + ", level: " + data.level);
 		} catch (Exception e) {
 			System.out.println("Couldn't load save data: " + e.getMessage());
 		}

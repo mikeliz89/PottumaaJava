@@ -1,6 +1,8 @@
 package Entity;
 
 import Entity.Obstacles.Obstacle;
+import Entity.Player.Player;
+import Main.GameOptions;
 import Main.GamePanel;
 import TileMap.TileMap;
 import TileMap.Tile;
@@ -83,8 +85,8 @@ public abstract class MapObject {
 	
 	public Rectangle getCollisionBoxRectangle() {
 		return new Rectangle(
-				(int)x - collisionBoxWidth,
-				(int)y - collisionBoxHeight,
+				(int)(x + xMap - collisionBoxWidth / 2),
+				(int)(y + yMap - collisionBoxHeight / 2),
 				collisionBoxWidth,
 				collisionBoxHeight
 		);
@@ -144,7 +146,6 @@ public abstract class MapObject {
 			}
 			if (dy > 0) {
 				if (bottomLeft || bottomRight) {
-
 					dy = 0;
 					yTemp = (currentRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
 				} else {
@@ -254,6 +255,30 @@ public abstract class MapObject {
 			return;
 		}
 
+		drawCollisionBox(g);
+
+		drawAnimationImage(g);
+	}
+
+	private void drawCollisionBox(Graphics2D g) {
+
+		if(GameOptions.IS_DEBUG_MODE == false)
+			return;
+
+		var collisionBoxRectangle = getCollisionBoxRectangle();
+
+		if(this instanceof Player) {
+			g.setColor(Color.magenta);
+		} else {
+			g.setColor(Color.yellow);
+		}
+		g.drawRect(collisionBoxRectangle.x,
+				collisionBoxRectangle.y,
+				collisionBoxRectangle.width,
+				collisionBoxRectangle.height);
+	}
+
+	private void drawAnimationImage(Graphics2D g) {
 		if(facingRight) {
 			g.drawImage(
 				animation.getImage(),
@@ -275,7 +300,7 @@ public abstract class MapObject {
 			);
 		}
 	}
-	
+
 }
 
 

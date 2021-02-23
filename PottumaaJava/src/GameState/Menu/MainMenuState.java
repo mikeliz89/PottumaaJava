@@ -8,7 +8,7 @@ public class MainMenuState extends BaseMenuState {
 	
 	public MainMenuState(GameStateManager gsm) {
 		super(gsm, new String[] {
-				"Start",
+				"New Game",
 				"Load Game",
 				"Options",
 				"Help",
@@ -45,7 +45,7 @@ public class MainMenuState extends BaseMenuState {
 		try {
 			SaveData data = (SaveData) ResourceManager.load("1.save");
 			loadedLevel = data.level;
-			System.out.println("Loaded player. Name: " + data.name + " health " + data.health);
+			System.out.println("Loaded player. Name: " + data.name + ", health: " + data.health + ", level: " + data.level);
 		} catch (Exception e) {
 			System.out.println("Couldn't load save data: " + e.getMessage());
 		}
