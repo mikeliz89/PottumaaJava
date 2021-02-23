@@ -134,6 +134,16 @@ public abstract class BaseLevel extends GameState  {
     private boolean playerIsInMapPoint = false;
 
     private void checkMapPointCollisions() {
+        MapPoint mapPointToChangeTo = getMapPointToChangeTo();
+        player.setMapPointForLevelChange(mapPointToChangeTo);
+        if(mapPointToChangeTo != null) {
+            playerIsInMapPoint = true;
+            return;
+        }
+        playerIsInMapPoint = false;
+    }
+
+    private MapPoint getMapPointToChangeTo() {
         MapPoint mapPointToChangeTo = null;
         for(MapPoint mapPoint : mapPoints) {
             Rectangle mapPointRectangle = mapPoint.getRectangle();
@@ -142,12 +152,7 @@ public abstract class BaseLevel extends GameState  {
                 mapPointToChangeTo = mapPoint;
             }
         }
-        player.setMapPointForLevelChange(mapPointToChangeTo);
-        if(mapPointToChangeTo != null) {
-            playerIsInMapPoint = true;
-            return;
-        }
-        playerIsInMapPoint = false;
+        return mapPointToChangeTo;
     }
 
     private void updateNPCs() {
