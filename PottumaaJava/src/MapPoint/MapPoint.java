@@ -4,8 +4,7 @@ import Audio.AudioPlayer;
 import Main.GameOptions;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
@@ -18,6 +17,8 @@ public class MapPoint {
 	private double y;
 	private double xMap;
 	private double yMap;
+	private int width;
+	private int height;
 	private int gotoLevel;
 	private String mapPointSound;
 	private int mapPointType;
@@ -46,6 +47,9 @@ public class MapPoint {
 			BufferedImage subImage = getSubImage(tileset);
 
 			image = subImage;
+
+			width = image.getWidth();
+			height = image.getHeight();
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -130,16 +134,24 @@ public class MapPoint {
 		drawDebugRectangle(g);
 	}
 
+	public Rectangle getRectangle() {
+		return new Rectangle(
+				(int)(x + xMap - width / 2),
+				(int)(y + yMap - height / 2),
+				width,
+				height);
+	}
+
 	private void drawDebugRectangle(Graphics2D g) {
 		if(GameOptions.IS_DEBUG_MODE == false)
 			return;
 
 		g.setColor(Color.RED);
-		g.drawRect(
-				(int)(x + xMap - this.image.getWidth() / 2),
-				(int)(y + yMap - this.image.getHeight() / 2),
-				this.image.getWidth(),
-				this.image.getHeight()
+		var mapPointRectangle = getRectangle();
+		g.drawRect(mapPointRectangle.x,
+				mapPointRectangle.y,
+				mapPointRectangle.width,
+				mapPointRectangle.height
 		);
 	}
 

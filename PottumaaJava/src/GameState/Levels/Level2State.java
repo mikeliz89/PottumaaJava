@@ -4,9 +4,7 @@ import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import GameState.*;
 import MapPoint.MapPoint;
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Level2State extends BaseLevel {
 

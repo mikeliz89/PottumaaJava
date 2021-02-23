@@ -153,8 +153,10 @@ public class HUD {
 				"Century Gothic",
 				Font.PLAIN,
 				12);
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLUE);
 		g.setFont(titleFont);
+		g.drawString("xMap: " + player.getXMap(), 500, 13);
+		g.drawString("yMap: " + player.getYMap(), 500, 28);
 		g.drawString("X: " + player.getX(), 400, 13);
 		g.drawString("Y: " + player.getY(), 400, 28);
 		g.drawString("MaxSpeed: " + player.getMaxSpeed(), 600, 13);
@@ -162,11 +164,10 @@ public class HUD {
 	}
 
 	private void drawDebugPlayerRectangle(Graphics2D g) {
-		g.setColor(Color.BLUE);
-		g.drawRect((int) (player.getX() + player.getXMap() - player.getWidth() / 2),
-				(int) (player.getY() + player.getYMap() - player.getHeight() / 2),
-				player.getWidth(),
-				player.getHeight());
+		g.setColor(Color.PINK);
+		var playerRectangle = player.getRectangle();
+		g.drawRect(playerRectangle.x, playerRectangle.y,
+				playerRectangle.width, playerRectangle.height);
 	}
 
 	private void drawQuestLog(Graphics2D g) {
