@@ -7,6 +7,7 @@ import Entity.Obstacles.Obstacle;
 import GameState.GameStateManager;
 import GameState.ResourceManager;
 import GameState.SaveData;
+import Main.GameOptions;
 import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
@@ -62,6 +63,7 @@ public class Player extends MapObject {
 
 	private Wallet wallet;
 	private int currentLevel;
+	private MapPoint mapPointForLevelChange;
 
 	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
 		this.tileMaps = tileMaps;
@@ -268,27 +270,8 @@ public class Player extends MapObject {
 		return groundTileMaps;
 	}
 
-	MapPoint mapPointForLevelChange;
-	private boolean isInChangeLevelZone = false;
-	
-	public void checkMapPointCollision(MapPoint mapPoint) {
-
-		var mapPointRectangle = new Rectangle((int)mapPoint.getX(), (int)mapPoint.getY(),
-				mapPoint.getImage().getWidth(), mapPoint.getImage().getHeight());
-
-		var playerRectangle = new Rectangle((int)x, (int)y, width, height);
-
-		if(playerRectangle.intersects(mapPointRectangle)) {
-			isInChangeLevelZone  = true;
-			mapPointForLevelChange = mapPoint;
-			return;
-		}
-
-		isInChangeLevelZone = false;
-	}
-
-	public boolean getIsInChangeLevelZone() {
-		return isInChangeLevelZone;
+	public void setMapPointForLevelChange(MapPoint mapPointForLevelChange) {
+		this.mapPointForLevelChange = mapPointForLevelChange;
 	}
 
 	public void changeLevel(GameStateManager gsm) {
@@ -621,7 +604,14 @@ public class Player extends MapObject {
 		//Player is not drawn when flinching etc.
 		if (drawPlayer()) return;
 
+		drawDebugStuff(g);
+
 		super.draw(g);
+	}
+
+	private void drawDebugStuff(Graphics2D g) {
+		if(GameOptions.IS_DEBUG_MODE == false)
+			return;
 	}
 
 	private boolean drawPlayer() {

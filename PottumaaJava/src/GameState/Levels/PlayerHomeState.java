@@ -2,8 +2,6 @@ package GameState.Levels;
 
 import GameState.*;
 import MapPoint.MapPoint;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 public class PlayerHomeState extends BaseLevel {
 

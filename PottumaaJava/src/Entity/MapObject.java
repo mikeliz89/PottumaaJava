@@ -76,18 +76,26 @@ public abstract class MapObject {
 	}
 	
 	public boolean intersects(MapObject o) {
-		Rectangle r1 = getRectangle();
-		Rectangle r2 = o.getRectangle();
+		Rectangle r1 = getCollisionBoxRectangle();
+		Rectangle r2 = o.getCollisionBoxRectangle();
 		return r1.intersects(r2);
 	}
 	
-	public Rectangle getRectangle() {
+	public Rectangle getCollisionBoxRectangle() {
 		return new Rectangle(
 				(int)x - collisionBoxWidth,
 				(int)y - collisionBoxHeight,
 				collisionBoxWidth,
 				collisionBoxHeight
 		);
+	}
+
+	public Rectangle getRectangle() {
+		return new Rectangle(
+				(int)(x + xMap - width / 2),
+				(int)(y + yMap - height / 2),
+				width,
+				height);
 	}
 	
 	public void calculateCorners(double x, double y, TileMap tileMap) {
