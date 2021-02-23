@@ -121,6 +121,21 @@ public abstract class MapObject {
 
 	public void checkObstacleCollision(Obstacle obstacle) {
 		//todo: Koodaa varsinainen collision detection
+
+		/*
+		if (goingUp()) {
+			System.out.println("menossa ylös");
+		}
+		if(goingDown()) {
+			System.out.println("menossa alas");
+		}
+		if(goingLeft()) {
+			System.out.println("menossa vasemmalle");
+		}
+		if(goingRight()) {
+			System.out.println("menossa oikealle");
+		}
+		 */
 	}
 	
 	public void checkTileMapCollision(TileMap tm) {
@@ -135,48 +150,61 @@ public abstract class MapObject {
 		yTemp = y;
 
 		for (TileMap tileMap : tileMaps) {
+			var tileSize = tm.getTileSize();
 			calculateCorners(x, yDestination, tileMap);
-			if (dy < 0) {
+			if (goingUp()) {
 				if (topLeft || topRight) {
 					dy = 0;
-					yTemp = currentRow * tm.getTileSize() + collisionBoxHeight / 2;
+					yTemp = currentRow * tileSize + collisionBoxHeight / 2;
 				} else {
 					yTemp += dy;
 				}
 			}
-			if (dy > 0) {
+			if (goingDown()) {
 				if (bottomLeft || bottomRight) {
 					dy = 0;
-					yTemp = (currentRow + 1) * tm.getTileSize() - collisionBoxHeight / 2;
+					yTemp = (currentRow + 1) * tileSize - collisionBoxHeight / 2;
 				} else {
 					yTemp += dy;
 				}
 			}
-
 			calculateCorners(xDestination, y, tileMap);
-			if (dx < 0) {
+			if (goingLeft()) {
 				if (topLeft || bottomLeft) {
 					dx = 0;
-					xTemp = currentColumn * tm.getTileSize() + collisionBoxWidth / 2;
+					xTemp = currentColumn * tileSize + collisionBoxWidth / 2;
 				} else {
 					xTemp += dx;
 				}
 			}
-			if (dx > 0) {
+			if (goingRight()) {
 				if (topRight || bottomRight) {
 					dx = 0;
-					xTemp = (currentColumn + 1) * tm.getTileSize() - collisionBoxWidth / 2;
+					xTemp = (currentColumn + 1) * tileSize - collisionBoxWidth / 2;
 				} else {
 					xTemp += dx;
 				}
 			}
-
 			calculateCorners(x, yDestination + 1, tileMap);
-
 		}
-		
 	}
-	
+
+	private boolean goingRight() {
+		return dx > 0;
+	}
+
+	private boolean goingLeft() {
+		return dx < 0;
+	}
+
+	private boolean goingDown() {
+		return dy > 0;
+	}
+
+	private boolean goingUp() {
+		return dy < 0;
+	}
+
 	public int getX() { return (int)x; }
 	public int getY() { return (int)y; }
 	public int getWidth() { return width; }
