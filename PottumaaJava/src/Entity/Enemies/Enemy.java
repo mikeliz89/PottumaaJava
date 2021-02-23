@@ -61,6 +61,8 @@ public abstract class Enemy extends MapObject {
 	}
 	
 	public void update() {
+		super.update();
+
 		updatePosition();
 
 		checkTileMapCollisions();
