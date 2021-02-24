@@ -2,14 +2,17 @@ package GameState.Levels;
 
 import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
+import Entity.Items.Item;
 import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.House;
 import GameState.*;
 import MapPoint.MapPoint;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Level1State extends BaseLevel {
 
+	ArrayList<Item> items;
 	private House playerHome;
 	public Level1State(GameStateManager gsm, int previousState) {
 		super(gsm,
@@ -21,6 +24,16 @@ public class Level1State extends BaseLevel {
 				);
 		changeBackgroundMusic(previousState);
 		setPlayerStartingPosition(previousState);
+
+		createItems();
+	}
+
+	private void createItems() {
+		items = new ArrayList<>();
+		var banana =  new Item("Banana",
+				"/Images/Items/banana.png");
+		banana.setPosition(new Point(300, 300));
+		items.add(banana);
 	}
 
 	private void changeBackgroundMusic(int previousState) {
@@ -96,8 +109,16 @@ public class Level1State extends BaseLevel {
 	@Override
 	protected void drawObstacles(Graphics2D g) {
 		playerHome.draw(g);
+
+		drawItems(g);
 	}
-	
+
+	private void drawItems(Graphics2D g) {
+		for(Item item : items) {
+			item.draw(g);
+		}
+	}
+
 }
 
 
