@@ -46,6 +46,7 @@ public abstract class Enemy extends MapObject {
 	
 	public void hit(int damage) {
 		if(dead || flinching) return;
+		playSoundEffect("hit");
 		health -= damage;
 		if(health < 0) health = 0;
 		if(health == 0) die();
@@ -102,12 +103,6 @@ public abstract class Enemy extends MapObject {
 			if(elapsed > 400) {
 				flinching = false;
 			}
-		}
-	}
-
-	private void checkTileMapCollisions() {
-		for (TileMap tm : tileMaps) {
-			checkTileMapCollision(tm);
 		}
 	}
 
