@@ -32,7 +32,7 @@ public abstract class MapObject {
 	protected int collisionBoxWidth;
 	protected int collisionBoxHeight;
 	
-	// collision
+	// four-corner-collision detection
 	protected int currentRow;
 	protected int currentColumn;
 	protected double xTemp;
@@ -101,22 +101,27 @@ public abstract class MapObject {
 	}
 	
 	public void calculateCorners(double x, double y, TileMap tileMap) {
-		
-		 leftTile = (int)(x - collisionBoxWidth / 2) / tileMap.getTileSize();
-		 rightTile = (int)(x + collisionBoxWidth / 2 - 1) / tileMap.getTileSize();
-		 topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
-		 bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
-		 
+		calculateTiles(x, y, tileMap);
+		calculateFourCorners(tileMap);
+	}
+
+	private void calculateFourCorners(TileMap tileMap) {
 		int topLeftTileType = tileMap.getTileType(topTile, leftTile);
 		int topRightTileType = tileMap.getTileType(topTile, rightTile);
 		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
 		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
-		
+
 		topLeft = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
 		topRight = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
 		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
 		bottomRight = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
-		
+	}
+
+	private void calculateTiles(double x, double y, TileMap tileMap) {
+		leftTile = (int)(x - collisionBoxWidth / 2) / tileMap.getTileSize();
+		rightTile = (int)(x + collisionBoxWidth / 2 - 1) / tileMap.getTileSize();
+		topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
+		bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
 	}
 
 	public void checkObstacleCollision(Obstacle obstacle) {
@@ -139,13 +144,13 @@ public abstract class MapObject {
 	}
 	
 	public void checkTileMapCollision(TileMap tm) {
-		
-		currentColumn = (int)x / tm.getTileSize();
-		currentRow = (int)y / tm.getTileSize();
 
-		double xDestination = x + dx;
-		double yDestination = y + dy;
-		
+		calculateCurrentColumn(tm);
+		calculateCurrentRow(tm);
+
+		double xDestination = calculateDestinationX();
+		double yDestination = calculateDestinationY();
+
 		xTemp = x;
 		yTemp = y;
 
@@ -187,6 +192,23 @@ public abstract class MapObject {
 			}
 			calculateCorners(x, yDestination + 1, tileMap);
 		}
+	}
+
+	private double calculateDestinationY() {
+		double yDestination = y + dy;
+		return yDestination;
+	}
+
+	private double calculateDestinationX() {
+		return x + dx;
+	}
+
+	private void calculateCurrentRow(TileMap tm) {
+		currentRow = tm.getRowTile();
+	}
+
+	private void calculateCurrentColumn(TileMap tm) {
+		currentColumn = tm.getColumnTile();
 	}
 
 	private boolean goingRight() {
@@ -269,7 +291,20 @@ public abstract class MapObject {
 	}
 
 	public void update() {
+		updatePosition();
+		checkTileMapCollisions();
+		setPosition(xTemp, yTemp);
 		animation.update();
+	}
+
+	protected void updatePosition() {
+
+	}
+
+	private void checkTileMapCollisions() {
+		for (TileMap tileMap : tileMaps) {
+			checkTileMapCollision(tileMap);
+		}
 	}
 	
 	public void draw(Graphics2D g) {
@@ -308,25 +343,33 @@ public abstract class MapObject {
 
 	private void drawAnimationImage(Graphics2D g) {
 		if(facingRight) {
-			g.drawImage(
-				animation.getImage(),
-				(int)(x + xMap - width / 2),
-				(int)(y + yMap - height / 2),
-				null
-			);
+			drawNormalAnimationImage(g);
 		}
 		else {
 			//todo: tämä tarkoitti ennen vasemmalle menoa, mutta nykyään tarkoittaa vasemalle, ylös ja alas menoa.
 			//todo: koodaa else iffit eri suuntiin menoille.
-			g.drawImage(
-				animation.getImage(),
-				(int)(x + xMap - width / 2 + width),
-				(int)(y + yMap - height / 2),
-				-width,
-				height,
-				null
-			);
+			drawFlippedAnimationImage(g);
 		}
+	}
+
+	private void drawFlippedAnimationImage(Graphics2D g) {
+		g.drawImage(
+			animation.getImage(),
+			(int)(x + xMap - width / 2 + width),
+			(int)(y + yMap - height / 2),
+			-width,
+			height,
+			null
+		);
+	}
+
+	private void drawNormalAnimationImage(Graphics2D g) {
+		g.drawImage(
+			animation.getImage(),
+			(int)(x + xMap - width / 2),
+			(int)(y + yMap - height / 2),
+			null
+		);
 	}
 
 }

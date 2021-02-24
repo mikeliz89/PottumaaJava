@@ -153,6 +153,14 @@ public class TileMap {
 	public int getType() { return this.type; }
 	public BufferedImage getTileSet() { return tileset; }
 	public Tile[][] getTiles() { return tiles; }
+
+	public int getColumnTile() {
+		return (int)y / tileSize;
+	}
+
+	public int getRowTile() {
+		return (int)x / tileSize;
+	}
 	
 	public int getTileType(int row, int col) {
 		row = makeRowValueSafe(row);

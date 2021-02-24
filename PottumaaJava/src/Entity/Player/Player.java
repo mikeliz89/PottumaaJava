@@ -343,16 +343,15 @@ public class Player extends MapObject {
 		if(health == 0) die();
 	}
 
-	private void updatePosition() {
+	@Override
+	protected void updatePosition() {
 
 		moveUpOrDown();
 		moveLeftOrRight();
 
 		//cannot move left or right while attacking
-		if(!PlayerSettings.PLAYER_CAN_MOVE_WHILE_ATTACKING) {
-			if (currentAction == SCRATCHING || currentAction == FIREBALL) {
-				dx = 0;
-			}
+		if(!PlayerSettings.PLAYER_CAN_MOVE_WHILE_ATTACKING && isAttacking()) {
+			dx = 0;
 		}
 
 		jumping();
@@ -419,7 +418,6 @@ public class Player extends MapObject {
 	}
 
 	private void moveUpOrDown() {
-		// up and down
 		if(up) {
 			dy -= moveSpeed;
 			if(dy < -maxSpeed) {
@@ -463,11 +461,7 @@ public class Player extends MapObject {
 
 		updatePosition();
 
-		checkTileMapCollisions();
-
 		checkObstacleCollisions();
-
-		setPosition(xTemp, yTemp);
 
 		checkAttackHasStopped();
 
@@ -479,19 +473,13 @@ public class Player extends MapObject {
 
 		setAnimation();
 
-		updateDirection();
+		updateFacingDirection();
 
 	}
 
 	private void checkObstacleCollisions() {
 		for(Obstacle obstacle : obstacles) {
 			checkObstacleCollision(obstacle);
-		}
-	}
-
-	private void checkTileMapCollisions() {
-		for (TileMap tileMap : tileMaps) {
-			checkTileMapCollision(tileMap);
 		}
 	}
 
@@ -590,11 +578,17 @@ public class Player extends MapObject {
 		}
 	}
 
-	private void updateDirection() {
-		if(currentAction != SCRATCHING && currentAction != FIREBALL) {
+	private void updateFacingDirection() {
+		if(!isAttacking()) {
 			if(right) facingRight = true;
 			if(left) facingRight = false;
+			if(up) facingUp = true;
+			if(down) facingUp = false;
 		}
+	}
+
+	private boolean isAttacking() {
+		return currentAction == SCRATCHING || currentAction == FIREBALL;
 	}
 
 	public void draw(Graphics2D g) {

@@ -59,20 +59,17 @@ public abstract class BaseLevel extends GameState  {
 
         populateTileMaps();
         populateMapPoints();
-
         populateEnemies();
         populateNPCs();
         populateObstacles();
 
-        createPlayer();
-
-        //Note: Hud has to be created after Player!
-        hud = new HUD(player);
+        createPlayerAndHUD();
     }
 
-    private void createPlayer() {
+    private void createPlayerAndHUD() {
         player = new Player(tileMaps, obstacles);
         player.setCurrentLevel(gsm.getCurrentState());
+        hud = new HUD(player);
     }
 
     private void populateTileMaps() {
@@ -101,20 +98,13 @@ public abstract class BaseLevel extends GameState  {
 
     public void update() {
 
-        // update player
-        player.update();
+        updatePlayer();
 
-        checkMapPointCollisions();
+        isPlayerInMapPoint();
 
-        for (TileMap tm : tileMaps) {
-            tm.setPosition(
-                    GamePanel.WIDTH / 2 - player.getX(),
-                    GamePanel.HEIGHT / 2 - player.getY()
-            );
-        }
+        moveBackground();
 
-        // attack enemies
-        player.checkAttack(enemies);
+        checkPlayerAttackingEnemies();
 
         updateEnemies();
 
@@ -123,9 +113,26 @@ public abstract class BaseLevel extends GameState  {
         updateExplosions();
     }
 
+    private void moveBackground() {
+        for (TileMap tm : tileMaps) {
+            tm.setPosition(
+                    GamePanel.WIDTH / 2 - player.getX(),
+                    GamePanel.HEIGHT / 2 - player.getY()
+            );
+        }
+    }
+
+    private void updatePlayer() {
+        player.update();
+    }
+
+    private void checkPlayerAttackingEnemies() {
+        player.checkAttack(enemies);
+    }
+
     private boolean playerIsInMapPoint = false;
 
-    private void checkMapPointCollisions() {
+    private void isPlayerInMapPoint() {
         MapPoint mapPointToChangeTo = getMapPointToChangeTo();
         player.setMapPointForLevelChange(mapPointToChangeTo);
         if(mapPointToChangeTo != null) {
