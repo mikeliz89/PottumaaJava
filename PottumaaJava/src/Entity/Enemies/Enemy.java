@@ -61,7 +61,6 @@ public abstract class Enemy extends MapObject {
 	}
 	
 	public void update() {
-		updatePosition();
 		super.update();
 
 		updateFlinching();
@@ -111,6 +110,7 @@ public abstract class Enemy extends MapObject {
 		}
 	}
 
+	@Override
 	protected void updatePosition() {
 		moveUpOrDown();
 		moveLeftOrRight();

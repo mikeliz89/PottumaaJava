@@ -25,8 +25,6 @@ public abstract class BaseLevel extends GameState  {
     protected ArrayList<MapPoint> mapPoints;
     private HUD hud;
     private ArrayList<Integer> keysPressed;
-
-    //muuttuvat
     private String groundTileSetName;
     private String obstacleTileSetName;
     private String groundTileMapName;
@@ -316,9 +314,9 @@ public abstract class BaseLevel extends GameState  {
         if(k == KeyEvent.VK_Q) hud.ToggleQuestLog();
         if(k == KeyEvent.VK_F5) hud.TogglePauseMenu(); //F5 = Tallentaa pelin
 
-        if(k == KeyEvent.VK_1) quickTravel(1);
-        if(k == KeyEvent.VK_2) quickTravel(2);
-        if(k == KeyEvent.VK_3) quickTravel(6);
+        if(k == KeyEvent.VK_1) quickTravel(GameStateManager.STATE_LEVEL_1);
+        if(k == KeyEvent.VK_2) quickTravel(GameStateManager.STATE_LEVEL_2);
+        if(k == KeyEvent.VK_3) quickTravel(GameStateManager.STATE_PLAYER_HOME);
 
         if(playerIsInMapPoint) {
             if(k == KeyEvent.VK_E) {
