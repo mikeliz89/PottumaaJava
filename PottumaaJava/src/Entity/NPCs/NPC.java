@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+//todo: Yhteinen base class NPC/ENEMY/Player -luokille, esim Character-class?
 public abstract class NPC extends MapObject {
 
 	private int health;

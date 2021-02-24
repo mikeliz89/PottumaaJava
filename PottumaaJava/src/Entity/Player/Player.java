@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//todo: Yhteinen base class NPC/ENEMY/Player -luokille, esim Character-class?
 public class Player extends MapObject {
 	
 	// player stuff

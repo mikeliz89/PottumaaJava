@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//todo: Yhteinen base class NPC/ENEMY/Player -luokille, esim Character-class?
 public abstract class Enemy extends MapObject {
 
 	private int health;
