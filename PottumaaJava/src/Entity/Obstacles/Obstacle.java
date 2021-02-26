@@ -18,6 +18,8 @@ public class Obstacle extends MapObject {
         this.width = width;
         this.height = height;
         this.imageName = imageName;
+        this.collisionBoxHeight = height;
+        this.collisionBoxWidth = width;
         loadSprites();
     }
 
@@ -32,7 +34,7 @@ public class Obstacle extends MapObject {
 
             animation = new Animation();
             animation.setFrames(sprites);
-            animation.setDelay(70);
+            animation.setDelay(7000);
         }
         catch(Exception e) {
             e.printStackTrace();
