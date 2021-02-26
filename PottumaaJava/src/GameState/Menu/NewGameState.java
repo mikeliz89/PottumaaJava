@@ -2,7 +2,6 @@ package GameState.Menu;
 
 import Entity.Player.PlayerSettings;
 import GameState.GameStateManager;
-import GameState.ResourceManager;
 import GameState.SaveData;
 
 import java.awt.*;
@@ -118,7 +117,7 @@ public class NewGameState extends BaseMenuState {
         saveData.fire = PlayerSettings.PLAYER_START_FIRE;
         saveData.level = GameStateManager.STATE_LEVEL_1;
         try {
-            ResourceManager.save(saveData, "1.save");
+            saveManager.save(saveData, "1.save");
             System.out.println("Save successful");
         } catch(Exception e) {
             System.out.println("Couldn't save: " + e.getMessage());

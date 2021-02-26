@@ -313,7 +313,6 @@ public abstract class MapObject {
 
 		if(notOnScreen()) return;
 
-		//todo: onko tämä turha tarkistus?
 		if(!animation.hasFrames()) {
 			return;
 		}

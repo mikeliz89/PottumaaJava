@@ -17,8 +17,14 @@ public abstract class BaseMenuState extends GameState {
     private String[] options;
     protected String titleText;
     protected int currentChoice = 0;
+    protected ISaveManager saveManager;
 
     public BaseMenuState(GameStateManager gsm, String[] options, String backgroundImageName) {
+        this(gsm, options, backgroundImageName, new SaveManager());
+    }
+
+    public BaseMenuState(GameStateManager gsm, String[] options, String backgroundImageName, ISaveManager saveManager) {
+        this.saveManager = saveManager;
         this.gsm = gsm;
         this.options = options;
         this.backgroundImageName = backgroundImageName;

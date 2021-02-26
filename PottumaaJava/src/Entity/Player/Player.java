@@ -5,7 +5,8 @@ import Entity.*;
 import Entity.Enemies.Enemy;
 import Entity.Obstacles.Obstacle;
 import GameState.GameStateManager;
-import GameState.ResourceManager;
+import GameState.ISaveManager;
+import GameState.SaveManager;
 import GameState.SaveData;
 import Main.GameOptions;
 import MapPoint.*;
@@ -66,7 +67,14 @@ public class Player extends MapObject {
 	private int currentLevel;
 	private MapPoint mapPointForLevelChange;
 
+	private ISaveManager saveManager;
+
 	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
+		this(tileMaps, obstacles, new SaveManager());
+	}
+
+	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles, ISaveManager saveManager) {
+		this.saveManager = saveManager;
 		this.tileMaps = tileMaps;
 		this.obstacles = obstacles;
 		init();
@@ -113,7 +121,7 @@ public class Player extends MapObject {
 
 	private void loadGame() {
 		try {
-			SaveData data = (SaveData) ResourceManager.load("1.save");
+			SaveData data = (SaveData) saveManager.load("1.save");
 			health = data.health;
 			name = data.name;
 			experience = data.experience;
@@ -141,7 +149,7 @@ public class Player extends MapObject {
 		saveData.level = currentLevel;
 
 		try {
-			ResourceManager.save(saveData, "1.save");
+			saveManager.save(saveData, "1.save");
 			System.out.println("Save successful");
 		} catch(Exception e) {
 			System.out.println("Couldn't save: " + e.getMessage());
