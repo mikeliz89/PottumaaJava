@@ -4,7 +4,7 @@ import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
 import Entity.Items.Item;
 import Entity.NPCs.MrPotatoGuy;
-import Entity.Obstacles.House;
+import Entity.Obstacles.Obstacle;
 import GameState.*;
 import MapPoint.MapPoint;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Level1State extends BaseLevel {
 
 	ArrayList<Item> items;
-	private House playerHome;
+	private Obstacle playerHome;
 	public Level1State(GameStateManager gsm, int previousState) {
 		super(gsm,
 				"/Tilesets/grasstileset.png",
@@ -24,7 +24,7 @@ public class Level1State extends BaseLevel {
 				);
 		changeBackgroundMusic(previousState);
 		setPlayerStartingPosition(previousState);
-
+		createObstacles();
 		createItems();
 	}
 
@@ -49,11 +49,10 @@ public class Level1State extends BaseLevel {
 		player.setPosition(345, 200);
 	}
 
-	@Override
-	protected void populateObstacles() {
-		playerHome = new House(tileMaps);
+	private void createObstacles() {
+		playerHome = new Obstacle(tileMaps, 180, 120, "/Sprites/House/obstacles-new-house.gif");
 		playerHome.setPosition(527 - 180, 247 - 120);
-		obstacles.add(playerHome);
+		addObstacle(playerHome);
 	}
 
 	@Override

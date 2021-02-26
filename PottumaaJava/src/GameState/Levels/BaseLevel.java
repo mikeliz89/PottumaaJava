@@ -16,13 +16,14 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public abstract class BaseLevel extends GameState  {
-    protected ArrayList<Obstacle> obstacles;
+
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
     protected ArrayList<Enemy> enemies;
     protected ArrayList<NPC> NPCs;
     private ArrayList<Explosion> explosions;
     protected ArrayList<MapPoint> mapPoints;
+    private ArrayList<Obstacle> obstacles;
     private HUD hud;
     private ArrayList<Integer> keysPressed;
     private String groundTileSetName;
@@ -59,7 +60,6 @@ public abstract class BaseLevel extends GameState  {
         populateMapPoints();
         populateEnemies();
         populateNPCs();
-        populateObstacles();
 
         createPlayerAndHUD();
     }
@@ -85,9 +85,11 @@ public abstract class BaseLevel extends GameState  {
         tileMaps.add(tileMapGround);
     }
 
-    protected void populateMapPoints() {}
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
+    }
 
-    protected void populateObstacles() {}
+    protected void populateMapPoints() {}
 
     protected void populateEnemies() {}
 
@@ -212,7 +214,11 @@ public abstract class BaseLevel extends GameState  {
         drawInLevelZoneText(g);
     }
 
-    protected void drawObstacles(Graphics2D g) {}
+    protected void drawObstacles(Graphics2D g) {
+        for(Obstacle obstacle : obstacles) {
+            obstacle.draw(g);
+        }
+    }
 
     private void drawHUD(Graphics2D g) {
         hud.draw(g);
