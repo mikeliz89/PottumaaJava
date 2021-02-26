@@ -15,7 +15,7 @@ public class PlayerHomeState extends BaseLevel {
 				"/Music/happymusic.wav"
 				);
 
-		player.setPosition(450, 470);
+		player.setPosition(450, 480);
 	}
 
 	@Override

@@ -82,12 +82,13 @@ public class MapEditorState extends GameState {
 		tileMaps = new ArrayList<>();
 		
 		// tiles: ground
-		TileMap tileMapGround = new TileMap(tileSize);
-		tileMapGround.loadTiles("/Tilesets/grasstileset.png", false);
-		tileMapGround.loadMap("/Maps/map1.csv");
+		TileMap tileMapGround = new TileMap(tileSize,
+				"/Tilesets/grasstileset.png",
+				"/Maps/map1.csv");
+		tileMapGround.loadTiles();
+		tileMapGround.loadMap();
 		tileMapGround.setPosition(0, 0);
 		tileMapGround.setType(Tile.TILE_TYPE_GROUND);
-		tileMapGround.setTween(tileMapTween);
 		
 		tileMaps.add(tileMapGround);
 	}

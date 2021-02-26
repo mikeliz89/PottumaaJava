@@ -14,8 +14,8 @@ public class Arachnid extends Enemy {
 		
 		super(tileMaps, maxHealth);
 		
-		moveSpeed = 0.2;
-		maxSpeed = originalMaxSpeed = 0.2;
+		moveSpeed = EnemySettings.ARACHNID_MOVE_SPEED;
+		maxSpeed = originalMaxSpeed = EnemySettings.ARACHNID_MOVE_SPEED;
 		fallSpeed = 0.2;
 		stopSpeed = originalStopSpeed = 0.3;
 		maxFallSpeed = 10.0;

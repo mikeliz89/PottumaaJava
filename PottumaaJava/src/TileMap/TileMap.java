@@ -21,8 +21,6 @@ public class TileMap {
 	private int xMax;
 	private int yMax;
 	
-	private double tween;
-	
 	// map
 	private int[][] map;
 	private int tileSize;
@@ -44,59 +42,48 @@ public class TileMap {
 	private int colOffset;
 	private int numRowsToDraw;
 	private int numColsToDraw;
+
+	private String mapName;
+	private String tileSetName;
 	
-	public TileMap(int tileSize) {
+	public TileMap(int tileSize, String tileSetName, String mapName) {
 		this.tileSize = tileSize;
+		this.tileSetName = tileSetName;
+		this.mapName = mapName;
 		numRowsToDraw = GamePanel.HEIGHT / tileSize + 2;
 		numColsToDraw = GamePanel.WIDTH / tileSize + 2;
-		tween = 0.07;
 	}
 	
-	public void loadTiles(String s, boolean allBlocked) {
+	public void loadTiles() {
 		
 		try {
 			tileset = ImageIO.read(
-				getClass().getResourceAsStream(s)
+				getClass().getResourceAsStream(tileSetName)
 			);
 			numTilesX = tileset.getWidth() / tileSize;
 			numTilesY = tileset.getHeight() / tileSize;
 			
 			tiles = new Tile[numTilesY][numTilesX];
 			
-			int count = 0;
-			BufferedImage subimage;
+			int index = 0;
+			BufferedImage subImage;
 			for(int row = 0; row < numTilesY; row++) {
 				for(int col = 0; col < numTilesX; col++) {
-					subimage = 
+					subImage =
 						tileset.getSubimage(
 							col * tileSize,
 							row * tileSize,
 							tileSize,
 							tileSize
 						);
-					int tileFrictionType = Tile.TILE_TYPE_GROUND;
-					int type = Tile.TILE_TYPE_GROUND;
-					
-					if(allBlocked == true) {
-						if(count != 0) {
-							type = Tile.TILE_TYPE_OBSTACLE;
-						}
-					} 
-					else {
-						if(
-							count == 32 ||
-							count == 33 ||
-							count == 34) {
-							tileFrictionType = Tile.TILE_FRICTION_TYPE_ICE;
-						}
-						if (count == 20 || count == 21 || count == 22 || count == 29 || count == 13) {
-							type = Tile.TILE_TYPE_OBSTACLE;
-						}
-					}
-					Tile newTile = new Tile(subimage, type, tileFrictionType);
+
+					int tileType = getTileType(index);
+					int tileFrictionType = getFrictionType(index);
+
+					Tile newTile = new Tile(subImage, tileType, tileFrictionType);
 					tiles[row][col] = newTile;
 					
-					count ++;
+					index ++;
 				}
 			}
 		}
@@ -104,22 +91,46 @@ public class TileMap {
 			e.printStackTrace();
 		}
 	}
-	
-	public void loadMap(String s) {
+
+	private int getFrictionType(int index) {
+		int tileFrictionType = Tile.TILE_FRICTION_TYPE_GRASS;
+		if (type == Tile.TILE_TYPE_GROUND &&
+				(index == 32 ||
+				index == 33 ||
+				index == 34)) {
+			tileFrictionType = Tile.TILE_FRICTION_TYPE_ICE;
+		}
+		return tileFrictionType;
+	}
+
+	private int getTileType(int index) {
+		int tileType = Tile.TILE_TYPE_GROUND;
+
+		if(type == Tile.TILE_TYPE_OBSTACLE) {
+			if(index == 0) {
+				tileType = Tile.TILE_TYPE_GROUND;
+			} else {
+				tileType = Tile.TILE_TYPE_OBSTACLE;
+			}
+		}
+		return tileType;
+	}
+
+	public void loadMap() {
 		
 		try {
 			
-			InputStream in = getClass().getResourceAsStream(s);
+			InputStream in = getClass().getResourceAsStream(mapName);
 			BufferedReader br = new BufferedReader(
 						new InputStreamReader(in)
 					);
 
-			String delimeters = ";";
+			String delimeter = ";";
 			String firstRowValue = br.readLine();
 			String secondRowValue = br.readLine();
 			
-			numberOfColumns = Integer.parseInt(firstRowValue.substring(0, firstRowValue.indexOf(';')));
-			numberOfRows = Integer.parseInt(secondRowValue.substring(0, secondRowValue.indexOf(';')));
+			numberOfColumns = Integer.parseInt(firstRowValue.substring(0, firstRowValue.indexOf(delimeter)));
+			numberOfRows = Integer.parseInt(secondRowValue.substring(0, secondRowValue.indexOf(delimeter)));
 			
 			map = new int[numberOfRows][numberOfColumns];
 			width = numberOfColumns * tileSize;
@@ -132,7 +143,7 @@ public class TileMap {
 			
 			for(int row = 0; row < numberOfRows; row++) {
 				String line = br.readLine();
-				String[] tokens = line.split(delimeters, -1);
+				String[] tokens = line.split(delimeter, -1);
 				for(int col = 0; col < numberOfColumns; col++) {
 					map[row][col] = Integer.parseInt(tokens[col]);
 				}
@@ -146,7 +157,6 @@ public class TileMap {
 
 	public double getX() { return x; }
 	public double getY() { return y; }
-	public double getTween() { return tween; }
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
 	public int getTileSize() { return tileSize; }
@@ -203,13 +213,11 @@ public class TileMap {
 		this.tileSize = tileSize;
 	}
 	
-	public void setTween(double d) { tween = d; }
-	
 	public void setType(int type) { this.type = type; }
 	
 	public void setPosition(double x, double y) {
-		this.x += (x - this.x); // * tween;
-		this.y += (y - this.y); // * tween;
+		this.x += (x - this.x);
+		this.y += (y - this.y);
 		
 		fixBounds();
 		

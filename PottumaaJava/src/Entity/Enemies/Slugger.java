@@ -14,8 +14,8 @@ public class Slugger extends Enemy {
 		
 		super(tileMaps, maxHealth);
 		
-		moveSpeed = 0.3;
-		maxSpeed = originalMaxSpeed = 0.3;
+		moveSpeed = EnemySettings.SLUGGER_MOVE_SPEED;
+		maxSpeed = originalMaxSpeed = EnemySettings.SLUGGER_MOVE_SPEED;
 		fallSpeed = 0.2;
 		stopSpeed = originalStopSpeed = 0.3;
 		maxFallSpeed = 10.0;

@@ -43,7 +43,7 @@ public class Level1State extends BaseLevel {
 
 	private void setPlayerStartingPosition(int previousState) {
 		if(previousState == GameStateManager.STATE_LEVEL_2) {
-			player.setPosition(880, 585);
+			player.setPosition(845, 585);
 			return;
 		}
 		player.setPosition(345, 200);

@@ -18,7 +18,7 @@ public class Level2State extends BaseLevel {
 	}
 
 	private void setPlayerStartingPosition(int previousState) {
-		player.setPosition(80, 575);
+		player.setPosition(40, 575);
 	}
 
 	@Override

@@ -9,9 +9,12 @@ public class TileMapTest {
     private TileMap myTileMap;
 
     public TileMapTest() {
-        myTileMap = new TileMap(30);
-        myTileMap.loadTiles("/Tilesets/grasstileset.png", false);
-        myTileMap.loadMap("/Maps/map1.csv");
+        myTileMap = new TileMap(30,
+                "/Tilesets/grasstileset.png",
+                "/Maps/map1.csv"
+                );
+        myTileMap.loadTiles();
+        myTileMap.loadMap();
         myTileMap.setPosition(0, 0);
         myTileMap.setType(Tile.TILE_TYPE_GROUND);
     }

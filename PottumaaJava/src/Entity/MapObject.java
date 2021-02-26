@@ -37,10 +37,10 @@ public abstract class MapObject {
 	protected int currentColumn;
 	protected double xTemp;
 	protected double yTemp;
-	protected boolean topLeft;
-	protected boolean topRight;
-	protected boolean bottomLeft;
-	protected boolean bottomRight;
+	protected boolean topLeftCorner;
+	protected boolean topRightCorner;
+	protected boolean bottomLeftCorner;
+	protected boolean bottomRightCorner;
 
 	//tiles
 	protected int bottomTile;
@@ -101,8 +101,16 @@ public abstract class MapObject {
 	}
 	
 	public void calculateCorners(double x, double y, TileMap tileMap) {
-		calculateTiles(x, y, tileMap);
+		var tileSize = tileMap.getTileSize();
+		calculateTiles(x, y, tileSize);
 		calculateFourCorners(tileMap);
+	}
+
+	private void calculateTiles(double x, double y, int tileSize) {
+		leftTile = getLeftTile(x, tileSize);
+		rightTile = getRightTile(x, tileSize);
+		topTile = getTopTile(y, tileSize);
+		bottomTile = getBottomTile(y, tileSize);
 	}
 
 	private void calculateFourCorners(TileMap tileMap) {
@@ -111,23 +119,37 @@ public abstract class MapObject {
 		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
 		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
 
-		topLeft = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
-		topRight = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
-		bottomLeft = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
-		bottomRight = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
+		topLeftCorner = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		topRightCorner = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomLeftCorner = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomRightCorner = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
 	}
 
-	private void calculateTiles(double x, double y, TileMap tileMap) {
-		leftTile = (int)(x - collisionBoxWidth / 2) / tileMap.getTileSize();
-		rightTile = (int)(x + collisionBoxWidth / 2 - 1) / tileMap.getTileSize();
-		topTile = (int)(y - collisionBoxHeight / 2) / tileMap.getTileSize();
-		bottomTile = (int)(y + collisionBoxHeight / 2 - 1) / tileMap.getTileSize();
+	private int getBottomTile(double y, int tileSize) {
+		return (int)(y + collisionBoxHeight / 2 - 1) / tileSize;
+	}
+
+	private int getTopTile(double y, int tileSize) {
+		return (int)(y - collisionBoxHeight / 2) / tileSize;
+	}
+
+	private int getRightTile(double x, int tileSize) {
+		return (int)(x + collisionBoxWidth / 2 - 1) / tileSize;
+	}
+
+	private int getLeftTile(double x, int tileSize) {
+		return (int)(x - collisionBoxWidth / 2) / tileSize;
 	}
 
 	public void checkObstacleCollision(Obstacle obstacle) {
 		//todo: Koodaa varsinainen collision detection
 
-		/*
+		double xDestination = calculateDestinationX();
+		double yDestination = calculateDestinationY();
+
+		xTemp = x;
+		yTemp = y;
+
 		if (goingUp()) {
 			System.out.println("menossa ylös");
 		}
@@ -140,58 +162,102 @@ public abstract class MapObject {
 		if(goingRight()) {
 			System.out.println("menossa oikealle");
 		}
-		 */
+
 	}
 	
-	public void checkTileMapCollision(TileMap tm) {
-
-		calculateCurrentColumn(tm);
-		calculateCurrentRow(tm);
-
-		double xDestination = calculateDestinationX();
-		double yDestination = calculateDestinationY();
-
-		xTemp = x;
-		yTemp = y;
+	public void checkTileMapCollisions() {
 
 		for (TileMap tileMap : tileMaps) {
-			var tileSize = tm.getTileSize();
-			calculateCorners(x, yDestination, tileMap);
-			if (goingUp()) {
-				if (topLeft || topRight) {
-					dy = 0;
-					yTemp = currentRow * tileSize + collisionBoxHeight / 2;
-				} else {
-					yTemp += dy;
+
+			calculateCurrentColumn(tileMap);
+			calculateCurrentRow(tileMap);
+
+			double xDestination = calculateDestinationX();
+			double yDestination = calculateDestinationY();
+
+			xTemp = x;
+			yTemp = y;
+
+			if(tileMap.getType() == Tile.TILE_TYPE_OBSTACLE) {
+
+				calculateCornersForYDestination(yDestination, tileMap);
+				if (goingUp()) {
+					if (isHittingTopCorners()) {
+						preventMovingInYDirection();
+					} else {
+						moveInYDirection();
+					}
+				} else if (goingDown()) {
+					if (isHittingBottomCorners()) {
+						preventMovingInYDirection();
+					} else {
+						moveInYDirection();
+					}
+				}
+				calculateCornersForXDestination(xDestination, tileMap);
+				if (goingLeft()) {
+					if (isHittingLeftCorners()) {
+						preventMovingInXDirection();
+					} else {
+						moveInXDirection();
+					}
+				} else if (goingRight()) {
+					if (isHittingRightCorners()) {
+						preventMovingInXDirection();
+					} else {
+						moveInXDirection();
+					}
+				}
+			} else if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
+				if(goingUp() || goingDown()) {
+					moveInYDirection();
+				}
+				if (goingLeft() || goingRight()) {
+					moveInXDirection();
 				}
 			}
-			if (goingDown()) {
-				if (bottomLeft || bottomRight) {
-					dy = 0;
-					yTemp = (currentRow + 1) * tileSize - collisionBoxHeight / 2;
-				} else {
-					yTemp += dy;
-				}
-			}
-			calculateCorners(xDestination, y, tileMap);
-			if (goingLeft()) {
-				if (topLeft || bottomLeft) {
-					dx = 0;
-					xTemp = currentColumn * tileSize + collisionBoxWidth / 2;
-				} else {
-					xTemp += dx;
-				}
-			}
-			if (goingRight()) {
-				if (topRight || bottomRight) {
-					dx = 0;
-					xTemp = (currentColumn + 1) * tileSize - collisionBoxWidth / 2;
-				} else {
-					xTemp += dx;
-				}
-			}
-			calculateCorners(x, yDestination + 1, tileMap);
 		}
+
+	}
+
+	private void preventMovingInYDirection() {
+		dy = 0;
+	}
+
+	private void preventMovingInXDirection() {
+		dx = 0;
+	}
+
+	private void moveInXDirection() {
+		xTemp += dx;
+	}
+
+	private void moveInYDirection() {
+		yTemp += dy;
+	}
+
+	private boolean isHittingBottomCorners() {
+		return bottomLeftCorner || bottomRightCorner;
+	}
+
+	private boolean isHittingTopCorners() {
+		return topLeftCorner || topRightCorner;
+	}
+
+	private boolean isHittingRightCorners() {
+		return topRightCorner || bottomRightCorner;
+	}
+
+	private boolean isHittingLeftCorners() {
+		return topLeftCorner || bottomLeftCorner;
+	}
+
+	private void calculateCornersForXDestination(double xDestination, TileMap tileMap) {
+		calculateCorners(xDestination, y, tileMap);
+	}
+
+	private void calculateCornersForYDestination(double yDestination, TileMap tileMap) {
+		calculateCorners(x, yDestination, tileMap);
 	}
 
 	private double calculateDestinationY() {
@@ -242,8 +308,8 @@ public abstract class MapObject {
 		return stopSpeed;
 	}
 
-	protected boolean getBottomLeft() { return bottomLeft; }
-	protected boolean getBottomRight() { return bottomRight; }
+	protected boolean getBottomLeftCorner() { return bottomLeftCorner; }
+	protected boolean getBottomRightCorner() { return bottomRightCorner; }
 	
 	public void setMaxSpeed(double maxSpeed) {
 		this.maxSpeed = maxSpeed;
@@ -263,12 +329,9 @@ public abstract class MapObject {
 	}
 	
 	public void setMapPosition() {
-		for (TileMap tileMap : tileMaps) {
+		for (TileMap tileMap : getTileMaps(Tile.TILE_TYPE_GROUND)) {
 			xMap = tileMap.getX();
 			yMap = tileMap.getY();
-			break;
-			//optimization. Don't loop both tileMaps (ground and obstacles) for each MapObject
-			//todo: Should get only ground tileMaps in the first place..
 		}
 	}
 	
@@ -304,12 +367,16 @@ public abstract class MapObject {
 
 	}
 
-	private void checkTileMapCollisions() {
-		for (TileMap tileMap : tileMaps) {
-			checkTileMapCollision(tileMap);
+	protected ArrayList<TileMap> getTileMaps(int tileType) {
+		var groundTileMaps = new ArrayList<TileMap>();
+		for(TileMap tileMap : tileMaps) {
+			if(tileMap.getType() == tileType) {
+				groundTileMaps.add(tileMap);
+			}
 		}
+		return groundTileMaps;
 	}
-	
+
 	public void draw(Graphics2D g) {
 
 		setMapPosition();

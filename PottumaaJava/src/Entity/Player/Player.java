@@ -92,8 +92,8 @@ public class Player extends MapObject {
 		collisionBoxWidth = 20;
 		collisionBoxHeight = 20;
 		//speed
-		moveSpeed = 0.1;
-		maxSpeed = originalMaxSpeed = 0.6;
+		moveSpeed = PlayerSettings.PLAYER_MOVE_SPEED;
+		maxSpeed = originalMaxSpeed = PlayerSettings.PLAYER_MAX_SPEED;
 		stopSpeed = originalStopSpeed = 0.4; //grass
 		fallSpeed = 0.10;
 		maxFallSpeed = 4.0;
@@ -256,7 +256,7 @@ public class Player extends MapObject {
 	}
 
 	private void setSpeedAccordingToGroundType() {
-		for (TileMap ground : getGroundTileMaps()) {
+		for (TileMap ground : getTileMaps(Tile.TILE_TYPE_GROUND)) {
 			// On ice player goes faster and breaks slower
 			if (ground.getTileFrictionType(bottomTile, leftTile) == Tile.TILE_FRICTION_TYPE_ICE ||
 					ground.getTileFrictionType(bottomTile, rightTile) == Tile.TILE_FRICTION_TYPE_ICE) {
@@ -267,16 +267,6 @@ public class Player extends MapObject {
 				this.maxSpeed = originalMaxSpeed;
 			}
 		}
-	}
-
-	private ArrayList<TileMap> getGroundTileMaps() {
-		var groundTileMaps = new ArrayList<TileMap>();
-		for(TileMap tileMap : tileMaps) {
-			if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
-				groundTileMaps.add(tileMap);
-			}
-		}
-		return groundTileMaps;
 	}
 
 	public void setMapPointForLevelChange(MapPoint mapPointForLevelChange) {

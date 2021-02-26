@@ -72,17 +72,16 @@ public abstract class BaseLevel extends GameState  {
 
     private void populateTileMaps() {
         tileMaps = new ArrayList<>();
-        addTileMap(groundTileSetName, false, groundTileMapName, Tile.TILE_TYPE_GROUND);
-        addTileMap(obstacleTileSetName, true, obstacleTileMapName, Tile.TILE_TYPE_OBSTACLE);
+        addTileMap(groundTileSetName, groundTileMapName, Tile.TILE_TYPE_GROUND);
+        addTileMap(obstacleTileSetName, obstacleTileMapName, Tile.TILE_TYPE_OBSTACLE);
     }
 
-    private void addTileMap(String groundTileSetName, boolean allBlocked, String groundTileMapName, int tileTypeGround) {
-        TileMap tileMapGround = new TileMap(30);
-        tileMapGround.loadTiles(groundTileSetName, allBlocked);
-        tileMapGround.loadMap(groundTileMapName);
+    private void addTileMap(String tileSetName, String mapName, int tileType) {
+        TileMap tileMapGround = new TileMap(30, tileSetName, mapName);
+        tileMapGround.setType(tileType);
+        tileMapGround.loadTiles();
+        tileMapGround.loadMap();
         tileMapGround.setPosition(0, 0);
-        tileMapGround.setType(tileTypeGround);
-        tileMapGround.setTween(0.11);
         tileMaps.add(tileMapGround);
     }
 
@@ -261,14 +260,14 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private TileMap getGroundTileMap() {
-        TileMap groundMap = null;
+        TileMap groundTileMap = null;
         for(TileMap tileMap : tileMaps) {
             if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
-                groundMap = tileMap;
+                groundTileMap = tileMap;
             }
             break;
         }
-        return groundMap;
+        return groundTileMap;
     }
 
     private void drawTileMaps(Graphics2D g) {
