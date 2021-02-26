@@ -74,6 +74,7 @@ public class Arachnid extends Enemy {
 	private void setSoundEffects() {
 		sfx.put("deathCry", new AudioPlayer("/SFX/arachnidDeathCry.wav"));
 		sfx.put("idleSound", new AudioPlayer("/SFX/eating.wav"));
+		sfx.put("hit", new AudioPlayer("/SFX/arachnidHit.wav"));
 	}
 	
 }

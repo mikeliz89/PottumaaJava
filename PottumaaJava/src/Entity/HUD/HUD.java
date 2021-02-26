@@ -14,7 +14,8 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 public class HUD {
-	
+
+	private Inventory inventory;
 	private Player player;
 	private HashMap<String, AudioPlayer> sfx;
 	private BufferedImage image;
@@ -29,13 +30,18 @@ public class HUD {
 	
 	public HUD(Player player) {
 		this.player = player;
-		getImage();
+		setHudImage();
+		createInventory();
 		createQuestLog();
 		createDialogBox();
 		setSoundEffects();
 	}
 
-	private void getImage() {
+	private void createInventory() {
+		this.inventory = new Inventory(player);
+	}
+
+	private void setHudImage() {
 		try {
 			image = ImageIO.read(
 				getClass().getResourceAsStream(
@@ -118,7 +124,7 @@ public class HUD {
 			drawMap(g);
 
 		if(showInventory)
-			drawInventory(g);
+			inventory.draw(g);
 
 		if(showQuestLog)
 			drawQuestLog(g);
@@ -198,49 +204,6 @@ public class HUD {
 		return new Rectangle(x, y, width, height);
 	}
 
-	private void drawInventory(Graphics2D g) {
-
-		var outerBox = getOuterBox();
-		var innerBox = getInnerBox(outerBox);
-
-		drawInventoryInnerBox(g, innerBox);
-
-		drawOuterLines(g, outerBox);
-
-		drawInventoryTitle(g, innerBox);
-
-		drawGold(g, innerBox);
-
-		drawCharacterStatsTitle(g, innerBox);
-
-		drawExperience(g, innerBox);
-
-		drawAttackStats(g, innerBox);
-
-		drawHealth(g, innerBox);
-	}
-
-	private Rectangle getInnerBox(Rectangle outerBox) {
-		return new Rectangle(outerBox.x + 10, outerBox.y + 10,
-				outerBox.width-20, outerBox.height-20);
-	}
-
-	private void drawInventoryInnerBox(Graphics2D g, Rectangle innerBox) {
-		int alpha = 100; // vähemmän kuin 50% transparent
-		Color semiTransParentColor = new Color(0, 0, 0, alpha);
-		g.setColor(semiTransParentColor);
-		g.fill(innerBox);
-	}
-
-	private void drawOuterLines(Graphics2D g, Rectangle rectangle) {
-		g.setColor(Color.BLACK);
-		g.drawRect(rectangle.x, rectangle.y,
-				rectangle.width, rectangle.height);
-	}
-
-	private final int inventoryXPosition = 10;
-	private final int characterStatsXPosition = 480;
-
 	private void drawDeathScreen(Graphics2D g) {
 
 		var positionX = 0;
@@ -266,38 +229,6 @@ public class HUD {
 
 	private void drawPauseMenu(Graphics2D g) {
 		drawCenteredText(g, "Game saved.");
-	}
-
-	private void drawHealth(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.WHITE);
-		g.drawString("HP : "+ player.getHealth() + " / " + player.getMaxHealth(), innerBox.x + characterStatsXPosition, innerBox.y + 100);
-	}
-
-	private void drawCharacterStatsTitle(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.WHITE);
-		g.drawString("Character stats", innerBox.x + characterStatsXPosition, innerBox.y + 20);
-	}
-
-	private void drawExperience(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.CYAN);
-		g.drawString("Exp: " + player.getExperience(), innerBox.x + characterStatsXPosition, innerBox.y + 40 );
-	}
-
-	private void drawGold(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.ORANGE);
-		g.drawString("Gold: " + player.getMoneyInWallet(), innerBox.x + inventoryXPosition, innerBox.y + 40);
-	}
-
-	private void drawInventoryTitle(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.WHITE);
-		g.setFont(font);
-		g.drawString("Inventory", innerBox.x + inventoryXPosition, innerBox.y + 20);
-	}
-
-	private void drawAttackStats(Graphics2D g, Rectangle innerBox) {
-		g.setColor(Color.WHITE);
-		g.drawString("Scratch dmg: " + player.getScratchDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 60);
-		g.drawString("Fireball dmg: " + player.getFireBallDamage(), innerBox.x + characterStatsXPosition, innerBox.y + 80);
 	}
 
 	private void drawImage(Graphics2D g) {

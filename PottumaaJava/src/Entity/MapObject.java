@@ -266,6 +266,9 @@ public abstract class MapObject {
 		for (TileMap tileMap : tileMaps) {
 			xMap = tileMap.getX();
 			yMap = tileMap.getY();
+			break;
+			//optimization. Don't loop both tileMaps (ground and obstacles) for each MapObject
+			//todo: Should get only ground tileMaps in the first place..
 		}
 	}
 	

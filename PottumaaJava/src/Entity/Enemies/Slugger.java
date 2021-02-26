@@ -70,6 +70,7 @@ public class Slugger extends Enemy {
 
 	private void setSoundEffects() {
 		sfx.put("deathCry", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
+		sfx.put("hit", new AudioPlayer("/SFX/sluggerHit.wav"));
 		sfx.put("idleSound", new AudioPlayer("/SFX/slimy.wav"));
 	}
 	
