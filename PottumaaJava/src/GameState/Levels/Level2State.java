@@ -31,7 +31,7 @@ public class Level2State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
-		var enemyFactory = new EnemyFactory(tileMaps);
+		var enemyFactory = new EnemyFactory(tileMaps, obstacles);
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
 				new Point(700, 700),

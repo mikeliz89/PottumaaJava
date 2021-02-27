@@ -1,6 +1,7 @@
 package Entity.Enemies;
 
 import Audio.AudioPlayer;
+import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,9 +11,9 @@ public class Arachnid extends Enemy {
 
 	private BufferedImage[] sprites;
 
-	public Arachnid(ArrayList<TileMap> tileMaps, int maxHealth) {
+	public Arachnid(ArrayList<TileMap> tileMaps, int maxHealth, ArrayList<Obstacle> obstacles) {
 		
-		super(tileMaps, maxHealth);
+		super(tileMaps, maxHealth, obstacles);
 		
 		moveSpeed = EnemySettings.ARACHNID_MOVE_SPEED;
 		maxSpeed = originalMaxSpeed = EnemySettings.ARACHNID_MOVE_SPEED;

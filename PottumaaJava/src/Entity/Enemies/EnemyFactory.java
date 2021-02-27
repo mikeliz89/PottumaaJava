@@ -1,14 +1,16 @@
 package Entity.Enemies;
 
+import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
 import java.util.ArrayList;
 
 public class EnemyFactory {
 
     ArrayList<TileMap> tileMaps;
-
-    public EnemyFactory(ArrayList<TileMap> tileMaps) {
+    ArrayList<Obstacle> obstacles;
+    public EnemyFactory(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
         this.tileMaps = tileMaps;
+        this.obstacles = obstacles;
     }
 
     public Enemy getEnemy(int enemyType, int xCoordinate, int yCoordinate, int maxHealth) {
@@ -17,12 +19,12 @@ public class EnemyFactory {
         }
 
         if(enemyType == EnemySettings.ENEMY_TYPES_SLUGGER) {
-            var slugger = new Slugger(tileMaps, maxHealth);
+            var slugger = new Slugger(tileMaps, maxHealth, obstacles);
             slugger.setPosition(xCoordinate, yCoordinate);
             return slugger;
         }
         else if(enemyType == EnemySettings.ENEMY_TYPES_ARACHNID) {
-            var arachnid = new Arachnid(tileMaps, maxHealth);
+            var arachnid = new Arachnid(tileMaps, maxHealth, obstacles);
             arachnid.setPosition(xCoordinate, yCoordinate);
             return arachnid;
         }

@@ -99,19 +99,6 @@ public abstract class MapObject {
 				width,
 				height);
 	}
-	
-	public void calculateCorners(double x, double y, TileMap tileMap) {
-		var tileSize = tileMap.getTileSize();
-		calculateTiles(x, y, tileSize);
-		calculateFourCorners(tileMap);
-	}
-
-	private void calculateTiles(double x, double y, int tileSize) {
-		leftTile = getLeftTile(x, tileSize);
-		rightTile = getRightTile(x, tileSize);
-		topTile = getTopTile(y, tileSize);
-		bottomTile = getBottomTile(y, tileSize);
-	}
 
 	private void calculateFourCorners(TileMap tileMap) {
 		int topLeftTileType = tileMap.getTileType(topTile, leftTile);
@@ -125,48 +112,133 @@ public abstract class MapObject {
 		bottomRightCorner = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
 	}
 
-	private int getBottomTile(double y, int tileSize) {
-		return (int)(y + collisionBoxHeight / 2 - 1) / tileSize;
+	public int getX() { return (int)x; }
+	public int getY() { return (int)y; }
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
+	public int getCollisionBoxWidth() { return collisionBoxWidth; }
+	public int getCollisionBoxHeight() { return collisionBoxHeight; }
+	public void setCollisionBoxWidth(int collisionBoxWidth) {
+		this.collisionBoxWidth = collisionBoxWidth;
+	}
+	public void setCollisionBoxHeight(int collisionBoxHeight) {
+		this.collisionBoxHeight = collisionBoxHeight;
 	}
 
-	private int getTopTile(double y, int tileSize) {
-		return (int)(y - collisionBoxHeight / 2) / tileSize;
+	public double getMaxSpeed() {
+		return maxSpeed;
 	}
 
-	private int getRightTile(double x, int tileSize) {
-		return (int)(x + collisionBoxWidth / 2 - 1) / tileSize;
+	public double getStopSpeed() {
+		return stopSpeed;
 	}
 
-	private int getLeftTile(double x, int tileSize) {
-		return (int)(x - collisionBoxWidth / 2) / tileSize;
+	protected boolean getBottomLeftCorner() { return bottomLeftCorner; }
+	protected boolean getBottomRightCorner() { return bottomRightCorner; }
+
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
 	}
 
-	public void checkObstacleCollision(Obstacle obstacle) {
-		//todo: Koodaa varsinainen collision detection
+	public void setStopSpeed(double stopSpeed) {
+		this.stopSpeed = stopSpeed;
+	}
 
-		double xDestination = calculateDestinationX();
-		double yDestination = calculateDestinationY();
+	public void setPosition(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	public void setVector(double dx, double dy) {
+		this.dx = dx;
+		this.dy = dy;
+	}
 
-		xTemp = x;
-		yTemp = y;
-
-		if (goingUp()) {
-			System.out.println("menossa ylös");
+	public void setMapPosition() {
+		for (TileMap tileMap : getTileMaps(Tile.TILE_TYPE_GROUND)) {
+			xMap = tileMap.getX();
+			yMap = tileMap.getY();
 		}
-		if(goingDown()) {
-			System.out.println("menossa alas");
-		}
-		if(goingLeft()) {
-			System.out.println("menossa vasemmalle");
-		}
-		if(goingRight()) {
-			System.out.println("menossa oikealle");
-		}
+	}
+
+	public void setLeft(boolean b) { left = b; }
+	public void setRight(boolean b) { right = b; }
+	public void setUp(boolean b) { up = b; }
+	public void setDown(boolean b) { down = b; }
+	public void setJumping(boolean b) { jumping = b; }
+
+	public boolean notOnScreen() {
+		return x + xMap + width < 0 ||
+				x + xMap - width > GamePanel.WIDTH ||
+				y + yMap + height < 0 ||
+				y + yMap - height > GamePanel.HEIGHT;
+	}
+
+	public double getXMap() {
+		return xMap;
+	}
+
+	public double getYMap() {
+		return yMap;
+	}
+
+	public void update() {
+		updatePosition();
+		//if(this instanceof Player){
+			checkCollisions();
+		//}
+		setPosition(xTemp, yTemp);
+		updateAnimation();
+	}
+
+	private void updateAnimation() {
+		animation.update();
+	}
+
+	protected void updatePosition() {
 
 	}
-	
-	public void checkTileMapCollisions() {
 
+	protected ArrayList<TileMap> getTileMaps(int tileType) {
+		var groundTileMaps = new ArrayList<TileMap>();
+		for(TileMap tileMap : tileMaps) {
+			if(tileMap.getType() == tileType) {
+				groundTileMaps.add(tileMap);
+			}
+		}
+		return groundTileMaps;
+	}
+
+	public void draw(Graphics2D g) {
+
+		setMapPosition();
+
+		if(notOnScreen()) return;
+
+		if(!animation.hasFrames()) {
+			return;
+		}
+
+		drawCollisionBox(g);
+
+		drawAnimationImage(g);
+	}
+
+	public void checkCollisions() {
+		checkObstacleCollisions();
+		checkTileMapsCollisions();
+	}
+
+	private void checkObstacleCollisions() {
+		Obstacle obstacleTemp = null;
+		for(Obstacle obstacle : obstacles) {
+			if (intersects(obstacle)) {
+				System.out.println("mapobject intersects obstacle");
+				obstacleTemp = obstacle;
+			}
+		}
+	}
+
+	private void checkTileMapsCollisions() {
 		for (TileMap tileMap : tileMaps) {
 
 			calculateCurrentColumn(tileMap);
@@ -179,35 +251,8 @@ public abstract class MapObject {
 			yTemp = y;
 
 			if(tileMap.getType() == Tile.TILE_TYPE_OBSTACLE) {
-
-				calculateCornersForYDestination(yDestination, tileMap);
-				if (goingUp()) {
-					if (isHittingTopCorners()) {
-						preventMovingInYDirection();
-					} else {
-						moveInYDirection();
-					}
-				} else if (goingDown()) {
-					if (isHittingBottomCorners()) {
-						preventMovingInYDirection();
-					} else {
-						moveInYDirection();
-					}
-				}
-				calculateCornersForXDestination(xDestination, tileMap);
-				if (goingLeft()) {
-					if (isHittingLeftCorners()) {
-						preventMovingInXDirection();
-					} else {
-						moveInXDirection();
-					}
-				} else if (goingRight()) {
-					if (isHittingRightCorners()) {
-						preventMovingInXDirection();
-					} else {
-						moveInXDirection();
-					}
-				}
+				upAndDown(tileMap, yDestination);
+				leftAndRight(tileMap, xDestination);
 			} else if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
 				if(goingUp() || goingDown()) {
 					moveInYDirection();
@@ -217,7 +262,40 @@ public abstract class MapObject {
 				}
 			}
 		}
+	}
 
+	private void leftAndRight(TileMap tileMap, double xDestination) {
+		calculateCornersForXDestination(xDestination, tileMap);
+		if (goingLeft()) {
+			if (isHittingLeftCorners()) {
+				preventMovingInXDirection();
+			} else {
+				moveInXDirection();
+			}
+		} else if (goingRight()) {
+			if (isHittingRightCorners()) {
+				preventMovingInXDirection();
+			} else {
+				moveInXDirection();
+			}
+		}
+	}
+
+	private void upAndDown(TileMap tileMap, double yDestination) {
+		calculateCornersForYDestination(yDestination, tileMap);
+		if (goingUp()) {
+			if (isHittingTopCorners()) {
+				preventMovingInYDirection();
+			} else {
+				moveInYDirection();
+			}
+		} else if (goingDown()) {
+			if (isHittingBottomCorners()) {
+				preventMovingInYDirection();
+			} else {
+				moveInYDirection();
+			}
+		}
 	}
 
 	private void preventMovingInYDirection() {
@@ -260,6 +338,35 @@ public abstract class MapObject {
 		calculateCorners(x, yDestination, tileMap);
 	}
 
+	private void calculateCorners(double x, double y, TileMap tileMap) {
+		var tileSize = tileMap.getTileSize();
+		calculateTiles(x, y, tileSize);
+		calculateFourCorners(tileMap);
+	}
+
+	private void calculateTiles(double x, double y, int tileSize) {
+		leftTile = getLeftTile(x, tileSize);
+		rightTile = getRightTile(x, tileSize);
+		topTile = getTopTile(y, tileSize);
+		bottomTile = getBottomTile(y, tileSize);
+	}
+
+	private int getBottomTile(double y, int tileSize) {
+		return (int)(y + collisionBoxHeight / 2 - 1) / tileSize;
+	}
+
+	private int getTopTile(double y, int tileSize) {
+		return (int)(y - collisionBoxHeight / 2) / tileSize;
+	}
+
+	private int getRightTile(double x, int tileSize) {
+		return (int)(x + collisionBoxWidth / 2 - 1) / tileSize;
+	}
+
+	private int getLeftTile(double x, int tileSize) {
+		return (int)(x - collisionBoxWidth / 2) / tileSize;
+	}
+
 	private double calculateDestinationY() {
 		double yDestination = y + dy;
 		return yDestination;
@@ -291,105 +398,6 @@ public abstract class MapObject {
 
 	private boolean goingUp() {
 		return dy < 0;
-	}
-
-	public int getX() { return (int)x; }
-	public int getY() { return (int)y; }
-	public int getWidth() { return width; }
-	public int getHeight() { return height; }
-	public int getCollisionBoxWidth() { return collisionBoxWidth; }
-	public int getCollisionBoxHeight() { return collisionBoxHeight; }
-
-	public double getMaxSpeed() {
-		return maxSpeed;
-	}
-
-	public double getStopSpeed() {
-		return stopSpeed;
-	}
-
-	protected boolean getBottomLeftCorner() { return bottomLeftCorner; }
-	protected boolean getBottomRightCorner() { return bottomRightCorner; }
-	
-	public void setMaxSpeed(double maxSpeed) {
-		this.maxSpeed = maxSpeed;
-	}
-	
-	public void setStopSpeed(double stopSpeed) {
-		this.stopSpeed = stopSpeed;
-	}
-	
-	public void setPosition(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
-	public void setVector(double dx, double dy) {
-		this.dx = dx;
-		this.dy = dy;
-	}
-	
-	public void setMapPosition() {
-		for (TileMap tileMap : getTileMaps(Tile.TILE_TYPE_GROUND)) {
-			xMap = tileMap.getX();
-			yMap = tileMap.getY();
-		}
-	}
-	
-	public void setLeft(boolean b) { left = b; }
-	public void setRight(boolean b) { right = b; }
-	public void setUp(boolean b) { up = b; }
-	public void setDown(boolean b) { down = b; }
-	public void setJumping(boolean b) { jumping = b; }
-	
-	public boolean notOnScreen() {
-		return x + xMap + width < 0 ||
-			x + xMap - width > GamePanel.WIDTH ||
-			y + yMap + height < 0 ||
-			y + yMap - height > GamePanel.HEIGHT;
-	}
-
-	public double getXMap() {
-		return xMap;
-	}
-
-	public double getYMap() {
-		return yMap;
-	}
-
-	public void update() {
-		updatePosition();
-		checkTileMapCollisions();
-		setPosition(xTemp, yTemp);
-		animation.update();
-	}
-
-	protected void updatePosition() {
-
-	}
-
-	protected ArrayList<TileMap> getTileMaps(int tileType) {
-		var groundTileMaps = new ArrayList<TileMap>();
-		for(TileMap tileMap : tileMaps) {
-			if(tileMap.getType() == tileType) {
-				groundTileMaps.add(tileMap);
-			}
-		}
-		return groundTileMaps;
-	}
-
-	public void draw(Graphics2D g) {
-
-		setMapPosition();
-
-		if(notOnScreen()) return;
-
-		if(!animation.hasFrames()) {
-			return;
-		}
-
-		drawCollisionBox(g);
-
-		drawAnimationImage(g);
 	}
 
 	private void drawCollisionBox(Graphics2D g) {
@@ -440,21 +448,4 @@ public abstract class MapObject {
 			null
 		);
 	}
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

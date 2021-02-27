@@ -4,6 +4,7 @@ import Audio.AudioPlayer;
 import Entity.Animation;
 import Entity.HealthBar;
 import Entity.MapObject;
+import Entity.Obstacles.Obstacle;
 import TileMap.*;
 
 import java.awt.*;
@@ -25,10 +26,11 @@ public abstract class Enemy extends MapObject {
 	private HealthBar healthBar;
 	protected HashMap<String, AudioPlayer> sfx;
 	
-	public Enemy(ArrayList<TileMap> tileMaps, int maxHealth) {
+	public Enemy(ArrayList<TileMap> tileMaps, int maxHealth, ArrayList<Obstacle> obstacles) {
 		this.tileMaps = tileMaps;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
+		this.obstacles = obstacles;
 
 		//todo: Tee vaihtuva healthBarin korkeus per enemy tyyppi
 		healthBar = new HealthBar(3, this.maxHealth);

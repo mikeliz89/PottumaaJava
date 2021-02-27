@@ -23,7 +23,7 @@ public abstract class BaseLevel extends GameState  {
     protected ArrayList<NPC> NPCs;
     private ArrayList<Explosion> explosions;
     protected ArrayList<MapPoint> mapPoints;
-    private ArrayList<Obstacle> obstacles;
+    protected ArrayList<Obstacle> obstacles;
     private HUD hud;
     private ArrayList<Integer> keysPressed;
     private String groundTileSetName;
@@ -199,11 +199,11 @@ public abstract class BaseLevel extends GameState  {
 
         drawMapPoints(g);
 
-        drawObstacles(g);
+        drawPlayer(g);
 
         drawNPCs(g);
 
-        drawPlayer(g);
+        drawObstacles(g);
 
         drawEnemies(g);
 

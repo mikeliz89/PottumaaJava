@@ -1,6 +1,7 @@
 package Entity.Enemies;
 
 import Audio.AudioPlayer;
+import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -10,9 +11,9 @@ public class Slugger extends Enemy {
 	
 	private BufferedImage[] sprites;
 
-	public Slugger(ArrayList<TileMap> tileMaps, int maxHealth) {
+	public Slugger(ArrayList<TileMap> tileMaps, int maxHealth, ArrayList<Obstacle> obstacles) {
 		
-		super(tileMaps, maxHealth);
+		super(tileMaps, maxHealth, obstacles);
 		
 		moveSpeed = EnemySettings.SLUGGER_MOVE_SPEED;
 		maxSpeed = originalMaxSpeed = EnemySettings.SLUGGER_MOVE_SPEED;

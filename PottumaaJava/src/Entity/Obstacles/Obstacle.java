@@ -5,7 +5,6 @@ import Entity.MapObject;
 import TileMap.TileMap;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +17,6 @@ public class Obstacle extends MapObject {
         this.width = width;
         this.height = height;
         this.imageName = imageName;
-        this.collisionBoxHeight = height;
-        this.collisionBoxWidth = width;
         loadSprites();
     }
 

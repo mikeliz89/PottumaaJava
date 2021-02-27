@@ -52,6 +52,8 @@ public class Level1State extends BaseLevel {
 	private void createObstacles() {
 		playerHome = new Obstacle(tileMaps, 180, 120, "/Sprites/House/obstacles-new-house.gif");
 		playerHome.setPosition(527 - 180, 247 - 120);
+		playerHome.setCollisionBoxHeight(playerHome.getHeight() - 10);
+		playerHome.setCollisionBoxWidth(playerHome.getWidth() - 40);
 		addObstacle(playerHome);
 	}
 
@@ -83,7 +85,7 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
-		var enemyFactory = new EnemyFactory(tileMaps);
+		var enemyFactory = new EnemyFactory(tileMaps, obstacles);
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
 				new Point(330, 100),

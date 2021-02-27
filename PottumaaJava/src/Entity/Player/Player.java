@@ -460,8 +460,6 @@ public class Player extends MapObject {
 
 		updatePosition();
 
-		checkObstacleCollisions();
-
 		checkAttackHasStopped();
 
 		fireBallAttack();
@@ -474,12 +472,6 @@ public class Player extends MapObject {
 
 		updateFacingDirection();
 
-	}
-
-	private void checkObstacleCollisions() {
-		for(Obstacle obstacle : obstacles) {
-			checkObstacleCollision(obstacle);
-		}
 	}
 
 	private void flinching() {
