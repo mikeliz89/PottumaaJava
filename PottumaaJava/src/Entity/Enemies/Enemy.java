@@ -50,23 +50,23 @@ public abstract class Enemy extends Entity.Character {
 	//if it hits a wall, go other direction
 	private void checkWallHits() {
 		//right and left
-		if(right && dx == 0) {
+		if(right && getVectorX() == 0) {
 			right = false;
 			left = true;
 			facingRight = false;
 		}
-		else if(left && dx == 0) {
+		else if(left && getVectorX() == 0) {
 			right = true;
 			left = false;
 			facingRight = true;
 		}
 		//up and down
-		if(up && dy == 0) {
+		if(up && getVectorY() == 0) {
 			up = false;
 			down = true;
 			facingUp = false;
 		}
-		else if(down && dy == 0) {
+		else if(down && getVectorY() == 0) {
 			up = true;
 			down = false;
 			facingUp = true;

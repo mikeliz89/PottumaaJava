@@ -41,7 +41,6 @@ public class Player extends Entity.Character {
 	// animation actions
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
-	private static final int JUMPING = 2;
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
 	private Wallet wallet;
@@ -269,9 +268,8 @@ public class Player extends Entity.Character {
 		super.updatePosition();
 		//cannot move left or right while attacking
 		if(!PlayerSettings.PLAYER_CAN_MOVE_WHILE_ATTACKING && isAttacking()) {
-			dx = 0;
+			preventMovingInXDirection();
 		}
-		jumping();
 	}
 
 	public void setCharging(boolean isCharging) {
@@ -288,13 +286,6 @@ public class Player extends Entity.Character {
 		}
 	}
 
-	private void jumping() {
-		if(jumping) {
-			playSoundEffect("jump");
-			dy = jumpStart;
-		}
-	}
-
 	@Override
 	protected void moveLeftOrRight() {
 		super.moveLeftOrRight();
@@ -302,47 +293,11 @@ public class Player extends Entity.Character {
 		stopGoingLeft();
 	}
 
-	private void stopGoingLeft() {
-		if(goingLeft()) {
-			dx += stopSpeed;
-			if(goingRight()) {
-				dx = 0;
-			}
-		}
-	}
-
-	private void stopGoingRight() {
-		if(goingRight()) {
-			dx -= stopSpeed;
-			if(goingLeft()) {
-				dx = 0;
-			}
-		}
-	}
-
 	@Override
 	protected void moveUpOrDown() {
 		super.moveUpOrDown();
 		stopGoingDown();
 		stopGoingUp();
-	}
-
-	private void stopGoingUp() {
-		if(goingUp()) {
-			dy += stopSpeed;
-			if(goingDown()) {
-				dy = 0;
-			}
-		}
-	}
-
-	private void stopGoingDown() {
-		if(goingDown()) {
-			dy -= stopSpeed;
-			if(goingUp()) {
-				dy = 0;
-			}
-		}
 	}
 
 	public void update() {

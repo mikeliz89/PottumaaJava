@@ -21,8 +21,8 @@ public abstract class MapObject {
 	// position and vector
 	protected double x;
 	protected double y;
-	protected double dx;
-	protected double dy;
+	private double dx;
+	private double dy;
 	
 	// dimensions
 	private int width;
@@ -145,6 +145,14 @@ public abstract class MapObject {
 	public void setVector(double dx, double dy) {
 		this.dx = dx;
 		this.dy = dy;
+	}
+
+	protected double getVectorX() {
+		return this.dx;
+	}
+
+	protected double getVectorY() {
+		return this.dy;
 	}
 
 	public void setMapPosition() {
@@ -293,12 +301,48 @@ public abstract class MapObject {
 		}
 	}
 
-	private void preventMovingInYDirection() {
+	protected void preventMovingInYDirection() {
 		dy = 0;
 	}
 
-	private void preventMovingInXDirection() {
+	protected void preventMovingInXDirection() {
 		dx = 0;
+	}
+
+	protected void stopGoingUp() {
+		if(goingUp()) {
+			dy += stopSpeed;
+			if(goingDown()) {
+				dy = 0;
+			}
+		}
+	}
+
+	protected void stopGoingDown() {
+		if(goingDown()) {
+			dy -= stopSpeed;
+			if(goingUp()) {
+				dy = 0;
+			}
+		}
+	}
+
+	protected void stopGoingLeft() {
+		if(goingLeft()) {
+			dx += stopSpeed;
+			if(goingRight()) {
+				dx = 0;
+			}
+		}
+	}
+
+	protected void stopGoingRight() {
+		if(goingRight()) {
+			dx -= stopSpeed;
+			if(goingLeft()) {
+				dx = 0;
+			}
+		}
 	}
 
 	private void moveInXDirection() {
@@ -454,5 +498,33 @@ public abstract class MapObject {
 			(int)(y + yMap - height / 2),
 			null
 		);
+	}
+
+	protected void moveDown() {
+		dy += moveSpeed;
+		if(dy > maxSpeed) {
+			dy = maxSpeed;
+		}
+	}
+
+	protected void moveUp() {
+		dy -= moveSpeed;
+		if (dy < -maxSpeed) {
+			dy = -maxSpeed;
+		}
+	}
+
+	protected void moveRight() {
+		dx += moveSpeed;
+		if(dx > maxSpeed) {
+			dx = maxSpeed;
+		}
+	}
+
+	protected void moveLeft() {
+		dx -= moveSpeed;
+		if(dx < -maxSpeed) {
+			dx = -maxSpeed;
+		}
 	}
 }

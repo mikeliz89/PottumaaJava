@@ -246,32 +246,4 @@ public abstract class Character extends MapObject {
         }
     }
 
-    private void moveDown() {
-        dy += moveSpeed;
-        if(dy > maxSpeed) {
-            dy = maxSpeed;
-        }
-    }
-
-    private void moveUp() {
-        dy -= moveSpeed;
-        if (dy < -maxSpeed) {
-            dy = -maxSpeed;
-        }
-    }
-
-    private void moveRight() {
-        dx += moveSpeed;
-        if(dx > maxSpeed) {
-            dx = maxSpeed;
-        }
-    }
-
-    private void moveLeft() {
-        dx -= moveSpeed;
-        if(dx < -maxSpeed) {
-            dx = -maxSpeed;
-        }
-    }
-
 }

@@ -20,8 +20,13 @@ public class FireBall extends MapObject {
 		facingRight = right;
 		
 		moveSpeed = 2.0;
-		if(right) dx = moveSpeed;
-		else dx = -moveSpeed;
+
+		if(right)
+			setVector(getVectorX() + moveSpeed,
+					getVectorY());
+		else
+			setVector(getVectorX() - moveSpeed,
+					getVectorY());
 		
 		setWidth(30);
 		setHeight(30);
@@ -77,7 +82,10 @@ public class FireBall extends MapObject {
 		hit = true;
 		animation.setFrames(hitSprites);
 		animation.setDelay(70);
-		dx = 0;
+		if(right)
+			stopGoingRight();
+		else
+			stopGoingLeft();
 	}
 	
 	public boolean shouldRemove() { return remove; }
@@ -86,7 +94,7 @@ public class FireBall extends MapObject {
 
 		super.update();
 		
-		if(dx == 0 && !hit) {
+		if(getVectorX() == 0 && !hit) {
 			setHit();
 		}
 
