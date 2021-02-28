@@ -174,7 +174,6 @@ public abstract class Character extends MapObject {
     public void update() {
         super.update();
         updateFlinching();
-        updatePosition();
         setCurrentAction();
     }
 

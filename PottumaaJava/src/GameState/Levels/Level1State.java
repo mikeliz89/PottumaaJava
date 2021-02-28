@@ -88,10 +88,10 @@ public class Level1State extends BaseLevel {
 		var enemyFactory = new EnemyFactory(tileMaps, obstacles);
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
-				//new Point(330, 100),
-				//new Point(250, 100),
-				//new Point(700, 100),
-				//new Point(100, 500),
+				new Point(330, 100),
+				new Point(250, 100),
+				new Point(700, 100),
+				new Point(100, 500),
 		};
 		for (Point sluggerPoint : sluggerPoints) {
 			var s = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
