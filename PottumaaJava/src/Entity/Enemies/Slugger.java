@@ -3,36 +3,26 @@ package Entity.Enemies;
 import Audio.AudioPlayer;
 import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.util.ArrayList;
 
 public class Slugger extends Enemy {
-	
-	private BufferedImage[] sprites;
 
-	public Slugger(ArrayList<TileMap> tileMaps, int maxHealth, ArrayList<Obstacle> obstacles) {
-		
-		super(tileMaps, maxHealth, obstacles);
-		
+	public Slugger(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles, int maxHealth) {
+
+		super(tileMaps, obstacles, maxHealth, "/Sprites/Enemies/slugger.gif",
+				30, 30);
+
 		moveSpeed = EnemySettings.SLUGGER_MOVE_SPEED;
 		maxSpeed = originalMaxSpeed = EnemySettings.SLUGGER_MOVE_SPEED;
 		fallSpeed = 0.2;
 		stopSpeed = originalStopSpeed = 0.3;
 		maxFallSpeed = 10.0;
-		
-		width = 30;
-		height = 30;
+
 		collisionBoxWidth = 20;
 		collisionBoxHeight = 20;
 
 		damage = 1;
 
-		loadSprites();
-
-		animation.setFrames(sprites);
-		animation.setDelay(300);
-		
 		right = true;
 		facingRight = true;
 
@@ -41,49 +31,19 @@ public class Slugger extends Enemy {
 
 		enemyType = EnemySettings.ENEMY_TYPES_SLUGGER;
 
-		setSoundEffects();
 	}
 
-	private void loadSprites() {
-		try {
-
-			BufferedImage spriteSheet = ImageIO.read(
-				getClass().getResourceAsStream(
-					"/Sprites/Enemies/slugger.gif"
-				)
-			);
-
-			sprites = new BufferedImage[3];
-			for(int i = 0; i < sprites.length; i++) {
-				sprites[i] = spriteSheet.getSubimage(
-					i * width,
-					0,
-					width,
-					height
-				);
-			}
-
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void setSoundEffects() {
-		sfx.put("deathCry", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
+	@Override
+	protected void setSoundEffects() {
+		sfx.put("death", new AudioPlayer("/SFX/sluggerDeathCry.wav"));
+		sfx.put("idle", new AudioPlayer("/SFX/slimy.wav"));
 		sfx.put("hit", new AudioPlayer("/SFX/sluggerHit.wav"));
-		sfx.put("idleSound", new AudioPlayer("/SFX/slimy.wav"));
 	}
-	
+
+	@Override
+	protected int[] getAnimationFrames() {
+		return new int[]{
+				1, 2, 3
+		};
+	}
 }
-
-
-
-
-
-
-
-
-
-
-

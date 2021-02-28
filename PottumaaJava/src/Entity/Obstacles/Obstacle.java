@@ -14,8 +14,8 @@ public class Obstacle extends MapObject {
     private String imageName;
     public Obstacle(ArrayList<TileMap> tileMaps, int width, int height, String imageName) {
         this.tileMaps = tileMaps;
-        this.width = width;
-        this.height = height;
+        setWidth(width);
+        setHeight(height);
         this.imageName = imageName;
         loadSprites();
     }

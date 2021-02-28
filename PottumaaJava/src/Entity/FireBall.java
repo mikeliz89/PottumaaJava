@@ -23,8 +23,8 @@ public class FireBall extends MapObject {
 		if(right) dx = moveSpeed;
 		else dx = -moveSpeed;
 		
-		width = 30;
-		height = 30;
+		setWidth(30);
+		setHeight(30);
 		collisionBoxWidth = 14;
 		collisionBoxHeight = 14;
 
@@ -32,6 +32,8 @@ public class FireBall extends MapObject {
 	}
 
 	private void loadSprites() {
+		var width = getWidth();
+		var height = getHeight();
 		try {
 
 			BufferedImage spriteSheet = ImageIO.read(

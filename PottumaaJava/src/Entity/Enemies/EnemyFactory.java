@@ -19,12 +19,12 @@ public class EnemyFactory {
         }
 
         if(enemyType == EnemySettings.ENEMY_TYPES_SLUGGER) {
-            var slugger = new Slugger(tileMaps, maxHealth, obstacles);
+            var slugger = new Slugger(tileMaps, obstacles, maxHealth);
             slugger.setPosition(xCoordinate, yCoordinate);
             return slugger;
         }
         else if(enemyType == EnemySettings.ENEMY_TYPES_ARACHNID) {
-            var arachnid = new Arachnid(tileMaps, maxHealth, obstacles);
+            var arachnid = new Arachnid(tileMaps, obstacles, maxHealth);
             arachnid.setPosition(xCoordinate, yCoordinate);
             return arachnid;
         }

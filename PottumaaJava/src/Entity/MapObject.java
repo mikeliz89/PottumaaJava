@@ -25,8 +25,8 @@ public abstract class MapObject {
 	protected double dy;
 	
 	// dimensions
-	protected int width;
-	protected int height;
+	private int width;
+	private int height;
 	
 	// collision box
 	protected int collisionBoxWidth;
@@ -111,6 +111,12 @@ public abstract class MapObject {
 	}
 	public void setCollisionBoxHeight(int collisionBoxHeight) {
 		this.collisionBoxHeight = collisionBoxHeight;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	public double getMaxSpeed() {

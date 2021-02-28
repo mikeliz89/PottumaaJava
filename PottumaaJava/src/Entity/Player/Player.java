@@ -13,23 +13,14 @@ import MapPoint.*;
 import TileMap.Tile;
 import TileMap.TileMap;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-//todo: Yhteinen base class NPC/ENEMY/Player -luokille, esim Character-class?
-public class Player extends MapObject {
+public class Player extends Entity.Character {
 	
 	// player stuff
-	private int health;
-	private int maxHealth;
 	private int fire;
 	private int maxFire;
-	private boolean dead;
-	private boolean flinching;
-	private long flinchTimer;
 	private boolean charging;
 	private int experience;
 	private double chargeSpeed;
@@ -47,22 +38,12 @@ public class Player extends MapObject {
 	private int scratchDamage;
 	private int scratchRange;
 
-	// animations
-	private ArrayList<BufferedImage[]> sprites;
-	private final int[] numFrames = {
-		2, 8, 1, 2, 4, 2, 5
-	};
-	
 	// animation actions
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
 	private static final int JUMPING = 2;
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
-	private int currentAction;
-	
-	private HashMap<String, AudioPlayer> sfx;
-
 	private Wallet wallet;
 	private int currentLevel;
 	private MapPoint mapPointForLevelChange;
@@ -74,21 +55,25 @@ public class Player extends MapObject {
 	}
 
 	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles, ISaveManager saveManager) {
+		super(tileMaps, obstacles, PlayerSettings.PLAYER_START_HEALTH,
+				"/Sprites/Player/playersprites.gif",
+				30, 30);
 		this.saveManager = saveManager;
-		this.tileMaps = tileMaps;
-		this.obstacles = obstacles;
 		init();
+		loadGame();
+	}
+
+	private void init() {
+		fireBalls = new ArrayList<>();
+
 		//damage & health
 		experience = PlayerSettings.PLAYER_START_EXP;
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
-		health = maxHealth = PlayerSettings.PLAYER_START_HEALTH;
 		fire = maxFire = PlayerSettings.PLAYER_START_FIRE;
 		fireCost = 200;
 		scratchRange = 40;
 		//size
-		width = 30;
-		height = 30;
 		collisionBoxWidth = 20;
 		collisionBoxHeight = 20;
 		//speed
@@ -101,22 +86,11 @@ public class Player extends MapObject {
 		stopJumpSpeed = 0.3;
 		chargeSpeed = 2.4;
 		facingRight = true;
-        //animation & sprites
-		loadSprites();
-		currentAction = IDLE;
-		animation.setFrames(sprites.get(IDLE));
-		animation.setDelay(400);
+		//animation & sprites
+		flinchDurationInMilliseconds = 1000;
+		setPlayerAction(IDLE, 400);
 		//other
 		createWallet();
-		//audio
-		setSoundEffects();
-		//load game
-		loadGame();
-	}
-
-	private void init() {
-		fireBalls = new ArrayList<>();
-		animation = new Animation();
 	}
 
 	private void loadGame() {
@@ -132,7 +106,7 @@ public class Player extends MapObject {
 			System.out.println("Couldn't load save data: " + e.getMessage());
 		}
 
-		checkIfPlayerShouldBeDead();
+		checkIfShouldBeDead();
 	}
 
 	public void setCurrentLevel(int level) {
@@ -188,63 +162,23 @@ public class Player extends MapObject {
 		return experience;
 	}
 
- 	private void loadSprites() {
-		try {
-
-			BufferedImage spriteSheet = ImageIO.read(
-				getClass().getResourceAsStream(
-					"/Sprites/Player/playersprites.gif"
-				)
-			);
-
-			sprites = new ArrayList<>();
-			for(int i = 0; i < 7; i++) {
-
-				BufferedImage[] bi =
-					new BufferedImage[numFrames[i]];
-
-				for(int j = 0; j < numFrames[i]; j++) {
-
-					if(i != SCRATCHING) {
-						bi[j] = spriteSheet.getSubimage(
-								j * width,
-								i * height,
-								width,
-								height
-						);
-					}
-					else {
-						bi[j] = spriteSheet.getSubimage(
-								j * width * 2,
-								i * height,
-								width * 2,
-								height
-						);
-					}
-
-				}
-
-				sprites.add(bi);
-
-			}
-
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+	@Override
+	protected int[] getAnimationFrames() {
+		return new int[]{
+				2, 8, 1, 2, 4, 2, 5
+		};
 	}
 
-	private void setSoundEffects() {
-		sfx = new HashMap<>();
+	@Override
+	protected void setSoundEffects() {
+		super.setSoundEffects();
 		sfx.put("jump", new AudioPlayer("/SFX/jump.wav"));
 		sfx.put("scratch", new AudioPlayer("/SFX/scratch.wav"));
 		sfx.put("fireball", new AudioPlayer("/SFX/fireball.wav"));
-		sfx.put("playerGetsHit", new AudioPlayer("/SFX/playerGetsHit.wav"));
-		sfx.put("playerDeath", new AudioPlayer("/SFX/playerDeath.wav"));
+		sfx.put("hit", new AudioPlayer("/SFX/playerGetsHit.wav"));
+		sfx.put("death", new AudioPlayer("/SFX/playerDeath.wav"));
 	}
-	
-	public int getHealth() { return health; }
-	public int getMaxHealth() { return maxHealth; }
+
 	public int getFire() { return fire; }
 	public int getMaxFire() { return maxFire; }
 	
@@ -282,7 +216,7 @@ public class Player extends MapObject {
 	}
 
 	public void checkAttack(ArrayList<Enemy> enemies) {
-
+		var height = getHeight();
 		for (Enemy e : enemies) {
 			if (scratching) {
 				if (facingRight) {
@@ -321,48 +255,21 @@ public class Player extends MapObject {
 	}
 
 	private void checkEnemyCollision(Enemy e) {
-		if(dead) return;
+		if(isDead()) return;
 
 		if (intersects(e)) {
 			hit(e.getDamage());
 		}
 	}
 
-	public void hit(int damage) {
-		if(flinching) return;
-		health -= damage;
-		checkIfPlayerShouldBeDead();
-		flinching = true;
-		flinchTimer = System.nanoTime();
-		playSoundEffect("playerGetsHit");
-	}
-
-	private void checkIfPlayerShouldBeDead() {
-		if(health < 0) health = 0;
-		if(health == 0) die();
-	}
-
 	@Override
 	protected void updatePosition() {
-
-		moveUpOrDown();
-		moveLeftOrRight();
-
+		super.updatePosition();
 		//cannot move left or right while attacking
 		if(!PlayerSettings.PLAYER_CAN_MOVE_WHILE_ATTACKING && isAttacking()) {
 			dx = 0;
 		}
-
 		jumping();
-	}
-
-	private void die() {
-		dead = true;
-		playSoundEffect("playerDeath");
-	}
-
-	public boolean isDead() {
-		return dead;
 	}
 
 	public void setCharging(boolean isCharging) {
@@ -386,17 +293,11 @@ public class Player extends MapObject {
 		}
 	}
 
-	private void moveLeftOrRight() {
-		if(left) {
-			moveLeft();
-		}
-		else if(right) {
-			moveRight();
-		}
-		else {
-			stopGoingRight();
-			stopGoingLeft();
-		}
+	@Override
+	protected void moveLeftOrRight() {
+		super.moveLeftOrRight();
+		stopGoingRight();
+		stopGoingLeft();
 	}
 
 	private void stopGoingLeft() {
@@ -417,31 +318,11 @@ public class Player extends MapObject {
 		}
 	}
 
-	private void moveRight() {
-		dx += moveSpeed;
-		if(dx > maxSpeed) {
-			dx = maxSpeed;
-		}
-	}
-
-	private void moveLeft() {
-		dx -= moveSpeed;
-		if(dx < -maxSpeed) {
-			dx = -maxSpeed;
-		}
-	}
-
-	private void moveUpOrDown() {
-		if(up) {
-			moveUp();
-		}
-		else if(down) {
-			moveDown();
-		}
-		else {
-			stopGoingDown();
-			stopGoingUp();
-		}
+	@Override
+	protected void moveUpOrDown() {
+		super.moveUpOrDown();
+		stopGoingDown();
+		stopGoingUp();
 	}
 
 	private void stopGoingUp() {
@@ -462,25 +343,9 @@ public class Player extends MapObject {
 		}
 	}
 
-	private void moveDown() {
-		dy += moveSpeed;
-		if(dy > maxSpeed) {
-			dy = maxSpeed;
-		}
-	}
-
-	private void moveUp() {
-		dy -= moveSpeed;
-		if(dy < -maxSpeed) {
-			dy = -maxSpeed;
-		}
-	}
-
-	private void playSoundEffect(String soundEffectName) {
-		sfx.get(soundEffectName).play();
-	}
-	
 	public void update() {
+
+		fireBallAttack();
 
 		super.update();
 
@@ -488,33 +353,15 @@ public class Player extends MapObject {
 
 		checkCharging();
 
-		updatePosition();
-
 		checkAttackHasStopped();
-
-		fireBallAttack();
 
 		updateFireBalls();
 
-		flinching();
-
-		setAnimation();
-
 		updateFacingDirection();
-
-	}
-
-	private void flinching() {
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed > 1000) {
-				flinching = false;
-			}
-		}
 	}
 
 	private void checkAttackHasStopped() {
+		var currentAction = getCurrentAction();
 		if(currentAction == SCRATCHING) {
 			if(animation.hasPlayedOnce()) scratching = false;
 		}
@@ -524,6 +371,7 @@ public class Player extends MapObject {
 	}
 
 	private void fireBallAttack() {
+		var currentAction = getCurrentAction();
 		fire += 1;
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL) {
@@ -536,23 +384,20 @@ public class Player extends MapObject {
 		}
 	}
 
-	private void setAnimation() {
+	protected void setCurrentAction() {
+		var currentAction = getCurrentAction();
 		if(scratching) {
 			if(currentAction != SCRATCHING) {
 				playSoundEffect("scratch");
-				currentAction = SCRATCHING;
-				animation.setFrames(sprites.get(SCRATCHING));
-				animation.setDelay(50);
-				width = 60;
+				setPlayerAction(SCRATCHING, 50);
+				setWidth(60);
 			}
 		}
 		else if(firing) {
 			if(currentAction != FIREBALL) {
 				playSoundEffect("fireball");
-				currentAction = FIREBALL;
-				animation.setFrames(sprites.get(FIREBALL));
-				animation.setDelay(100);
-				width = 30;
+				setPlayerAction(FIREBALL, 100);
+				setWidth(30);
 			}
 		}
 		else if(goingDown() ||
@@ -560,20 +405,22 @@ public class Player extends MapObject {
 				goingLeft() ||
 				goingRight()) {
 			if(currentAction != WALKING) {
-				currentAction = WALKING;
-				animation.setFrames(sprites.get(WALKING));
-				animation.setDelay(100);
-				width = 30;
+				setPlayerAction(WALKING, 100);
+				setWidth(30);
 			}
 		}
 		else { //Everything else
 			if(currentAction != IDLE) {
-				currentAction = IDLE;
-				animation.setFrames(sprites.get(IDLE));
-				animation.setDelay(400);
-				width = 30;
+				setPlayerAction(IDLE, 400);
+				setWidth(30);
 			}
 		}
+	}
+
+	private void setPlayerAction(int action, int i) {
+		setCurrentAction(action);
+		animation.setFrames(sprites.get(action));
+		animation.setDelay(i);
 	}
 
 	private void updateFireBalls() {
@@ -596,16 +443,13 @@ public class Player extends MapObject {
 	}
 
 	private boolean isAttacking() {
+		var currentAction = getCurrentAction();
 		return currentAction == SCRATCHING || currentAction == FIREBALL;
 	}
 
 	public void draw(Graphics2D g) {
 
 		drawFireBalls(g);
-
-		//Player is not drawn when flinching etc.
-		if (drawPlayer()) return;
-
 		drawDebugStuff(g);
 
 		super.draw(g);
@@ -616,16 +460,6 @@ public class Player extends MapObject {
 			return;
 	}
 
-	private boolean drawPlayer() {
-		if(flinching) {
-			long elapsed =
-				(System.nanoTime() - flinchTimer) / 1000000;
-			if(elapsed / 100 % 2 == 0) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	private void drawFireBalls(Graphics2D g) {
 		for (FireBall fireBall : fireBalls) {
@@ -641,20 +475,3 @@ public class Player extends MapObject {
 		return scratchDamage;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
