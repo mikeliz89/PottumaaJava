@@ -100,18 +100,6 @@ public abstract class MapObject {
 				height);
 	}
 
-	private void calculateFourCorners(TileMap tileMap) {
-		int topLeftTileType = tileMap.getTileType(topTile, leftTile);
-		int topRightTileType = tileMap.getTileType(topTile, rightTile);
-		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
-		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
-
-		topLeftCorner = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
-		topRightCorner = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
-		bottomLeftCorner = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
-		bottomRightCorner = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
-	}
-
 	public int getX() { return (int)x; }
 	public int getY() { return (int)y; }
 	public int getWidth() { return width; }
@@ -267,13 +255,13 @@ public abstract class MapObject {
 	private void leftAndRight(TileMap tileMap, double xDestination) {
 		calculateCornersForXDestination(xDestination, tileMap);
 		if (goingLeft()) {
-			if (isHittingLeftCorners()) {
+			if (leftCornersAreHitting()) {
 				preventMovingInXDirection();
 			} else {
 				moveInXDirection();
 			}
 		} else if (goingRight()) {
-			if (isHittingRightCorners()) {
+			if (rightCornersAreHitting()) {
 				preventMovingInXDirection();
 			} else {
 				moveInXDirection();
@@ -284,13 +272,13 @@ public abstract class MapObject {
 	private void upAndDown(TileMap tileMap, double yDestination) {
 		calculateCornersForYDestination(yDestination, tileMap);
 		if (goingUp()) {
-			if (isHittingTopCorners()) {
+			if (topCornersAreHitting()) {
 				preventMovingInYDirection();
 			} else {
 				moveInYDirection();
 			}
 		} else if (goingDown()) {
-			if (isHittingBottomCorners()) {
+			if (bottomCornersAreHitting()) {
 				preventMovingInYDirection();
 			} else {
 				moveInYDirection();
@@ -314,19 +302,19 @@ public abstract class MapObject {
 		yTemp += dy;
 	}
 
-	private boolean isHittingBottomCorners() {
+	private boolean bottomCornersAreHitting() {
 		return bottomLeftCorner || bottomRightCorner;
 	}
 
-	private boolean isHittingTopCorners() {
+	private boolean topCornersAreHitting() {
 		return topLeftCorner || topRightCorner;
 	}
 
-	private boolean isHittingRightCorners() {
+	private boolean rightCornersAreHitting() {
 		return topRightCorner || bottomRightCorner;
 	}
 
-	private boolean isHittingLeftCorners() {
+	private boolean leftCornersAreHitting() {
 		return topLeftCorner || bottomLeftCorner;
 	}
 
@@ -349,6 +337,18 @@ public abstract class MapObject {
 		rightTile = getRightTile(x, tileSize);
 		topTile = getTopTile(y, tileSize);
 		bottomTile = getBottomTile(y, tileSize);
+	}
+
+	private void calculateFourCorners(TileMap tileMap) {
+		int topLeftTileType = tileMap.getTileType(topTile, leftTile);
+		int topRightTileType = tileMap.getTileType(topTile, rightTile);
+		int bottomLeftTileType = tileMap.getTileType(bottomTile, leftTile);
+		int bottomRightTileType = tileMap.getTileType(bottomTile, rightTile);
+
+		topLeftCorner = topLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		topRightCorner = topRightTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomLeftCorner = bottomLeftTileType == Tile.TILE_TYPE_OBSTACLE;
+		bottomRightCorner = bottomRightTileType == Tile.TILE_TYPE_OBSTACLE;
 	}
 
 	private int getBottomTile(double y, int tileSize) {
@@ -384,19 +384,19 @@ public abstract class MapObject {
 		currentColumn = tm.getColumnTile();
 	}
 
-	private boolean goingRight() {
+	protected boolean goingRight() {
 		return dx > 0;
 	}
 
-	private boolean goingLeft() {
+	protected boolean goingLeft() {
 		return dx < 0;
 	}
 
-	private boolean goingDown() {
+	protected boolean goingDown() {
 		return dy > 0;
 	}
 
-	private boolean goingUp() {
+	protected boolean goingUp() {
 		return dy < 0;
 	}
 

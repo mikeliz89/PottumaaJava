@@ -116,31 +116,47 @@ public abstract class Enemy extends MapObject {
 
 	private void moveUpOrDown() {
 		if(up) {
-			dy -= moveSpeed;
-			if(dy < -maxSpeed) {
-				dy = -maxSpeed;
-			}
+			moveUp();
 		}
 		else if(down) {
-			dy += moveSpeed;
-			if(dy > maxSpeed) {
-				dy = maxSpeed;
-			}
+			moveDown();
 		}
 	}
 
 	private void moveLeftOrRight() {
 		if(left) {
-			dx -= moveSpeed;
-			if(dx < -maxSpeed) {
-				dx = -maxSpeed;
-			}
+			moveLeft();
 		}
 		else if(right) {
-			dx += moveSpeed;
-			if(dx > maxSpeed) {
-				dx = maxSpeed;
-			}
+			moveRight();
+		}
+	}
+
+	private void moveDown() {
+		dy += moveSpeed;
+		if(dy > maxSpeed) {
+			dy = maxSpeed;
+		}
+	}
+
+	private void moveUp() {
+		dy -= moveSpeed;
+		if (dy < -maxSpeed) {
+			dy = -maxSpeed;
+		}
+	}
+
+	private void moveRight() {
+		dx += moveSpeed;
+		if(dx > maxSpeed) {
+			dx = maxSpeed;
+		}
+	}
+
+	private void moveLeft() {
+		dx -= moveSpeed;
+		if(dx < -maxSpeed) {
+			dx = -maxSpeed;
 		}
 	}
 

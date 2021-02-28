@@ -388,61 +388,91 @@ public class Player extends MapObject {
 
 	private void moveLeftOrRight() {
 		if(left) {
-			dx -= moveSpeed;
-			if(dx < -maxSpeed) {
-				dx = -maxSpeed;
-			}
+			moveLeft();
 		}
 		else if(right) {
-			dx += moveSpeed;
-			if(dx > maxSpeed) {
-				dx = maxSpeed;
-			}
+			moveRight();
 		}
 		else {
-			// left and right
-			if(dx > 0) {
-				dx -= stopSpeed;
-				if(dx < 0) {
-					dx = 0;
-				}
+			stopGoingRight();
+			stopGoingLeft();
+		}
+	}
+
+	private void stopGoingLeft() {
+		if(goingLeft()) {
+			dx += stopSpeed;
+			if(goingRight()) {
+				dx = 0;
 			}
-			else if(dx < 0) {
-				dx += stopSpeed;
-				if(dx > 0) {
-					dx = 0;
-				}
+		}
+	}
+
+	private void stopGoingRight() {
+		if(goingRight()) {
+			dx -= stopSpeed;
+			if(goingLeft()) {
+				dx = 0;
 			}
+		}
+	}
+
+	private void moveRight() {
+		dx += moveSpeed;
+		if(dx > maxSpeed) {
+			dx = maxSpeed;
+		}
+	}
+
+	private void moveLeft() {
+		dx -= moveSpeed;
+		if(dx < -maxSpeed) {
+			dx = -maxSpeed;
 		}
 	}
 
 	private void moveUpOrDown() {
 		if(up) {
-			dy -= moveSpeed;
-			if(dy < -maxSpeed) {
-				dy = -maxSpeed;
-			}
+			moveUp();
 		}
 		else if(down) {
-			dy += moveSpeed;
-			if(dy > maxSpeed) {
-				dy = maxSpeed;
-			}
+			moveDown();
 		}
 		else {
-			// up and down
-			if(dy > 0) {
-				dy -= stopSpeed;
-				if(dy < 0) {
-					dy = 0;
-				}
+			stopGoingDown();
+			stopGoingUp();
+		}
+	}
+
+	private void stopGoingUp() {
+		if(goingUp()) {
+			dy += stopSpeed;
+			if(goingDown()) {
+				dy = 0;
 			}
-			else if(dy < 0) {
-				dy += stopSpeed;
-				if(dy > 0) {
-					dy = 0;
-				}
+		}
+	}
+
+	private void stopGoingDown() {
+		if(goingDown()) {
+			dy -= stopSpeed;
+			if(goingUp()) {
+				dy = 0;
 			}
+		}
+	}
+
+	private void moveDown() {
+		dy += moveSpeed;
+		if(dy > maxSpeed) {
+			dy = maxSpeed;
+		}
+	}
+
+	private void moveUp() {
+		dy -= moveSpeed;
+		if(dy < -maxSpeed) {
+			dy = -maxSpeed;
 		}
 	}
 
@@ -525,27 +555,14 @@ public class Player extends MapObject {
 				width = 30;
 			}
 		}
-		else if(dy > 0) { //going down
+		else if(goingDown() ||
+				goingUp() ||
+				goingLeft() ||
+				goingRight()) {
 			if(currentAction != WALKING) {
 				currentAction = WALKING;
 				animation.setFrames(sprites.get(WALKING));
 				animation.setDelay(100);
-				width = 30;
-			}
-		}
-		else if(dy < 0) { //going up
-			if(currentAction != WALKING) {
-				currentAction = WALKING;
-				animation.setFrames(sprites.get(WALKING));
-				animation.setDelay(100);
-				width = 30;
-			}
-		}
-		else if(left || right) { // left or right
-			if(currentAction != WALKING) {
-				currentAction = WALKING;
-				animation.setFrames(sprites.get(WALKING));
-				animation.setDelay(40);
 				width = 30;
 			}
 		}
