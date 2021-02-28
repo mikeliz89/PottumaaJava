@@ -5,7 +5,6 @@ import MapPoint.MapPoint;
 
 public class PlayerHomeState extends BaseLevel {
 
-	// TODO Piirrä talon sisätilat ja vaihda oikea tiedosto tähän.
 	public PlayerHomeState(GameStateManager gsm, int previousState) {
 		super(gsm,
 				"/Tilesets/small-house.png",
@@ -23,7 +22,17 @@ public class PlayerHomeState extends BaseLevel {
 		MapPoint mapPoint = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_DOWN, "/SFX/homeDoorClose.wav");
 		mapPoint.setPosition(450, 490);
 		mapPoint.setGotoLevel(GameStateManager.STATE_LEVEL_1);
-		mapPoints.add(mapPoint);
+		addMapPoint(mapPoint);
+	}
+
+	@Override
+	protected void populateEnemies() {
+
+	}
+
+	@Override
+	protected void populateNPCs() {
+
 	}
 
 }

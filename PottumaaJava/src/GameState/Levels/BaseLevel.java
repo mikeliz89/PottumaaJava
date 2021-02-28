@@ -18,14 +18,18 @@ import java.util.ArrayList;
 
 public abstract class BaseLevel extends GameState  {
 
+    protected abstract void populateMapPoints();
+    protected abstract void populateEnemies();
+    protected abstract void populateNPCs();
+
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
     protected ArrayList<Enemy> enemies;
     protected ArrayList<NPC> NPCs;
     private ArrayList<Item> items;
     private ArrayList<Explosion> explosions;
-    protected ArrayList<MapPoint> mapPoints;
-    protected ArrayList<Obstacle> obstacles;
+    private ArrayList<MapPoint> mapPoints;
+    private ArrayList<Obstacle> obstacles;
     private HUD hud;
     private ArrayList<Integer> keysPressed;
     private String groundTileSetName;
@@ -88,19 +92,21 @@ public abstract class BaseLevel extends GameState  {
         tileMaps.add(tileMapGround);
     }
 
-    public void addObstacle(Obstacle obstacle) {
+    protected void addObstacle(Obstacle obstacle) {
         obstacles.add(obstacle);
     }
 
-    public void addItem(Item item) {
+    protected void addItem(Item item) {
         items.add(item);
     }
 
-    protected void populateMapPoints() {}
+    protected ArrayList<Obstacle> getObstacles() {
+        return obstacles;
+    }
 
-    protected void populateEnemies() {}
-
-    protected void populateNPCs() {}
+    protected void addMapPoint(MapPoint mapPoint) {
+        mapPoints.add(mapPoint);
+    }
 
     public void update() {
 

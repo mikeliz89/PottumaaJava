@@ -71,12 +71,12 @@ public class Level1State extends BaseLevel {
 		var level2 = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_RIGHT, "");
 		level2.setPosition(885, 585);
 		level2.setGotoLevel(GameStateManager.STATE_LEVEL_2);
-		mapPoints.add(level2);
+		addMapPoint(level2);
 
 		var playerHome = new MapPoint(MapPoint.MAP_POINT_TYPE_ARROW_UP, "/SFX/homeDoorOpen.wav");
 		playerHome.setPosition(345, 195);
 		playerHome.setGotoLevel(GameStateManager.STATE_PLAYER_HOME);
-		mapPoints.add(playerHome);
+		addMapPoint(playerHome);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class Level1State extends BaseLevel {
 				new Point(300, 300)
 		};
 		for(Point npcPoint : points) {
-			mrPotatoGuy = new MrPotatoGuy(tileMaps, obstacles, 1000);
+			mrPotatoGuy = new MrPotatoGuy(tileMaps, getObstacles(), 1000);
 			mrPotatoGuy.setPosition(npcPoint.x, npcPoint.y);
 			NPCs.add(mrPotatoGuy);
 		}
@@ -94,7 +94,7 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
-		var enemyFactory = new EnemyFactory(tileMaps, obstacles);
+		var enemyFactory = new EnemyFactory(tileMaps, getObstacles());
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
 				new Point(330, 100),
