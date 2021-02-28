@@ -72,14 +72,14 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateNPCs() {
-		MrPotatoGuy mr;
+		MrPotatoGuy mrPotatoGuy;
 		Point[] points = new Point [] {
 				new Point(300, 300)
 		};
 		for(Point npcPoint : points) {
-			mr = new MrPotatoGuy(tileMaps, 1000);
-			mr.setPosition(npcPoint.x, npcPoint.y);
-			NPCs.add(mr);
+			mrPotatoGuy = new MrPotatoGuy(tileMaps, 1000);
+			mrPotatoGuy.setPosition(npcPoint.x, npcPoint.y);
+			NPCs.add(mrPotatoGuy);
 		}
 	}
 

@@ -5,12 +5,13 @@ import Entity.HealthBar;
 import Entity.MapObject;
 import TileMap.TileMap;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 //todo: Yhteinen base class NPC/ENEMY/Player -luokille, esim Character-class?
-public abstract class NPC extends MapObject {
+public class NPC extends MapObject {
 
 	private int health;
 	protected int maxHealth;
@@ -21,14 +22,46 @@ public abstract class NPC extends MapObject {
 	protected String name;
 	protected String profession;
 	protected BufferedImage[] sprites;
+	private String spriteMapName;
 	HealthBar healthBar;
 
-	public NPC(ArrayList<TileMap> tileMaps, int maxHealth) {
+	public NPC(ArrayList<TileMap> tileMaps, int maxHealth, String spriteMapName) {
+		this.spriteMapName = spriteMapName;
 		this.tileMaps = tileMaps;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
 		healthBar = new HealthBar(5, maxHealth);
 		animation = new Animation();
+	}
+
+	protected void loadSprites() {
+		try {
+
+			BufferedImage spriteSheet = ImageIO.read(
+					getClass().getResourceAsStream(
+							spriteMapName
+					)
+			);
+
+			sprites = new BufferedImage[4];
+			for(int i = 0; i < sprites.length; i++) {
+				sprites[i] = spriteSheet.getSubimage(
+						i * width,
+						0,
+						width,
+						height
+				);
+			}
+
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void setAnimation() {
+		animation.setFrames(sprites);
+		animation.setDelay(300);
 	}
 	
 	public boolean isDead() { return dead; }

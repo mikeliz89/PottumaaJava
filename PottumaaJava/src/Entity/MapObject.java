@@ -220,7 +220,8 @@ public abstract class MapObject {
 		Obstacle obstacleTemp = null;
 		for(Obstacle obstacle : obstacles) {
 			if (intersects(obstacle)) {
-				System.out.println("mapobject intersects obstacle");
+				if(GameOptions.IS_DEBUG_MODE)
+					System.out.println("mapobject intersects obstacle");
 				obstacleTemp = obstacle;
 			}
 		}
