@@ -164,6 +164,8 @@ public class Player extends Entity.Character {
 
 	@Override
 	protected int[] getAnimationFrames() {
+		//Comma = new row
+		//2 idle animations, 8 walking animations etc.
 		return new int[]{
 				2, 8, 1, 2, 4, 2, 5
 		};
