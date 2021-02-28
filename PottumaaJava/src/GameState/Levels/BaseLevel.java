@@ -3,6 +3,7 @@ package GameState.Levels;
 import Entity.Enemies.Enemy;
 import Entity.Explosion;
 import Entity.HUD.HUD;
+import Entity.Items.Item;
 import Entity.NPCs.NPC;
 import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
@@ -21,6 +22,7 @@ public abstract class BaseLevel extends GameState  {
     protected Player player;
     protected ArrayList<Enemy> enemies;
     protected ArrayList<NPC> NPCs;
+    private ArrayList<Item> items;
     private ArrayList<Explosion> explosions;
     protected ArrayList<MapPoint> mapPoints;
     protected ArrayList<Obstacle> obstacles;
@@ -55,6 +57,7 @@ public abstract class BaseLevel extends GameState  {
         enemies = new ArrayList<>();
         NPCs = new ArrayList<>();
         obstacles = new ArrayList<>();
+        items = new ArrayList<>();
 
         populateTileMaps();
         populateMapPoints();
@@ -87,6 +90,10 @@ public abstract class BaseLevel extends GameState  {
 
     public void addObstacle(Obstacle obstacle) {
         obstacles.add(obstacle);
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
     }
 
     protected void populateMapPoints() {}
@@ -205,6 +212,8 @@ public abstract class BaseLevel extends GameState  {
 
         drawObstacles(g);
 
+        drawItems(g);
+
         drawEnemies(g);
 
         drawExplosions(g);
@@ -217,6 +226,12 @@ public abstract class BaseLevel extends GameState  {
     protected void drawObstacles(Graphics2D g) {
         for(Obstacle obstacle : obstacles) {
             obstacle.draw(g);
+        }
+    }
+
+    private void drawItems(Graphics2D g) {
+        for(Item item : items) {
+            item.draw(g);
         }
     }
 

@@ -8,12 +8,9 @@ import Entity.Obstacles.Obstacle;
 import GameState.*;
 import MapPoint.MapPoint;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Level1State extends BaseLevel {
 
-	ArrayList<Item> items;
-	private Obstacle playerHome;
 	public Level1State(GameStateManager gsm, int previousState) {
 		super(gsm,
 				"/Tilesets/grasstileset.png",
@@ -29,11 +26,10 @@ public class Level1State extends BaseLevel {
 	}
 
 	private void createItems() {
-		items = new ArrayList<>();
 		var banana =  new Item("Banana",
 				"/Images/Items/banana.png");
 		banana.setPosition(new Point(300, 300));
-		items.add(banana);
+		addItem(banana);
 	}
 
 	private void changeBackgroundMusic(int previousState) {
@@ -50,11 +46,24 @@ public class Level1State extends BaseLevel {
 	}
 
 	private void createObstacles() {
-		playerHome = new Obstacle(tileMaps, 180, 120, "/Sprites/House/obstacles-new-house.gif");
+		var playerHome = new Obstacle(tileMaps, 180, 120, "/Images/Obstacles/playerHome.gif");
 		playerHome.setPosition(527 - 180, 247 - 120);
 		playerHome.setCollisionBoxHeight(playerHome.getHeight() - 10);
 		playerHome.setCollisionBoxWidth(playerHome.getWidth() - 40);
+
+		var aita = new Obstacle(tileMaps, 70, 35, "/Images/Obstacles/aita.gif");
+		aita.setPosition(240, 220);
+		aita.setCollisionBoxHeight(aita.getHeight());
+		aita.setCollisionBoxWidth(aita.getWidth());
+
+		var aita2 = new Obstacle(tileMaps, 70, 35, "/Images/Obstacles/aita.gif");
+		aita2.setPosition(310, 220);
+		aita2.setCollisionBoxHeight(aita2.getHeight());
+		aita2.setCollisionBoxWidth(aita2.getWidth());
+
 		addObstacle(playerHome);
+		addObstacle(aita);
+		addObstacle(aita2);
 	}
 
 	@Override
@@ -105,19 +114,6 @@ public class Level1State extends BaseLevel {
 				400, 400,
 				EnemySettings.ARACHNID_MAX_HEALTH);
 		enemies.add(a);
-	}
-
-	@Override
-	protected void drawObstacles(Graphics2D g) {
-		playerHome.draw(g);
-
-		drawItems(g);
-	}
-
-	private void drawItems(Graphics2D g) {
-		for(Item item : items) {
-			item.draw(g);
-		}
 	}
 
 }

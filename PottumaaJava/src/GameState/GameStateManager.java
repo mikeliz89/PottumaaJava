@@ -27,7 +27,7 @@ public class GameStateManager {
 	private String songToPlay;
 	
 	public GameStateManager() {
-		currentState = STATE_MAIN_MENU;
+		currentState = STATE_LEVEL_1;
 		bgMusic = new AudioPlayer(bgMusicFileName);
 		loadState();
 		playMusic();

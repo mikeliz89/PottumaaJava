@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class MapEditorState extends GameState {
 
-	private final int MAP_EDITOR_GRID_ROWS = 30;
-	private final int MAP_EDITOR_GRID_COLUMNS = 30;
+	private final int MAP_EDITOR_GRID_ROWS = 8;
+	private final int MAP_EDITOR_GRID_COLUMNS = 8;
 	private final int MAP_EDITOR_TOOL_ROWS = 13;
 
 	private ArrayList<TileMap> tileMaps;
