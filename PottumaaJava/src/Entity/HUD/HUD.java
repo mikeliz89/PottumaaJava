@@ -28,11 +28,11 @@ public class HUD {
 	private boolean showQuestLog;
 	private boolean showPauseMenu;
 	
-	public HUD(Player player) {
+	public HUD(Player player, QuestLog questLog) {
 		this.player = player;
+		this.questLog = questLog;
 		setHudImage();
 		createInventory();
-		createQuestLog();
 		createDialogBox();
 		setSoundEffects();
 	}
@@ -55,50 +55,30 @@ public class HUD {
 		}
 	}
 
-	private void createQuestLog() {
-		questLog = new QuestLog();
-		QuestFactory questFactory = new QuestFactory("Kill 5 Sluggers",
-				"Sluggers are those little slimy \n" +
-				"spiky snails that keep terrorizing your farm.\n" +
-				"Fellow villagers are scared of them.\n" +
-				"Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
-		Quest killSluggersQuest = questFactory.getQuest(QuestSettings.QUEST_TYPE_KILLQUEST);
-		questLog.addQuest(killSluggersQuest);
-	}
-
 	private void createDialogBox() {
 		dialogBox = new DialogBox("Welcome " + player.getName(),
 				"Mr.PotatoGuy: Welcome to the land of the pottu");
 	}
 
-	public void KillOneEnemy (int EnemyType) {
-		for(Quest quest : questLog.getKillQuests()) {
-			if(quest instanceof  KillQuest) {
-				var killQuest = (KillQuest)quest;
-				killQuest.KillOneEnemy(EnemyType, player);
-			}
-		}
- 	}
-
- 	public void TogglePauseMenu() {
+ 	public void togglePauseMenu() {
 		if(showPauseMenu == false) {
 			player.saveGame();
 		}
 		showPauseMenu = !showPauseMenu;
 	}
 
-	public void ToggleInventory() {
+	public void toggleInventory() {
 		if(showInventory == false) {
 			playSoundEffect("inventoryOpened");
 		}
 		showInventory = !showInventory;
 	}
 
-	public void ToggleDialogBox() {
+	public void toggleDialogBox() {
 		showDialogBox = !showDialogBox;
 	}
 
-	public void ToggleMap() {
+	public void toggleMap() {
 		if(showMap == false) {
 			playSoundEffect("takeMapFromPocket");
 		}
@@ -106,7 +86,7 @@ public class HUD {
 		showMap = !showMap;
 	}
 
-	public void ToggleQuestLog() {
+	public void toggleQuestLog() {
 		showQuestLog = !showQuestLog;
 	}
 	

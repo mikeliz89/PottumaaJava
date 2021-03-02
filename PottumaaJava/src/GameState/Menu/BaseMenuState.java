@@ -111,11 +111,6 @@ public abstract class BaseMenuState extends GameState {
         }
     }
 
-    public void keyReleased(int k) {
-
-    }
-
-    protected void select() {
-
-    }
+    public abstract void keyReleased(int k);
+    protected abstract void select();
 }

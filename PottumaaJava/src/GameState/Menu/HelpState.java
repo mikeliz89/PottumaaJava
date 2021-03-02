@@ -38,6 +38,10 @@ public class HelpState extends BaseMenuState {
 		}
 	}
 
+	@Override
+	public void keyReleased(int k) {
+
+	}
 }
 
 

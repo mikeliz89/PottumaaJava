@@ -51,6 +51,11 @@ public class MainMenuState extends BaseMenuState {
 		}
 	}
 
+	@Override
+	public void keyReleased(int k) {
+
+	}
+
 }
 
 

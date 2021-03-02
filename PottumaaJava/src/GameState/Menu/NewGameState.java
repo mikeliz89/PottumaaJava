@@ -132,4 +132,9 @@ public class NewGameState extends BaseMenuState {
         return str.substring(0, str.length() - chars);
     }
 
+    @Override
+    public void keyReleased(int k) {
+
+    }
+
 }

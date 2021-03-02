@@ -43,6 +43,11 @@ public class OptionsState extends BaseMenuState {
 		g.setFont(new Font("Arial", Font.PLAIN, 14));
 		g.drawString("F1=volume down, F2=volume up", 175, 280);
 	}
+
+	@Override
+	public void keyReleased(int k) {
+
+	}
 	
 }
 

@@ -7,6 +7,9 @@ import java.util.HashMap;
 
 public abstract class Quest {
 
+    private int rewardMoney;
+    private int rewardExperience;
+
     private String title;
     private String description;
     private HashMap<String, AudioPlayer> sfx;
@@ -41,9 +44,16 @@ public abstract class Quest {
         questIsDone = true;
         playSoundEffect("questIsDone");
         //reward player for finishing quest
-        //todo: add rewardMoneyAmount and rewardExperienceAmount to Quest, so that every quest gives different amount of rewards
-        player.addMoney(100);
-        player.addExperience(100);
+        player.addMoney(rewardMoney);
+        player.addExperience(rewardExperience);
+    }
+
+    public void setRewardMoney(int rewardMoney) {
+        this.rewardMoney = rewardMoney;
+    }
+
+    public void setRewardExperience(int rewardExperience) {
+        this.rewardExperience = rewardExperience;
     }
 
     private void playSoundEffect(String soundEffectName) {

@@ -1,12 +1,14 @@
 package GameState.Levels;
 
 import Entity.Enemies.Enemy;
+import Entity.Enemies.EnemySettings;
 import Entity.Explosion;
 import Entity.HUD.HUD;
 import Entity.Items.Item;
 import Entity.NPCs.NPC;
 import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
+import Entity.Quests.*;
 import GameState.*;
 import Main.GamePanel;
 import MapPoint.MapPoint;
@@ -37,6 +39,7 @@ public abstract class BaseLevel extends GameState  {
     private String groundTileMapName;
     private String obstacleTileMapName;
     private String bgMusicSoundFileName;
+    private QuestLog questLog;
 
     public BaseLevel(GameStateManager gameStateManager,
                      String groundTileSetName, String obstacleTileSetName,
@@ -68,13 +71,38 @@ public abstract class BaseLevel extends GameState  {
         populateEnemies();
         populateNPCs();
 
-        createPlayerAndHUD();
+        createPlayer();
+        createQuestLog();
+        createHUD();
     }
 
-    private void createPlayerAndHUD() {
+    private void createPlayer() {
         player = new Player(tileMaps, obstacles);
         player.setCurrentLevel(gsm.getCurrentState());
-        hud = new HUD(player);
+    }
+
+    private void createQuestLog() {
+        questLog = new QuestLog();
+        QuestFactory questFactory = new QuestFactory("Kill 5 Sluggers",
+                "Sluggers are those little slimy \n" +
+                        "spiky snails that keep terrorizing your farm.\n" +
+                        "Fellow villagers are scared of them.\n" +
+                        "Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
+        Quest killSluggersQuest = questFactory.getQuest(QuestSettings.QUEST_TYPE_KILLQUEST);
+        questLog.addQuest(killSluggersQuest);
+    }
+
+    private void killOneEnemy(int EnemyType) {
+        for(Quest quest : questLog.getKillQuests()) {
+            if(quest instanceof KillQuest) {
+                var killQuest = (KillQuest)quest;
+                killQuest.killOneEnemy(EnemyType, player);
+            }
+        }
+    }
+
+    private void createHUD() {
+        hud = new HUD(player, questLog);
     }
 
     private void populateTileMaps() {
@@ -177,8 +205,8 @@ public abstract class BaseLevel extends GameState  {
             Enemy e = enemies.get(i);
             e.update();
             if(e.isDead()) {
-                updateQuests(e);
-                givePlayerRewards(e);
+                killOneEnemy(e.getEnemyType());
+                givePlayerRewardForKillingEnemy(e);
                 enemies.remove(i);
                 i--;
                 explosions.add(
@@ -187,11 +215,7 @@ public abstract class BaseLevel extends GameState  {
         }
     }
 
-    private void updateQuests(Enemy e) {
-        hud.KillOneEnemy(e.getEnemyType());
-    }
-
-    private void givePlayerRewards(Enemy e) {
+    private void givePlayerRewardForKillingEnemy(Enemy e) {
         player.addExperience(e.getExperienceGainedWhenKilled());
         player.addMoney(e.getMoneyGainedWhenKilled());
     }
@@ -334,11 +358,11 @@ public abstract class BaseLevel extends GameState  {
         if(k == KeyEvent.VK_R) player.setScratching();
         if(k == KeyEvent.VK_F) player.setFiring();
 
-        if(k == KeyEvent.VK_I) hud.ToggleInventory();
-        if(k == KeyEvent.VK_M) hud.ToggleMap();
-        if(k == KeyEvent.VK_J) hud.ToggleDialogBox();
-        if(k == KeyEvent.VK_Q) hud.ToggleQuestLog();
-        if(k == KeyEvent.VK_F5) hud.TogglePauseMenu(); //F5 = Tallentaa pelin
+        if(k == KeyEvent.VK_I) hud.toggleInventory();
+        if(k == KeyEvent.VK_M) hud.toggleMap();
+        if(k == KeyEvent.VK_J) hud.toggleDialogBox();
+        if(k == KeyEvent.VK_Q) hud.toggleQuestLog();
+        if(k == KeyEvent.VK_F5) hud.togglePauseMenu(); //F5 = Tallentaa pelin
 
         if(k == KeyEvent.VK_1) quickTravel(GameStateManager.STATE_LEVEL_1);
         if(k == KeyEvent.VK_2) quickTravel(GameStateManager.STATE_LEVEL_2);

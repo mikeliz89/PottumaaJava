@@ -22,7 +22,7 @@ public class KillQuest extends Quest {
         return CurrentKillCount;
     }
 
-    public void KillOneEnemy(int killedEnemyType, Player player) {
+    public void killOneEnemy(int killedEnemyType, Player player) {
 
         if(EnemyType != killedEnemyType) {
           return;
