@@ -76,6 +76,8 @@ public abstract class MapObject {
 		tileMaps = new ArrayList<>();
 		obstacles = new ArrayList<>();
 	}
+
+	protected abstract void updatePosition();
 	
 	public boolean intersects(MapObject o) {
 		Rectangle r1 = getCollisionBoxRectangle();
@@ -196,9 +198,6 @@ public abstract class MapObject {
 		animation.update();
 	}
 
-	protected void updatePosition() {
-
-	}
 
 	protected ArrayList<TileMap> getTileMaps(int tileType) {
 		var groundTileMaps = new ArrayList<TileMap>();
@@ -307,6 +306,14 @@ public abstract class MapObject {
 
 	protected void preventMovingInXDirection() {
 		dx = 0;
+	}
+
+	public void stopMoving() {
+		left = false;
+		right = false;
+		up = false;
+		down = false;
+		setVector(0, 0);
 	}
 
 	protected void stopGoingUp() {

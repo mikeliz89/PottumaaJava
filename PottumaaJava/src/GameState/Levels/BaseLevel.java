@@ -41,6 +41,9 @@ public abstract class BaseLevel extends GameState  {
     private String bgMusicSoundFileName;
     private QuestLog questLog;
 
+    private boolean playerIsInMapPoint = false;
+    private boolean playerIsCloseEnoughToNPC = false;
+
     public BaseLevel(GameStateManager gameStateManager,
                      String groundTileSetName, String obstacleTileSetName,
                      String groundTileMapName, String obstacleTileMapName,
@@ -140,6 +143,7 @@ public abstract class BaseLevel extends GameState  {
 
         updatePlayer();
 
+        isPlayerCloseEnoughToTalkToNPC();
         isPlayerInMapPoint();
 
         moveBackground();
@@ -170,7 +174,26 @@ public abstract class BaseLevel extends GameState  {
         player.checkAttack(enemies);
     }
 
-    private boolean playerIsInMapPoint = false;
+    private void isPlayerCloseEnoughToTalkToNPC() {
+        NPC npcToTalkTo = getNPCToTalkTo();
+        player.setNPCToTalkTo(npcToTalkTo);
+        if(npcToTalkTo != null) {
+            playerIsCloseEnoughToNPC = true;
+            return;
+        }
+        playerIsCloseEnoughToNPC = false;
+    }
+
+    private NPC getNPCToTalkTo() {
+        NPC npcToTalkTo = null;
+        for(NPC npc : NPCs) {
+            if(npc.intersects(player)) {
+                npcToTalkTo = npc;
+                npc.stopMoving();
+            }
+        }
+        return npcToTalkTo;
+    }
 
     private void isPlayerInMapPoint() {
         MapPoint mapPointToChangeTo = getMapPointToChangeTo();
@@ -251,6 +274,17 @@ public abstract class BaseLevel extends GameState  {
         drawHUD(g);
 
         drawInLevelZoneText(g);
+
+        drawTalkToNPCText(g);
+    }
+
+    private void drawTalkToNPCText(Graphics2D g) {
+        g.setFont(new Font("Arial", Font.PLAIN, 12));
+        g.setColor(Color.BLUE);
+        if(playerIsCloseEnoughToNPC)
+            g.drawString("Press E to talk",
+                    player.getX() + (int)player.getXMap(),
+                    player.getY() + (int)player.getYMap());
     }
 
     protected void drawObstacles(Graphics2D g) {
@@ -371,6 +405,15 @@ public abstract class BaseLevel extends GameState  {
         if(playerIsInMapPoint) {
             if(k == KeyEvent.VK_E) {
                 player.changeLevel(gsm);
+            }
+        }
+
+        if(playerIsCloseEnoughToNPC) {
+            if(k == KeyEvent.VK_E) {
+                var npc = player.getNPCToTalkTo();
+                var dialogBox = npc.getDialogBox();
+                hud.setDialogBox(dialogBox);
+                hud.toggleDialogBox();
             }
         }
     }

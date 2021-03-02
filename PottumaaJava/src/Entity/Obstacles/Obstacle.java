@@ -37,4 +37,7 @@ public class Obstacle extends MapObject {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void updatePosition() {}
 }

@@ -1,5 +1,6 @@
 package Entity.NPCs;
 
+import Entity.HUD.DialogBox;
 import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
 
@@ -18,6 +19,7 @@ public abstract class NPC extends Entity.Character {
 			   int width, int height) {
 
 		super(tileMaps, obstacles, maxHealth, spriteSheetName, width, height);
+
 		init();
 	}
 
@@ -31,7 +33,6 @@ public abstract class NPC extends Entity.Character {
 	}
 
 	public void draw(Graphics2D g) {
-
 		super.draw(g);
 		drawName(g);
 	}
@@ -46,7 +47,6 @@ public abstract class NPC extends Entity.Character {
 
 	@Override
 	protected void setCurrentAction() {
-
 		var currentAction = getCurrentAction();
 		if(currentAction != WALKING) {
 			setCurrentAction(WALKING);
@@ -54,4 +54,7 @@ public abstract class NPC extends Entity.Character {
 			animation.setDelay(50);
 		}
 	}
+
+	public abstract DialogBox getDialogBox();
+
 }

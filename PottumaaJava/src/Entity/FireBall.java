@@ -89,7 +89,8 @@ public class FireBall extends MapObject {
 	}
 	
 	public boolean shouldRemove() { return remove; }
-	
+
+	@Override
 	public void update() {
 
 		super.update();
@@ -101,6 +102,11 @@ public class FireBall extends MapObject {
 		if(hit && animation.hasPlayedOnce()) {
 			remove = true;
 		}
+	}
+
+	@Override
+	protected void updatePosition() {
+
 	}
 	
 }

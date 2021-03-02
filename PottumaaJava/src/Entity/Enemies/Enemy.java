@@ -30,7 +30,8 @@ public abstract class Enemy extends Entity.Character {
 	public int getEnemyType() {
 		return enemyType;
 	}
-	
+
+	@Override
 	public void update() {
 		super.update();
 		checkWallHits();

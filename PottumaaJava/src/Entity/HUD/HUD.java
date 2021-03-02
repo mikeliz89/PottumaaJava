@@ -1,7 +1,6 @@
 package Entity.HUD;
 
 import Audio.AudioPlayer;
-import Entity.Enemies.EnemySettings;
 import Entity.Player.Player;
 import Entity.Quests.*;
 import Main.GameOptions;
@@ -33,7 +32,6 @@ public class HUD {
 		this.questLog = questLog;
 		setHudImage();
 		createInventory();
-		createDialogBox();
 		setSoundEffects();
 	}
 
@@ -55,11 +53,6 @@ public class HUD {
 		}
 	}
 
-	private void createDialogBox() {
-		dialogBox = new DialogBox("Welcome " + player.getName(),
-				"Mr.PotatoGuy: Welcome to the land of the pottu");
-	}
-
  	public void togglePauseMenu() {
 		if(showPauseMenu == false) {
 			player.saveGame();
@@ -74,7 +67,15 @@ public class HUD {
 		showInventory = !showInventory;
 	}
 
+	public void setDialogBox(DialogBox dialogBox) {
+		this.dialogBox = dialogBox;
+	}
+
 	public void toggleDialogBox() {
+		//if haven't talked to anyone yet, should not be able to toggle dialobox
+		if(dialogBox == null)
+			return;
+
 		showDialogBox = !showDialogBox;
 	}
 
@@ -121,6 +122,9 @@ public class HUD {
 	}
 
 	private void drawDialogBox(Graphics2D g) {
+		if(dialogBox == null)
+			return;
+
 		dialogBox.draw(g);
 	}
 

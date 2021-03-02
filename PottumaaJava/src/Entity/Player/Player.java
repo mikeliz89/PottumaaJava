@@ -3,6 +3,7 @@ package Entity.Player;
 import Audio.AudioPlayer;
 import Entity.*;
 import Entity.Enemies.Enemy;
+import Entity.NPCs.NPC;
 import Entity.Obstacles.Obstacle;
 import GameState.GameStateManager;
 import GameState.ISaveManager;
@@ -46,6 +47,7 @@ public class Player extends Entity.Character {
 	private Wallet wallet;
 	private int currentLevel;
 	private MapPoint mapPointForLevelChange;
+	private NPC npcToTalkTo;
 
 	private ISaveManager saveManager;
 
@@ -206,6 +208,14 @@ public class Player extends Entity.Character {
 
 	public void setMapPointForLevelChange(MapPoint mapPointForLevelChange) {
 		this.mapPointForLevelChange = mapPointForLevelChange;
+	}
+
+	public void setNPCToTalkTo(NPC npcToTalkTo) {
+		this.npcToTalkTo = npcToTalkTo;
+	}
+
+	public NPC getNPCToTalkTo() {
+		return this.npcToTalkTo;
 	}
 
 	public void changeLevel(GameStateManager gsm) {

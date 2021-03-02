@@ -83,7 +83,7 @@ public class Level1State extends BaseLevel {
 	protected void populateNPCs() {
 		MrPotatoGuy mrPotatoGuy;
 		Point[] points = new Point [] {
-				new Point(300, 300)
+				new Point(800, 300)
 		};
 		for(Point npcPoint : points) {
 			mrPotatoGuy = new MrPotatoGuy(tileMaps, getObstacles(), 1000);
