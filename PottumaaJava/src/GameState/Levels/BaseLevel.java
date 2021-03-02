@@ -11,13 +11,14 @@ import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import Entity.Quests.*;
 import GameState.*;
+import Handlers.KeyboardController;
+import Handlers.MapPointHandler;
 import Handlers.NPCHandler;
 import Main.GamePanel;
 import MapPoint.MapPoint;
 import TileMap.*;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public abstract class BaseLevel extends GameState  {
@@ -33,19 +34,17 @@ public abstract class BaseLevel extends GameState  {
 
     private NPCHandler npcHandler;
     private ExplosionHandler explosionHandler;
+    private MapPointHandler mapPointHandler;
 
-    private ArrayList<MapPoint> mapPoints;
     private ArrayList<Obstacle> obstacles;
     private HUD hud;
-    private ArrayList<Integer> keysPressed;
+    private KeyboardController keyboardController;
     private String groundTileSetName;
     private String obstacleTileSetName;
     private String groundTileMapName;
     private String obstacleTileMapName;
     private String bgMusicSoundFileName;
     private QuestLog questLog;
-
-    private boolean playerIsInMapPoint = false;
 
     public BaseLevel(GameStateManager gameStateManager,
                      String groundTileSetName, String obstacleTileSetName,
@@ -64,15 +63,12 @@ public abstract class BaseLevel extends GameState  {
 
         gsm.setSongToPlay(bgMusicSoundFileName);
 
-        mapPoints = new ArrayList<>();
-
-        keysPressed = new ArrayList<>();
         enemies = new ArrayList<>();
         obstacles = new ArrayList<>();
         items = new ArrayList<>();
 
         populateTileMaps();
-        populateMapPoints();
+
         populateEnemies();
 
         createPlayer();
@@ -83,7 +79,12 @@ public abstract class BaseLevel extends GameState  {
 
         populateNPCs();
 
-        explosionHandler = new ExplosionHandler(getGroundTileMap());
+        var groundTileMap = getGroundTileMap();
+        explosionHandler = new ExplosionHandler(groundTileMap);
+        mapPointHandler = new MapPointHandler(player, groundTileMap);
+        keyboardController = new KeyboardController(gsm, player, hud, npcHandler, mapPointHandler);
+
+        populateMapPoints();
     }
 
     protected void addNPC(NPC npc) {
@@ -147,14 +148,14 @@ public abstract class BaseLevel extends GameState  {
     }
 
     protected void addMapPoint(MapPoint mapPoint) {
-        mapPoints.add(mapPoint);
+        mapPointHandler.add(mapPoint);
     }
 
     public void update() {
 
         updatePlayer();
 
-        isPlayerInMapPoint();
+        mapPointHandler.update();
 
         moveBackground();
 
@@ -182,28 +183,6 @@ public abstract class BaseLevel extends GameState  {
 
     private void checkPlayerAttackingEnemies() {
         player.checkAttack(enemies);
-    }
-
-    private void isPlayerInMapPoint() {
-        MapPoint mapPointToChangeTo = getMapPointToChangeTo();
-        player.setMapPointForLevelChange(mapPointToChangeTo);
-        if(mapPointToChangeTo != null) {
-            playerIsInMapPoint = true;
-            return;
-        }
-        playerIsInMapPoint = false;
-    }
-
-    private MapPoint getMapPointToChangeTo() {
-        MapPoint mapPointToChangeTo = null;
-        for(MapPoint mapPoint : mapPoints) {
-            Rectangle mapPointRectangle = mapPoint.getRectangle();
-            Rectangle playerRectangle = player.getRectangle();
-            if(playerRectangle.intersects(mapPointRectangle)) {
-                mapPointToChangeTo = mapPoint;
-            }
-        }
-        return mapPointToChangeTo;
     }
 
     private void updateNPCs() {
@@ -282,7 +261,7 @@ public abstract class BaseLevel extends GameState  {
     private void drawInLevelZoneText(Graphics2D g) {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
         g.setColor(Color.BLUE);
-        if(playerIsInMapPoint)
+        if(mapPointHandler.playerIsInMapPoint())
             g.drawString("Press E",
                     player.getX() + (int)player.getXMap(),
                     player.getY() + (int)player.getYMap());
@@ -307,11 +286,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void drawMapPoints(Graphics2D g) {
-        for (MapPoint mapPoint : mapPoints) {
-            TileMap groundMap = getGroundTileMap();
-            mapPoint.setMapPosition((int) groundMap.getX(), (int) groundMap.getY());
-            mapPoint.draw(g);
-        }
+        mapPointHandler.draw(g);
     }
 
     private TileMap getGroundTileMap() {
@@ -332,85 +307,10 @@ public abstract class BaseLevel extends GameState  {
     }
 
     public void keyPressed(int k) {
-        if(keysPressed.contains(k) == false) {
-            keysPressed.add(k);
-        }
-
-        //have to press running before can charge
-        if(keysPressed.contains(KeyEvent.VK_LEFT) == true ||
-                keysPressed.contains(KeyEvent.VK_RIGHT) == true ||
-                keysPressed.contains(KeyEvent.VK_UP) == true ||
-                keysPressed.contains(KeyEvent.VK_DOWN) == true) {
-            if(keysPressed.contains(KeyEvent.VK_SHIFT)) {
-                player.setCharging(true);
-            }
-        }
-
-        if(k == KeyEvent.VK_LEFT) {
-            player.setLeft(true);
-        }
-        if(k == KeyEvent.VK_RIGHT) {
-            if(keysPressed.contains(KeyEvent.VK_RIGHT) == true) {
-                if(k == KeyEvent.VK_SHIFT) {
-                    player.setCharging(true);
-                }
-            }
-            player.setRight(true);
-        }
-        if(k == KeyEvent.VK_UP) player.setUp(true);
-        if(k == KeyEvent.VK_DOWN) player.setDown(true);
-        if(k == KeyEvent.VK_R) player.setScratching();
-        if(k == KeyEvent.VK_F) player.setFiring();
-
-        if(k == KeyEvent.VK_I) hud.toggleInventory();
-        if(k == KeyEvent.VK_M) hud.toggleMap();
-        if(k == KeyEvent.VK_J) hud.toggleDialogBox();
-        if(k == KeyEvent.VK_Q) hud.toggleQuestLog();
-        if(k == KeyEvent.VK_F5) hud.togglePauseMenu(); //F5 = Tallentaa pelin
-
-        if(k == KeyEvent.VK_1) quickTravel(GameStateManager.STATE_LEVEL_1);
-        if(k == KeyEvent.VK_2) quickTravel(GameStateManager.STATE_LEVEL_2);
-        if(k == KeyEvent.VK_3) quickTravel(GameStateManager.STATE_PLAYER_HOME);
-
-        if(playerIsInMapPoint) {
-            if(k == KeyEvent.VK_E) {
-                player.changeLevel(gsm);
-            }
-        }
-
-        if(npcHandler.playerIsCloseEnoughToNPC()) {
-            if(k == KeyEvent.VK_E) {
-                var npc = player.getNPCToTalkTo();
-                var dialogBox = npc.getDialogBox();
-                hud.setDialogBox(dialogBox);
-                hud.toggleDialogBox();
-            }
-        }
+        keyboardController.keyPressed(k);
     }
 
     public void keyReleased(int k) {
-
-        if(k == KeyEvent.VK_SHIFT) {
-            player.setCharging(false);
-        }
-        if(k == KeyEvent.VK_LEFT) {
-            player.setLeft(false);
-        }
-        if(k == KeyEvent.VK_RIGHT) {
-            player.setRight(false);
-        }
-        //NOTE: if next 2 are commented, player keeps going down or up
-        if(k == KeyEvent.VK_UP) player.setUp(false);
-        if(k == KeyEvent.VK_DOWN) player.setDown(false);
-
-        // remove released keys from keysPressed arrayList
-        if(keysPressed.contains(k) == true) {
-            keysPressed.remove(keysPressed.indexOf(k));
-        }
-
-    }
-
-    private void quickTravel(int levelNumber) {
-        gsm.setState(levelNumber);
+        keyboardController.keyReleased(k);
     }
 }
