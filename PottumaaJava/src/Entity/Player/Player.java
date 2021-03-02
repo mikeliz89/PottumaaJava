@@ -5,6 +5,7 @@ import Entity.*;
 import Entity.Enemies.Enemy;
 import Entity.NPCs.NPC;
 import Entity.Obstacles.Obstacle;
+import Entity.Player.Magic.FireBallHandler;
 import GameState.GameStateManager;
 import GameState.ISaveManager;
 import GameState.SaveManager;
@@ -20,19 +21,20 @@ import java.util.ArrayList;
 public class Player extends Entity.Character {
 	
 	// player stuff
-	private int fire;
-	private int maxFire;
+	private int mana;
+	private int maxMana;
 	private boolean charging;
 	private int experience;
 	private double chargeSpeed;
 	//name
 	private String name;
+
+	private FireBallHandler fireBallHandler;
 	
 	// fireball
 	private boolean firing;
-	private int fireCost;
+	private int fireballManaCost;
 	private int fireBallDamage;
-	private ArrayList<FireBall> fireBalls;
 	
 	// scratch
 	private boolean scratching;
@@ -60,19 +62,19 @@ public class Player extends Entity.Character {
 				"/Sprites/Player/playersprites.gif",
 				30, 30);
 		this.saveManager = saveManager;
-		init();
+		init(tileMaps);
 		loadGame();
 	}
 
-	private void init() {
-		fireBalls = new ArrayList<>();
+	private void init(ArrayList<TileMap> tileMaps) {
+		fireBallHandler = new FireBallHandler(this, tileMaps, FIREBALL);
 
 		//damage & health
 		experience = PlayerSettings.PLAYER_START_EXP;
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
-		fire = maxFire = PlayerSettings.PLAYER_START_FIRE;
-		fireCost = 200;
+		mana = maxMana = PlayerSettings.PLAYER_START_FIRE;
+		fireballManaCost = PlayerSettings.PLAYER_FIREBALL_MANA_COST;
 		scratchRange = 40;
 		//size
 		collisionBoxWidth = 20;
@@ -100,7 +102,7 @@ public class Player extends Entity.Character {
 			health = data.health;
 			name = data.name;
 			experience = data.experience;
-			fire = data.fire;
+			mana = data.mana;
 			wallet.addMoney(data.money);
 			System.out.println("Loaded player. Name: " + data.name + ", health: " + data.health + ", level: " + data.level);
 		} catch (Exception e) {
@@ -119,7 +121,7 @@ public class Player extends Entity.Character {
 		saveData.name = name;
 		saveData.health = health;
 		saveData.experience = experience;
-		saveData.fire = fire;
+		saveData.mana = mana;
 		saveData.money = getMoneyInWallet();
 		saveData.level = currentLevel;
 
@@ -128,6 +130,31 @@ public class Player extends Entity.Character {
 			System.out.println("Save successful");
 		} catch(Exception e) {
 			System.out.println("Couldn't save: " + e.getMessage());
+		}
+	}
+
+	public void increaseMana() {
+		mana += 1;
+		if(mana > maxMana) {
+			mana = maxMana;
+		}
+	}
+
+	public void decreaseMana(int magicType) {
+		mana -= getManaCostByType(magicType);
+	}
+
+	public boolean hasEnoughMana(int magicType) {
+		if(mana > getManaCostByType(magicType))
+			return true;
+		return false;
+	}
+
+	private int getManaCostByType(int magicType) {
+		switch(magicType) {
+			case FIREBALL:
+			return fireballManaCost;
+			default: throw new IllegalArgumentException("Magictype " + magicType + " is not supported");
 		}
 	}
 
@@ -182,8 +209,8 @@ public class Player extends Entity.Character {
 		sfx.put("death", new AudioPlayer("/SFX/playerDeath.wav"));
 	}
 
-	public int getFire() { return fire; }
-	public int getMaxFire() { return maxFire; }
+	public int getMana() { return mana; }
+	public int getMaxMana() { return maxMana; }
 	
 	public void setFiring() { 
 		firing = true;
@@ -250,18 +277,8 @@ public class Player extends Entity.Character {
 					}
 				}
 			}
-			checkFireBallCollisions(e);
+			fireBallHandler.checkFireBallCollisions(e);
 			checkEnemyCollision(e);
-		}
-	}
-
-	private void checkFireBallCollisions(Enemy e) {
-		for (FireBall fireBall : fireBalls) {
-			if (fireBall.intersects(e)) {
-				e.hit(fireBallDamage);
-				fireBall.setHit();
-				break;
-			}
 		}
 	}
 
@@ -312,7 +329,7 @@ public class Player extends Entity.Character {
 
 	public void update() {
 
-		fireBallAttack();
+		fireBallHandler.update();
 
 		super.update();
 
@@ -321,8 +338,6 @@ public class Player extends Entity.Character {
 		checkCharging();
 
 		checkAttackHasStopped();
-
-		updateFireBalls();
 
 		updateFacingDirection();
 	}
@@ -334,20 +349,6 @@ public class Player extends Entity.Character {
 		}
 		if(currentAction == FIREBALL) {
 			if(animation.hasPlayedOnce()) firing = false;
-		}
-	}
-
-	private void fireBallAttack() {
-		var currentAction = getCurrentAction();
-		fire += 1;
-		if(fire > maxFire) fire = maxFire;
-		if(firing && currentAction != FIREBALL) {
-			if(fire > fireCost) {
-				fire -= fireCost;
-				FireBall fb = new FireBall(tileMaps, facingRight);
-				fb.setPosition(x, y);
-				fireBalls.add(fb);
-			}
 		}
 	}
 
@@ -390,16 +391,6 @@ public class Player extends Entity.Character {
 		animation.setDelay(i);
 	}
 
-	private void updateFireBalls() {
-		for(int i = 0; i < fireBalls.size(); i++) {
-			fireBalls.get(i).update();
-			if(fireBalls.get(i).shouldRemove()) {
-				fireBalls.remove(i);
-				i--;
-			}
-		}
-	}
-
 	private void updateFacingDirection() {
 		if(!isAttacking()) {
 			if(right) facingRight = true;
@@ -407,6 +398,14 @@ public class Player extends Entity.Character {
 			if(up) facingUp = true;
 			if(down) facingUp = false;
 		}
+	}
+
+	public int getCurrentAction() {
+		return super.getCurrentAction();
+	}
+
+	public boolean getFiring() {
+		return this.firing;
 	}
 
 	private boolean isAttacking() {
@@ -429,9 +428,7 @@ public class Player extends Entity.Character {
 
 
 	private void drawFireBalls(Graphics2D g) {
-		for (FireBall fireBall : fireBalls) {
-			fireBall.draw(g);
-		}
+		fireBallHandler.draw(g);
 	}
 
 	public int getFireBallDamage() {

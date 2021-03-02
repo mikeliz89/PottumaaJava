@@ -233,7 +233,7 @@ public class HUD {
 		g.setFont(font);
 		g.setColor(Color.BLACK);
 		g.drawString(
-			player.getFire() / 100 + "/" + player.getMaxFire() / 100,
+			player.getMana() / 100 + "/" + player.getMaxMana() / 100,
 				textsXCoordinate,
 			45
 		);

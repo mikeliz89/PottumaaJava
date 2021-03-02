@@ -8,6 +8,6 @@ public class SaveData implements java.io.Serializable {
     public int health;
     public int money;
     public int experience;
-    public int fire;
+    public int mana;
     public int level;
 }

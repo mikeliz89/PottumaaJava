@@ -10,4 +10,7 @@ public class PlayerSettings {
     public static boolean PLAYER_CAN_MOVE_WHILE_ATTACKING = true;
     public static double PLAYER_MOVE_SPEED = 1.3;
     public static double PLAYER_MAX_SPEED = 1.3;
+    public static int PLAYER_FIREBALL_MANA_COST = 200;
+
+    public static double MAGIC_FIREBALL_MOVE_SPEED = 3.3;
 }

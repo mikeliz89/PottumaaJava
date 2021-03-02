@@ -121,6 +121,10 @@ public abstract class MapObject {
 		this.height = height;
 	}
 
+	public boolean isFacingRight() {
+		return this.facingRight;
+	}
+
 	public double getMaxSpeed() {
 		return maxSpeed;
 	}

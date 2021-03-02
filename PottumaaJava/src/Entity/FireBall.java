@@ -1,5 +1,6 @@
 package Entity;
 
+import Entity.Player.PlayerSettings;
 import TileMap.*;
 
 import java.awt.image.BufferedImage;
@@ -19,7 +20,7 @@ public class FireBall extends MapObject {
 		
 		facingRight = right;
 		
-		moveSpeed = 2.0;
+		moveSpeed = PlayerSettings.MAGIC_FIREBALL_MOVE_SPEED;
 
 		if(right)
 			setVector(getVectorX() + moveSpeed,

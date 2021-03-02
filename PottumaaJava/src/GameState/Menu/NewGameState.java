@@ -114,7 +114,7 @@ public class NewGameState extends BaseMenuState {
         saveData.health = PlayerSettings.PLAYER_START_HEALTH;
         saveData.money = PlayerSettings.PLAYER_START_MONEY;
         saveData.experience = PlayerSettings.PLAYER_START_EXP;
-        saveData.fire = PlayerSettings.PLAYER_START_FIRE;
+        saveData.mana = PlayerSettings.PLAYER_START_FIRE;
         saveData.level = GameStateManager.STATE_LEVEL_1;
         try {
             saveManager.save(saveData, "1.save");
