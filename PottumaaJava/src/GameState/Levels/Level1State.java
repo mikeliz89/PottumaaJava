@@ -88,7 +88,7 @@ public class Level1State extends BaseLevel {
 		for(Point npcPoint : points) {
 			mrPotatoGuy = new MrPotatoGuy(tileMaps, getObstacles(), 1000);
 			mrPotatoGuy.setPosition(npcPoint.x, npcPoint.y);
-			NPCs.add(mrPotatoGuy);
+			addNPC(mrPotatoGuy);
 		}
 	}
 

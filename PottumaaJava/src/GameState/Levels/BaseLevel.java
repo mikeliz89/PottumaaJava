@@ -3,7 +3,7 @@ package GameState.Levels;
 import Entity.Enemies.Enemy;
 import Entity.Enemies.EnemySettings;
 import Entity.Explosion;
-import Entity.ExplosionHandler;
+import Handlers.ExplosionHandler;
 import Entity.HUD.HUD;
 import Entity.Items.Item;
 import Entity.NPCs.NPC;
@@ -11,6 +11,7 @@ import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import Entity.Quests.*;
 import GameState.*;
+import Handlers.NPCHandler;
 import Main.GamePanel;
 import MapPoint.MapPoint;
 import TileMap.*;
@@ -28,8 +29,9 @@ public abstract class BaseLevel extends GameState  {
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
     protected ArrayList<Enemy> enemies;
-    protected ArrayList<NPC> NPCs;
     private ArrayList<Item> items;
+
+    private NPCHandler npcHandler;
     private ExplosionHandler explosionHandler;
 
     private ArrayList<MapPoint> mapPoints;
@@ -44,7 +46,6 @@ public abstract class BaseLevel extends GameState  {
     private QuestLog questLog;
 
     private boolean playerIsInMapPoint = false;
-    private boolean playerIsCloseEnoughToNPC = false;
 
     public BaseLevel(GameStateManager gameStateManager,
                      String groundTileSetName, String obstacleTileSetName,
@@ -67,20 +68,26 @@ public abstract class BaseLevel extends GameState  {
 
         keysPressed = new ArrayList<>();
         enemies = new ArrayList<>();
-        NPCs = new ArrayList<>();
         obstacles = new ArrayList<>();
         items = new ArrayList<>();
 
         populateTileMaps();
         populateMapPoints();
         populateEnemies();
-        populateNPCs();
 
         createPlayer();
         createQuestLog();
         createHUD();
 
+        npcHandler = new NPCHandler(player);
+
+        populateNPCs();
+
         explosionHandler = new ExplosionHandler(getGroundTileMap());
+    }
+
+    protected void addNPC(NPC npc) {
+        npcHandler.add(npc);
     }
 
     private void createPlayer() {
@@ -147,7 +154,6 @@ public abstract class BaseLevel extends GameState  {
 
         updatePlayer();
 
-        isPlayerCloseEnoughToTalkToNPC();
         isPlayerInMapPoint();
 
         moveBackground();
@@ -178,27 +184,6 @@ public abstract class BaseLevel extends GameState  {
         player.checkAttack(enemies);
     }
 
-    private void isPlayerCloseEnoughToTalkToNPC() {
-        NPC npcToTalkTo = getNPCToTalkTo();
-        player.setNPCToTalkTo(npcToTalkTo);
-        if(npcToTalkTo != null) {
-            playerIsCloseEnoughToNPC = true;
-            return;
-        }
-        playerIsCloseEnoughToNPC = false;
-    }
-
-    private NPC getNPCToTalkTo() {
-        NPC npcToTalkTo = null;
-        for(NPC npc : NPCs) {
-            if(npc.intersects(player)) {
-                npcToTalkTo = npc;
-                npc.stopMoving();
-            }
-        }
-        return npcToTalkTo;
-    }
-
     private void isPlayerInMapPoint() {
         MapPoint mapPointToChangeTo = getMapPointToChangeTo();
         player.setMapPointForLevelChange(mapPointToChangeTo);
@@ -222,9 +207,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void updateNPCs() {
-        for (NPC npc : NPCs) {
-            npc.update();
-        }
+       npcHandler.update();
     }
 
     private void updateEnemies() {
@@ -274,7 +257,7 @@ public abstract class BaseLevel extends GameState  {
     private void drawTalkToNPCText(Graphics2D g) {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
         g.setColor(Color.BLUE);
-        if(playerIsCloseEnoughToNPC)
+        if(npcHandler.playerIsCloseEnoughToNPC())
             g.drawString("Press E to talk",
                     player.getX() + (int)player.getXMap(),
                     player.getY() + (int)player.getYMap());
@@ -316,9 +299,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void drawNPCs(Graphics2D g) {
-        for(NPC npc : NPCs) {
-            npc.draw(g);
-        }
+       npcHandler.draw(g);
     }
 
     private void drawPlayer(Graphics2D g) {
@@ -397,7 +378,7 @@ public abstract class BaseLevel extends GameState  {
             }
         }
 
-        if(playerIsCloseEnoughToNPC) {
+        if(npcHandler.playerIsCloseEnoughToNPC()) {
             if(k == KeyEvent.VK_E) {
                 var npc = player.getNPCToTalkTo();
                 var dialogBox = npc.getDialogBox();

@@ -1,5 +1,6 @@
-package Entity;
+package Handlers;
 
+import Entity.Explosion;
 import TileMap.TileMap;
 
 import java.awt.*;
