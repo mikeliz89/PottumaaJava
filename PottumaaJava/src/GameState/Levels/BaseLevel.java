@@ -2,8 +2,7 @@ package GameState.Levels;
 
 import Entity.Enemies.Enemy;
 import Entity.Enemies.EnemySettings;
-import Entity.Explosion;
-import Handlers.ExplosionHandler;
+import Handlers.*;
 import Entity.HUD.HUD;
 import Entity.Items.Item;
 import Entity.NPCs.NPC;
@@ -11,9 +10,6 @@ import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import Entity.Quests.*;
 import GameState.*;
-import Handlers.KeyboardController;
-import Handlers.MapPointHandler;
-import Handlers.NPCHandler;
 import Main.GamePanel;
 import MapPoint.MapPoint;
 import TileMap.*;
@@ -29,7 +25,7 @@ public abstract class BaseLevel extends GameState  {
 
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
-    protected ArrayList<Enemy> enemies;
+    private EnemyHandler enemyHandler;
     private ArrayList<Item> items;
 
     private NPCHandler npcHandler;
@@ -63,13 +59,10 @@ public abstract class BaseLevel extends GameState  {
 
         gsm.setSongToPlay(bgMusicSoundFileName);
 
-        enemies = new ArrayList<>();
         obstacles = new ArrayList<>();
         items = new ArrayList<>();
 
         populateTileMaps();
-
-        populateEnemies();
 
         createPlayer();
         createQuestLog();
@@ -84,7 +77,15 @@ public abstract class BaseLevel extends GameState  {
         mapPointHandler = new MapPointHandler(player, groundTileMap);
         keyboardController = new KeyboardController(gsm, player, hud, npcHandler, mapPointHandler);
 
+        enemyHandler = new EnemyHandler(player, explosionHandler, questLog);
+
+        populateEnemies();
+
         populateMapPoints();
+    }
+
+    protected void addEnemy(Enemy enemy) {
+        enemyHandler.add(enemy);
     }
 
     protected void addNPC(NPC npc) {
@@ -105,15 +106,6 @@ public abstract class BaseLevel extends GameState  {
                         "Get rid of them", 5, EnemySettings.ENEMY_TYPES_SLUGGER);
         Quest killSluggersQuest = questFactory.getQuest(QuestSettings.QUEST_TYPE_KILLQUEST);
         questLog.addQuest(killSluggersQuest);
-    }
-
-    private void killOneEnemy(int EnemyType) {
-        for(Quest quest : questLog.getKillQuests()) {
-            if(quest instanceof KillQuest) {
-                var killQuest = (KillQuest)quest;
-                killQuest.killOneEnemy(EnemyType, player);
-            }
-        }
     }
 
     private void createHUD() {
@@ -159,9 +151,7 @@ public abstract class BaseLevel extends GameState  {
 
         moveBackground();
 
-        checkPlayerAttackingEnemies();
-
-        updateEnemies();
+        enemyHandler.update();
 
         updateNPCs();
 
@@ -181,31 +171,8 @@ public abstract class BaseLevel extends GameState  {
         player.update();
     }
 
-    private void checkPlayerAttackingEnemies() {
-        player.checkAttack(enemies);
-    }
-
     private void updateNPCs() {
        npcHandler.update();
-    }
-
-    private void updateEnemies() {
-        for(int i = 0; i < enemies.size(); i++) {
-            Enemy e = enemies.get(i);
-            e.update();
-            if(e.isDead()) {
-                killOneEnemy(e.getEnemyType());
-                givePlayerRewardForKillingEnemy(e);
-                enemies.remove(i);
-                i--;
-                explosionHandler.addExplosion(new Explosion(e.getX(), e.getY()));
-            }
-        }
-    }
-
-    private void givePlayerRewardForKillingEnemy(Enemy e) {
-        player.addExperience(e.getExperienceGainedWhenKilled());
-        player.addMoney(e.getMoneyGainedWhenKilled());
     }
 
     public void draw(Graphics2D g) {
@@ -272,9 +239,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void drawEnemies(Graphics2D g) {
-        for (Enemy enemy : enemies) {
-            enemy.draw(g);
-        }
+        enemyHandler.draw(g);
     }
 
     private void drawNPCs(Graphics2D g) {

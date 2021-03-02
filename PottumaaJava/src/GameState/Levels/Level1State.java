@@ -103,17 +103,17 @@ public class Level1State extends BaseLevel {
 				new Point(100, 500),
 		};
 		for (Point sluggerPoint : sluggerPoints) {
-			var s = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
+			var slugger = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
 					sluggerPoint.x,
 					sluggerPoint.y,
 					EnemySettings.SLUGGER_MAX_HEALTH);
-			enemies.add(s);
+			addEnemy(slugger);
 		}
 		//hämähäkki
-		var a = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_ARACHNID,
+		var arachnid = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_ARACHNID,
 				400, 400,
 				EnemySettings.ARACHNID_MAX_HEALTH);
-		enemies.add(a);
+		addEnemy(arachnid);
 	}
 
 }

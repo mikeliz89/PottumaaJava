@@ -32,6 +32,8 @@ public class DialogBox {
         drawHeader(g, shape);
 
         drawText(g, text, shape.x + 20, shape.y + 20);
+
+        drawText(g, "Press J to exit dialog", shape.x + 120, shape.y + 190);
     }
 
     private Rectangle getShape() {

@@ -41,11 +41,11 @@ public class Level2State extends BaseLevel {
 		};
 		for (Point sluggerPoint : sluggerPoints) {
 			//little bit tougher enemy in level 2
-			var s = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
+			var slugger = enemyFactory.getEnemy(EnemySettings.ENEMY_TYPES_SLUGGER,
 					sluggerPoint.x,
 					sluggerPoint.y,
 					EnemySettings.SLUGGER_MAX_HEALTH + 2); //tougher slugger in level 2
-			enemies.add(s);
+			addEnemy(slugger);
 		}
 	}
 
