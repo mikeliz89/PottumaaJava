@@ -3,7 +3,6 @@ package GameState.MapEditor;
 import GameState.*;
 import Main.GamePanel;
 import TileMap.TileMap;
-import TileMap.Tile;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -19,7 +18,8 @@ public class MapEditorState extends GameState {
 
 	private ArrayList<TileMap> tileMaps;
 	private ArrayList<Integer> keysPressed;
-	private int tileSize = 30;
+	private final int tileSize = 30;
+	private final int levelTileCount = 30;
 	private int numTilesX;
 	private int numTilesY;
 
@@ -33,7 +33,7 @@ public class MapEditorState extends GameState {
 
 	// tileset
 	private BufferedImage tileset;
-	private Tile[] tiles;
+	private MapEditorTile[] tiles;
 
 	private ArrayList<MapEditorSlot> mapEditorSlots;
 
@@ -76,21 +76,24 @@ public class MapEditorState extends GameState {
 					getClass().getResourceAsStream(s)
 			);
 
-			tiles = new Tile[3];
+			tiles = new MapEditorTile[3];
 
 			numTilesX = tileset.getWidth() / tileSize;
 			numTilesY = tileset.getHeight() / tileSize;
 
 			BufferedImage subImage = getSubImage(4, 0);
-			Tile tile = getNewTile(subImage);
+			var tile = getNewTile(subImage);
+			tile.setIndex(32);
 			tiles[0] = tile;
 
 			subImage = getSubImage(0, 1);
 			tile = getNewTile(subImage);
+			tile.setIndex(1);
 			tiles[1] = tile;
 
 			subImage = getSubImage(0, 2);
 			tile = getNewTile(subImage);
+			tile.setIndex(2);
 			tiles[2] = tile;
 
 		} catch (IOException e) {
@@ -98,8 +101,8 @@ public class MapEditorState extends GameState {
 		}
 	}
 
-	private Tile getNewTile(BufferedImage subImage) {
-		return new Tile(subImage, 1, 1);
+	private MapEditorTile getNewTile(BufferedImage subImage) {
+		return new MapEditorTile(subImage, 1, 1);
 	}
 
 	private BufferedImage getSubImage(int row, int column) {
@@ -193,9 +196,9 @@ public class MapEditorState extends GameState {
 		g.drawRect(x,y, tileSize,tileSize);
 	}
 
-	private String getSelectedImageIndex() {
+	private int getSelectedImageIndex() {
 		var tile = tiles[currentSelection];
-		return "8";
+		return tile.getIndex();
 	}
 
 	private BufferedImage getSelectedImage() {
@@ -221,12 +224,15 @@ public class MapEditorState extends GameState {
 	private void drawTileSets(Graphics2D g) {
 
 		for(int i = 0; i < tiles.length; i++) {
+			var tile = tiles[i];
 			g.drawImage(
-					tiles[i].getImage(),
+					tile.getImage(),
 					0,
 					tileSize * i,
 					null
 			);
+			g.setColor(Color.RED);
+			g.drawString(Integer.toString(tile.getIndex()), 0, tileSize * i + 10);
 		}
 	}
 
@@ -299,9 +305,10 @@ public class MapEditorState extends GameState {
 		var image = getSelectedImage();
 		for(MapEditorSlot mapEditorSlot : mapEditorSlots) {
 			if(mapEditorSlot.getRow() == currentGridRow &&
-			   mapEditorSlot.getColumn() == currentGridColumn)
-			mapEditorSlot.setImage(image);
-			mapEditorSlot.setTileSetIndex(tileSetIndex);
+			   mapEditorSlot.getColumn() == currentGridColumn) {
+				mapEditorSlot.setImage(image);
+				mapEditorSlot.setTileSetIndex(Integer.toString(tileSetIndex));
+			}
 		}
 	}
 
@@ -327,30 +334,45 @@ public class MapEditorState extends GameState {
 		return rows;
 	}
 
-	private void addTileMapRows(CsvFileWriter csvFileWriter, ArrayList<String> rows) {
-		var rowValues = new ArrayList<String>();
+	private final String defaultTileSetIndex = "8"; //ruoho
 
-		var lastRow = 0;
-		for(MapEditorSlot mapEditorSlot : mapEditorSlots) {
-			var row = mapEditorSlot.getRow();
-			if(row != lastRow) {
-				rowValues = new ArrayList<>();
-				lastRow = row;
+	private void addTileMapRows(CsvFileWriter csvFileWriter, ArrayList<String> rows) {
+		var emptyRowCount = levelTileCount - MAP_EDITOR_GRID_ROWS;
+		var emptyColumnCount = levelTileCount - MAP_EDITOR_GRID_COLUMNS;
+		for(int row = 0; row < MAP_EDITOR_GRID_ROWS + emptyRowCount; row++) {
+			var rowValues = new ArrayList<String>();
+
+			for(int column = 0; column < MAP_EDITOR_GRID_COLUMNS + emptyColumnCount; column++) {
+				boolean columnValueIsSet = false;
+				for(MapEditorSlot mapEditorSlot : mapEditorSlots) {
+					var mapEditorRow = mapEditorSlot.getRow();
+					var mapEditorColumn = mapEditorSlot.getColumn();
+					if(mapEditorRow == row && mapEditorColumn == column) {
+						var tileSetIndex = mapEditorSlot.getTileSetIndex();
+						if(tileSetIndex == "0") {
+							tileSetIndex = defaultTileSetIndex;
+						}
+						rowValues.add(tileSetIndex);
+						columnValueIsSet = true;
+					}
+				}
+				if(columnValueIsSet == false) {
+					rowValues.add(defaultTileSetIndex);
+				}
 			}
-			rowValues.add(mapEditorSlot.getTileSetIndex());
-		}
-		var row = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
-		for(int i = 0; i <  MAP_EDITOR_GRID_ROWS; i++) {
-			rows.add(row);
+
+			var csvRow = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
+			rows.add(csvRow);
 		}
 	}
 
 	private void addHeaderRows(CsvFileWriter csvFileWriter, ArrayList<String> rows) {
 		var headerRowCount = 2;
-		for(int j = 0; j < headerRowCount; j++) {
+		var headerColumnCount = levelTileCount - MAP_EDITOR_GRID_COLUMNS;
+		for(int row = 0; row < headerRowCount; row++) {
 			var rowValues = new ArrayList<String>();
-			rowValues.add(Integer.toString(MAP_EDITOR_GRID_COLUMNS));
-			for (int i = 0; i < MAP_EDITOR_GRID_COLUMNS - 1; i++) {
+			rowValues.add(Integer.toString(levelTileCount));
+			for (int column = 0; column < (MAP_EDITOR_GRID_COLUMNS + headerColumnCount) - 1; column++) {
 				rowValues.add("");
 			}
 			var headerRow = csvFileWriter.convertArrayListIntoCommaSeparatedString(rowValues);
