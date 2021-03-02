@@ -3,6 +3,7 @@ package GameState.Levels;
 import Entity.Enemies.Enemy;
 import Entity.Enemies.EnemySettings;
 import Entity.Explosion;
+import Entity.ExplosionHandler;
 import Entity.HUD.HUD;
 import Entity.Items.Item;
 import Entity.NPCs.NPC;
@@ -29,7 +30,8 @@ public abstract class BaseLevel extends GameState  {
     protected ArrayList<Enemy> enemies;
     protected ArrayList<NPC> NPCs;
     private ArrayList<Item> items;
-    private ArrayList<Explosion> explosions;
+    private ExplosionHandler explosionHandler;
+
     private ArrayList<MapPoint> mapPoints;
     private ArrayList<Obstacle> obstacles;
     private HUD hud;
@@ -62,7 +64,7 @@ public abstract class BaseLevel extends GameState  {
         gsm.setSongToPlay(bgMusicSoundFileName);
 
         mapPoints = new ArrayList<>();
-        explosions = new ArrayList<>();
+
         keysPressed = new ArrayList<>();
         enemies = new ArrayList<>();
         NPCs = new ArrayList<>();
@@ -77,6 +79,8 @@ public abstract class BaseLevel extends GameState  {
         createPlayer();
         createQuestLog();
         createHUD();
+
+        explosionHandler = new ExplosionHandler(getGroundTileMap());
     }
 
     private void createPlayer() {
@@ -154,7 +158,7 @@ public abstract class BaseLevel extends GameState  {
 
         updateNPCs();
 
-        updateExplosions();
+        explosionHandler.update();
     }
 
     private void moveBackground() {
@@ -232,8 +236,7 @@ public abstract class BaseLevel extends GameState  {
                 givePlayerRewardForKillingEnemy(e);
                 enemies.remove(i);
                 i--;
-                explosions.add(
-                        new Explosion(e.getX(), e.getY()));
+                explosionHandler.addExplosion(new Explosion(e.getX(), e.getY()));
             }
         }
     }
@@ -241,16 +244,6 @@ public abstract class BaseLevel extends GameState  {
     private void givePlayerRewardForKillingEnemy(Enemy e) {
         player.addExperience(e.getExperienceGainedWhenKilled());
         player.addMoney(e.getMoneyGainedWhenKilled());
-    }
-
-    private void updateExplosions() {
-        for(int i = 0; i < explosions.size(); i++) {
-            explosions.get(i).update();
-            if(explosions.get(i).shouldRemove()) {
-                explosions.remove(i);
-                i--;
-            }
-        }
     }
 
     public void draw(Graphics2D g) {
@@ -313,11 +306,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void drawExplosions(Graphics2D g) {
-        for (Explosion explosion : explosions) {
-            TileMap groundMap = getGroundTileMap();
-            explosion.setMapPosition((int) groundMap.getX(), (int) groundMap.getY());
-            explosion.draw(g);
-        }
+        explosionHandler.draw(g);
     }
 
     private void drawEnemies(Graphics2D g) {
