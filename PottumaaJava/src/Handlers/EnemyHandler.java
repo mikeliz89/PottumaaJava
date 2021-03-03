@@ -10,7 +10,7 @@ import Entity.Quests.QuestLog;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class EnemyHandler {
+public class EnemyHandler extends BaseHandler {
 
     private ArrayList<Enemy> enemies;
     private Player player;

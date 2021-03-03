@@ -6,7 +6,7 @@ import TileMap.TileMap;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ExplosionHandler {
+public class ExplosionHandler extends BaseHandler {
 
     private ArrayList<Explosion> explosions;
     private TileMap groundTileMap;

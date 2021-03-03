@@ -6,7 +6,7 @@ import Entity.Player.Player;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class NPCHandler {
+public class NPCHandler extends BaseHandler {
 
     private Player player;
     private ArrayList<NPC> NPCs;

@@ -21,7 +21,6 @@ public class Level1State extends BaseLevel {
 				);
 		changeBackgroundMusic(previousState);
 		setPlayerStartingPosition(previousState);
-		createObstacles();
 	}
 
 	private void changeBackgroundMusic(int previousState) {
@@ -37,7 +36,8 @@ public class Level1State extends BaseLevel {
 		player.setPosition(345, 200);
 	}
 
-	private void createObstacles() {
+	@Override
+	protected void populateObstacles() {
 		var playerHome = new Obstacle(tileMaps, 180, 120, "/Images/Obstacles/playerHome.gif");
 		playerHome.setPosition(527 - 180, 247 - 120);
 		playerHome.setCollisionBoxHeight(playerHome.getHeight() - 10);

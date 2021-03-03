@@ -7,7 +7,7 @@ import TileMap.TileMap;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapPointHandler {
+public class MapPointHandler extends BaseHandler {
 
     private Player player;
     private ArrayList<MapPoint> mapPoints;

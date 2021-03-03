@@ -23,6 +23,7 @@ public abstract class BaseLevel extends GameState  {
     protected abstract void populateEnemies();
     protected abstract void populateNPCs();
     protected abstract void populateItems();
+    protected abstract void populateObstacles();
 
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
@@ -32,8 +33,8 @@ public abstract class BaseLevel extends GameState  {
     private NPCHandler npcHandler;
     private ExplosionHandler explosionHandler;
     private MapPointHandler mapPointHandler;
+    private ObstacleHandler obstacleHandler;
 
-    private ArrayList<Obstacle> obstacles;
     private HUD hud;
     private KeyboardController keyboardController;
     private String groundTileSetName;
@@ -60,31 +61,56 @@ public abstract class BaseLevel extends GameState  {
 
         gsm.setSongToPlay(bgMusicSoundFileName);
 
-        obstacles = new ArrayList<>();
-
+        //Note: tilemaps need to be done first, because all MapObjects need them for drawing
         populateTileMaps();
+        var groundTileMap = getGroundTileMap();
+
+        initObstacles();
 
         createPlayer();
         createQuestLog();
         createHUD();
 
-        npcHandler = new NPCHandler(player);
+        initNPCs();
 
-        populateNPCs();
+        initExplosions(groundTileMap);
 
-        var groundTileMap = getGroundTileMap();
-        explosionHandler = new ExplosionHandler(groundTileMap);
-        mapPointHandler = new MapPointHandler(player, groundTileMap);
+        initEnemies();
+
+        initMapPoints(groundTileMap);
+
+        initItems();
+
         keyboardController = new KeyboardController(gsm, player, hud, npcHandler, mapPointHandler);
+    }
 
-        enemyHandler = new EnemyHandler(player, explosionHandler, questLog);
+    private void initObstacles() {
+        obstacleHandler = new ObstacleHandler();
+        populateObstacles();
+    }
+
+    private void initExplosions(TileMap groundTileMap) {
+        explosionHandler = new ExplosionHandler(groundTileMap);
+    }
+
+    private void initItems() {
         itemHandler = new ItemHandler(player);
-
-        populateEnemies();
-
-        populateMapPoints();
-
         populateItems();
+    }
+
+    private void initMapPoints(TileMap groundTileMap) {
+        mapPointHandler = new MapPointHandler(player, groundTileMap);
+        populateMapPoints();
+    }
+
+    private void initEnemies() {
+        enemyHandler = new EnemyHandler(player, explosionHandler, questLog);
+        populateEnemies();
+    }
+
+    private void initNPCs() {
+        npcHandler = new NPCHandler(player);
+        populateNPCs();
     }
 
     protected void addEnemy(Enemy enemy) {
@@ -96,7 +122,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void createPlayer() {
-        player = new Player(tileMaps, obstacles);
+        player = new Player(tileMaps, obstacleHandler.getObstacles());
         player.setCurrentLevel(gsm.getCurrentState());
     }
 
@@ -131,7 +157,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     protected void addObstacle(Obstacle obstacle) {
-        obstacles.add(obstacle);
+        obstacleHandler.add(obstacle);
     }
 
     protected void addItem(Item item) {
@@ -139,7 +165,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     protected ArrayList<Obstacle> getObstacles() {
-        return obstacles;
+        return obstacleHandler.getObstacles();
     }
 
     protected void addMapPoint(MapPoint mapPoint) {
@@ -207,9 +233,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     protected void drawObstacles(Graphics2D g) {
-        for(Obstacle obstacle : obstacles) {
-            obstacle.draw(g);
-        }
+        obstacleHandler.draw(g);
     }
 
     private void drawItems(Graphics2D g) {
