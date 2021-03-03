@@ -54,6 +54,11 @@ public class Level2State extends BaseLevel {
 
 	}
 
+	@Override
+	protected void populateItems() {
+
+	}
+
 }
 
 

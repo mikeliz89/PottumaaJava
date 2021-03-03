@@ -22,11 +22,12 @@ public abstract class BaseLevel extends GameState  {
     protected abstract void populateMapPoints();
     protected abstract void populateEnemies();
     protected abstract void populateNPCs();
+    protected abstract void populateItems();
 
     protected ArrayList<TileMap> tileMaps;
     protected Player player;
     private EnemyHandler enemyHandler;
-    private ArrayList<Item> items;
+    private ItemHandler itemHandler;
 
     private NPCHandler npcHandler;
     private ExplosionHandler explosionHandler;
@@ -60,7 +61,6 @@ public abstract class BaseLevel extends GameState  {
         gsm.setSongToPlay(bgMusicSoundFileName);
 
         obstacles = new ArrayList<>();
-        items = new ArrayList<>();
 
         populateTileMaps();
 
@@ -78,10 +78,13 @@ public abstract class BaseLevel extends GameState  {
         keyboardController = new KeyboardController(gsm, player, hud, npcHandler, mapPointHandler);
 
         enemyHandler = new EnemyHandler(player, explosionHandler, questLog);
+        itemHandler = new ItemHandler(player);
 
         populateEnemies();
 
         populateMapPoints();
+
+        populateItems();
     }
 
     protected void addEnemy(Enemy enemy) {
@@ -132,7 +135,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     protected void addItem(Item item) {
-        items.add(item);
+        itemHandler.add(item);
     }
 
     protected ArrayList<Obstacle> getObstacles() {
@@ -145,7 +148,7 @@ public abstract class BaseLevel extends GameState  {
 
     public void update() {
 
-        updatePlayer();
+        player.update();
 
         mapPointHandler.update();
 
@@ -153,9 +156,11 @@ public abstract class BaseLevel extends GameState  {
 
         enemyHandler.update();
 
-        updateNPCs();
+        npcHandler.update();
 
         explosionHandler.update();
+
+        itemHandler.update();
     }
 
     private void moveBackground() {
@@ -165,14 +170,6 @@ public abstract class BaseLevel extends GameState  {
                     GamePanel.HEIGHT / 2 - player.getY()
             );
         }
-    }
-
-    private void updatePlayer() {
-        player.update();
-    }
-
-    private void updateNPCs() {
-       npcHandler.update();
     }
 
     public void draw(Graphics2D g) {
@@ -216,9 +213,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void drawItems(Graphics2D g) {
-        for(Item item : items) {
-            item.draw(g);
-        }
+        itemHandler.draw(g);
     }
 
     private void drawHUD(Graphics2D g) {

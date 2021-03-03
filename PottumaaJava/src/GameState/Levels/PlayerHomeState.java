@@ -35,6 +35,11 @@ public class PlayerHomeState extends BaseLevel {
 
 	}
 
+	@Override
+	protected void populateItems() {
+
+	}
+
 }
 
 

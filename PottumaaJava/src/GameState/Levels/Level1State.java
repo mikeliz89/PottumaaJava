@@ -22,14 +22,6 @@ public class Level1State extends BaseLevel {
 		changeBackgroundMusic(previousState);
 		setPlayerStartingPosition(previousState);
 		createObstacles();
-		createItems();
-	}
-
-	private void createItems() {
-		var banana =  new Item("Banana",
-				"/Images/Items/banana.png");
-		banana.setPosition(new Point(300, 300));
-		addItem(banana);
 	}
 
 	private void changeBackgroundMusic(int previousState) {
@@ -114,6 +106,14 @@ public class Level1State extends BaseLevel {
 				400, 400,
 				EnemySettings.ARACHNID_MAX_HEALTH);
 		addEnemy(arachnid);
+	}
+
+	@Override
+	protected void populateItems() {
+		var banana =  new Item("Banana",
+				"/Images/Items/banana.png");
+		banana.setPosition(new Point(300, 300));
+		addItem(banana);
 	}
 
 }
