@@ -24,12 +24,10 @@ public abstract class BaseLevel extends GameState  {
     protected abstract void populateNPCs();
     protected abstract void populateItems();
     protected abstract void populateObstacles();
-
-    protected ArrayList<TileMap> tileMaps;
     protected Player player;
     private EnemyHandler enemyHandler;
     private ItemHandler itemHandler;
-
+    private TileMapHandler tileMapHandler;
     private NPCHandler npcHandler;
     private ExplosionHandler explosionHandler;
     private MapPointHandler mapPointHandler;
@@ -62,8 +60,7 @@ public abstract class BaseLevel extends GameState  {
         gsm.setSongToPlay(bgMusicSoundFileName);
 
         //Note: tilemaps need to be done first, because all MapObjects need them for drawing
-        populateTileMaps();
-        var groundTileMap = getGroundTileMap();
+        initTileMaps();
 
         initObstacles();
 
@@ -73,11 +70,11 @@ public abstract class BaseLevel extends GameState  {
 
         initNPCs();
 
-        initExplosions(groundTileMap);
+        initExplosions();
 
         initEnemies();
 
-        initMapPoints(groundTileMap);
+        initMapPoints();
 
         initItems();
 
@@ -89,7 +86,8 @@ public abstract class BaseLevel extends GameState  {
         populateObstacles();
     }
 
-    private void initExplosions(TileMap groundTileMap) {
+    private void initExplosions() {
+        TileMap groundTileMap = tileMapHandler.getGroundTileMap();
         explosionHandler = new ExplosionHandler(groundTileMap);
     }
 
@@ -98,7 +96,8 @@ public abstract class BaseLevel extends GameState  {
         populateItems();
     }
 
-    private void initMapPoints(TileMap groundTileMap) {
+    private void initMapPoints() {
+        TileMap groundTileMap = tileMapHandler.getGroundTileMap();
         mapPointHandler = new MapPointHandler(player, groundTileMap);
         populateMapPoints();
     }
@@ -113,6 +112,11 @@ public abstract class BaseLevel extends GameState  {
         populateNPCs();
     }
 
+    private void initTileMaps() {
+        tileMapHandler = new TileMapHandler();
+        populateTileMaps();
+    }
+
     protected void addEnemy(Enemy enemy) {
         enemyHandler.add(enemy);
     }
@@ -122,7 +126,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void createPlayer() {
-        player = new Player(tileMaps, obstacleHandler.getObstacles());
+        player = new Player(tileMapHandler.getTileMaps(), obstacleHandler.getObstacles());
         player.setCurrentLevel(gsm.getCurrentState());
     }
 
@@ -142,18 +146,21 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void populateTileMaps() {
-        tileMaps = new ArrayList<>();
         addTileMap(groundTileSetName, groundTileMapName, Tile.TILE_TYPE_GROUND);
         addTileMap(obstacleTileSetName, obstacleTileMapName, Tile.TILE_TYPE_OBSTACLE);
     }
 
     private void addTileMap(String tileSetName, String mapName, int tileType) {
-        TileMap tileMapGround = new TileMap(30, tileSetName, mapName);
-        tileMapGround.setType(tileType);
-        tileMapGround.loadTiles();
-        tileMapGround.loadMap();
-        tileMapGround.setPosition(0, 0);
-        tileMaps.add(tileMapGround);
+        TileMap tileMap = new TileMap(30, tileSetName, mapName);
+        tileMap.setType(tileType);
+        tileMap.loadTiles();
+        tileMap.loadMap();
+        tileMap.setPosition(0, 0);
+        tileMapHandler.add(tileMap);
+    }
+
+    protected ArrayList<TileMap> getTileMaps() {
+        return tileMapHandler.getTileMaps();
     }
 
     protected void addObstacle(Obstacle obstacle) {
@@ -178,7 +185,7 @@ public abstract class BaseLevel extends GameState  {
 
         mapPointHandler.update();
 
-        moveBackground();
+        tileMapHandler.update();
 
         enemyHandler.update();
 
@@ -187,10 +194,12 @@ public abstract class BaseLevel extends GameState  {
         explosionHandler.update();
 
         itemHandler.update();
+
+        moveBackground();
     }
 
     private void moveBackground() {
-        for (TileMap tm : tileMaps) {
+        for (TileMap tm : getTileMaps()) {
             tm.setPosition(
                     GamePanel.WIDTH / 2 - player.getX(),
                     GamePanel.HEIGHT / 2 - player.getY()
@@ -273,21 +282,8 @@ public abstract class BaseLevel extends GameState  {
         mapPointHandler.draw(g);
     }
 
-    private TileMap getGroundTileMap() {
-        TileMap groundTileMap = null;
-        for(TileMap tileMap : tileMaps) {
-            if(tileMap.getType() == Tile.TILE_TYPE_GROUND) {
-                groundTileMap = tileMap;
-            }
-            break;
-        }
-        return groundTileMap;
-    }
-
     private void drawTileMaps(Graphics2D g) {
-        for (TileMap tm : tileMaps) {
-            tm.draw(g);
-        }
+        tileMapHandler.draw(g);
     }
 
     public void keyPressed(int k) {

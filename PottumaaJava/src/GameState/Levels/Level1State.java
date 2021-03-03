@@ -38,6 +38,9 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateObstacles() {
+
+		var tileMaps = getTileMaps();
+
 		var playerHome = new Obstacle(tileMaps, 180, 120, "/Images/Obstacles/playerHome.gif");
 		playerHome.setPosition(527 - 180, 247 - 120);
 		playerHome.setCollisionBoxHeight(playerHome.getHeight() - 10);
@@ -73,6 +76,7 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateNPCs() {
+		var tileMaps = getTileMaps();
 		MrPotatoGuy mrPotatoGuy;
 		Point[] points = new Point [] {
 				new Point(800, 300)
@@ -86,6 +90,7 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateEnemies() {
+		var tileMaps = getTileMaps();
 		var enemyFactory = new EnemyFactory(tileMaps, getObstacles());
 		Point[] sluggerPoints = new Point[] {
 				new Point(130, 50),
