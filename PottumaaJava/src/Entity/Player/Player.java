@@ -74,7 +74,7 @@ public class Player extends Entity.Character {
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
 		mana = maxMana = PlayerSettings.PLAYER_START_FIRE;
-		fireballManaCost = PlayerSettings.PLAYER_FIREBALL_MANA_COST;
+		fireballManaCost = PlayerSettings.MAGIC_FIREBALL_MANA_COST;
 		scratchRange = 40;
 		//size
 		collisionBoxWidth = 20;
