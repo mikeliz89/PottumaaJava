@@ -25,31 +25,31 @@ public class TileMapTest {
     }
 
     @Test
-    public void getTileTypeDoesGiveGoodValueOnRowZeroColumnZero() {
+    public void getTileType_DoesGiveGoodValueOnRowZeroColumnZero() {
         var tileType = myTileMap.getTileType(0, 0);
         assertEquals(Tile.TILE_FRICTION_TYPE_GRASS, tileType);
     }
 
     @Test
-    public void getTileTypeDoesGiveGoodValueOnRowTenColumnTen() {
+    public void getTileType_DoesGiveGoodValueOnRowTenColumnTen() {
         var tileType = myTileMap.getTileType(10, 10);
         assertEquals(Tile.TILE_FRICTION_TYPE_GRASS, tileType);
     }
 
     @Test
-    public void getTileTypeDoesGiveGoodValueOnRTooSmallRow() {
+    public void getTileType_DoesGiveGoodValueOnRTooSmallRow() {
         var tileType = myTileMap.getTileType(-1, 0);
         assertEquals(Tile.TILE_FRICTION_TYPE_GRASS, tileType);
     }
 
     @Test
-    public void getTileTypeDoesNotThrowExceptionOnTooBigRow() {
+    public void getTileType_DoesNotThrowExceptionOnTooBigRow() {
         var tileType = myTileMap.getTileType(31, 10);
         assertEquals(Tile.TILE_FRICTION_TYPE_GRASS, tileType);
     }
 
     @Test
-    public void getTileTypeDoesNotThrowExceptionOnTooBigColumn() {
+    public void getTileType_DoesNotThrowExceptionOnTooBigColumn() {
         var tileType = myTileMap.getTileType(10, 31);
         assertEquals(Tile.TILE_FRICTION_TYPE_GRASS, tileType);
     }

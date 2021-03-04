@@ -38,17 +38,23 @@ public class PlayerTest {
     }
 
     @Test
-    void WhenPlayerGetsHitZeroDamageHealthShouldBeFive() {
+    void getHealth_WhenPlayerGetsHitZeroDamageHealthShouldBeStartHealth() {
         myPlayer.hit(0);
         var health = myPlayer.getHealth();
         assertEquals(PlayerSettings.PLAYER_START_HEALTH, health);
     }
 
     @Test
-    void WhenPlayerGetsHitDamageMoreThanMaxHealthPlayerHealthShouldBeZero() {
+    void getHealth_WhenPlayerGetsHitDamageMoreThanMaxHealthPlayerHealthShouldBeZero() {
         myPlayer.hit(PlayerSettings.PLAYER_START_HEALTH+1);
         var health = myPlayer.getHealth();
         assertEquals(0, health);
+    }
+
+    @Test
+    void getExperience_ShouldBeZeroAtFirst() {
+        var experience = myPlayer.getExperience();
+        assertEquals(0, experience);
     }
 
 }

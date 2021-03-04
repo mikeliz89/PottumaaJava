@@ -11,7 +11,6 @@ import TileMap.TileMap;
 
 public class EnemyTest {
 
-    //private final int MAX_HEALTH = 10;
     private final ArrayList<TileMap> myTileMaps;
     private final ArrayList<Obstacle> obstacles;
     private final Enemy myEnemy;
@@ -30,7 +29,7 @@ public class EnemyTest {
     }
 
     @Test
-    public void EnemyHealthIsReducedWhenTakingDamageButIsNotDead() {
+    public void GetHealth_EnemyHealthIsReducedWhenTakingDamageButIsNotDead() {
         myEnemy.hit(1);
         var newHealth = myEnemy.getHealth();
         assertEquals(EnemySettings.SLUGGER_MAX_HEALTH - 1, newHealth);
@@ -38,7 +37,7 @@ public class EnemyTest {
     }
 
     @Test
-    public void EnemyHealthIsZeroAndEnemyIsDeadWhenTakingDamageMoreThanMaxHealth() {
+    public void GetHealth_EnemyHealthIsZeroAndEnemyIsDeadWhenTakingDamageMoreThanMaxHealth() {
         myEnemy.hit(myEnemy.getMaxHealth()+1);
         var newHealth = myEnemy.getHealth();
         assertEquals(0, newHealth);
@@ -46,7 +45,7 @@ public class EnemyTest {
     }
 
     @Test
-    public void WhenEnemyHealthGoesToZeroEnemyIsDead() {
+    public void GetHealth_WhenEnemyHealthGoesToZeroEnemyIsDead() {
         myEnemy.hit(EnemySettings.SLUGGER_MAX_HEALTH);
         var newHealth = myEnemy.getHealth();
         assertEquals(0, newHealth);
@@ -54,7 +53,7 @@ public class EnemyTest {
     }
 
     @Test
-    public void EnemyIsHitWhenItIsAlreadyDeadShouldNotReduceHealth() {
+    public void GetHealth_EnemyIsHitWhenItIsAlreadyDeadShouldNotReduceHealth() {
         myEnemy.hit(EnemySettings.SLUGGER_MAX_HEALTH);
         var newHealth = myEnemy.getHealth();
         assertEquals(0, newHealth);

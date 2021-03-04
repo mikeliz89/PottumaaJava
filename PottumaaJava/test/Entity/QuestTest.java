@@ -18,13 +18,13 @@ public class QuestTest {
     }
 
     @Test
-    public void getTitleShouldReturnTitle() {
+    public void getTitle_ShouldReturnTitle() {
         var title = myQuest.getTitle();
         assertEquals("Welcome to hell", title);
     }
 
     @Test
-    public void getDescriptionShouldReturnDescription() {
+    public void getDescription_ShouldReturnDescription() {
         var description = myQuest.getDescription();
         assertEquals("This is it", description);
     }

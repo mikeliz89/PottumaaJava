@@ -26,7 +26,7 @@ public class WalletTest {
     }
 
     @Test
-    void IncreaseMaxShouldReturnMaxPlus100() {
+    void getMaxMoney_IncreaseMaxShouldReturnMaxPlus100() {
         var maxMoney =  myWallet.getMaxMoney();
         myWallet.increaseMaxMoney();
         var newMaxMoney = myWallet.getMaxMoney();
@@ -37,28 +37,28 @@ public class WalletTest {
     }
 
     @Test
-    void Taking100MoneyFromWalletShouldRemove100FromWallet() {
+    void getMoney_Taking100MoneyFromWalletShouldRemove100FromWallet() {
         myWallet.reduceMoney(100);
         var newMoney = myWallet.getMoney();
         assertEquals(400, newMoney);
     }
 
     @Test
-    void TakeMoney100ShouldRemove100FromWallet() {
+    void getMoney_TakeMoney100ShouldRemove100FromWallet() {
         myWallet.reduceMoney(40);
         var newMoney = myWallet.getMoney();
         assertEquals(460, newMoney);
     }
 
     @Test
-    void TryingToTakeMoreFromWalletThanThereActuallyIs_WalletShouldHaveZeroMoney() {
+    void getMoney_TryingToTakeMoreFromWalletThanThereActuallyIs_WalletShouldHaveZeroMoney() {
         myWallet.reduceMoney(myWallet.getMoney() + 10);
         var moneyInWallet = myWallet.getMoney();
         assertEquals(0, moneyInWallet);
     }
 
     @Test
-    void AddMoneyToWalletShouldWork() {
+    void getMoney_AddMoneyToWalletShouldWork() {
         var moneyInWalletAtTheStart = myWallet.getMoney();
         myWallet.addMoney(100);
         var moneyInWalletAfterAdding = myWallet.getMoney();
@@ -66,7 +66,7 @@ public class WalletTest {
     }
 
     @Test
-    void AddMoreManyToWalletThanItsMaxAmountIs_WalletShouldHaveMaxAmountOfMoney() {
+    void getMoney_AddMoreManyToWalletThanItsMaxAmountIs_WalletShouldHaveMaxAmountOfMoney() {
         myWallet.addMoney(1500);
         var moneyInWalletAfterAdding = myWallet.getMoney();
         assertEquals(moneyInWalletAfterAdding, myWallet.getMaxMoney());
