@@ -3,6 +3,7 @@ package Entity;
 import Entity.Obstacles.Obstacle;
 import Entity.Player.Player;
 import Entity.Player.PlayerSettings;
+import GameState.GameStateManager;
 import GameState.ISaveManager;
 import TileMap.TileMap;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,57 @@ public class PlayerTest {
     void getExperience_ShouldBeZeroAtFirst() {
         var experience = myPlayer.getExperience();
         assertEquals(0, experience);
+    }
+
+    @Test
+    void getDamage() {
+        var damage = myPlayer.getDamage();
+        assertEquals(0, damage);
+    }
+
+    @Test
+    void getCurrentLevel_Then_setCurrentLevel_Then_getCurrentLevel_Again_LevelShouldBeChanged() {
+        assertEquals(0, myPlayer.getCurrentLevel());
+        myPlayer.setCurrentLevel(GameStateManager.STATE_LEVEL_2);
+        assertEquals(GameStateManager.STATE_LEVEL_2, myPlayer.getCurrentLevel());
+    }
+
+    @Test
+    void increaseMana_WhenPlayerManaIsMax_ShouldNotIncreaseManaAnymore() {
+        var oldMana = myPlayer.getMana();
+        myPlayer.increaseMana();
+        var newMana = myPlayer.getMana();
+        assertEquals(oldMana, newMana);
+    }
+
+    @Test()
+    void decreaseMana_ShouldRemoveManaPoints() {
+        var oldMana = myPlayer.getMana();
+        myPlayer.decreaseMana(5); //FIREBALL
+        var newMana = myPlayer.getMana();
+        assertTrue(newMana < oldMana);
+    }
+
+    @Test
+    void increaseMana_WhenPlayerManaIsNotMax_ShouldIncreaseManaByOne() {
+        myPlayer.decreaseMana(5); //FIREBALL
+        var oldMana = myPlayer.getMana();
+        myPlayer.increaseMana();
+        var newMana = myPlayer.getMana();
+        assertEquals(oldMana+1, newMana);
+    }
+
+    @Test
+    void hasEnoughMana_getManaCostByType_ShouldThrow_IllegalArgumentException_For_UnsupportedType() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            myPlayer.hasEnoughMana(1000);
+        });
+    }
+
+    @Test
+    void getName_ShouldReturnNull() {
+        var name = myPlayer.getName();
+        assertNull(name);
     }
 
 }

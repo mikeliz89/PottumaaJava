@@ -15,6 +15,10 @@ import java.util.HashMap;
 
 public abstract class Character extends MapObject {
 
+    protected abstract void setSoundEffects();
+    protected abstract int[] getAnimationFrames();
+    protected abstract void setCurrentAction();
+
     private boolean flinching;
     protected long flinchTimer;
     protected int flinchDurationInMilliseconds;
@@ -51,9 +55,6 @@ public abstract class Character extends MapObject {
         healthBar = new HealthBar(3, this.maxHealth);
         sprites = new ArrayList<>();
     }
-
-    protected abstract int[] getAnimationFrames();
-    protected abstract void setCurrentAction();
 
     private void loadSprites() {
 
@@ -165,10 +166,6 @@ public abstract class Character extends MapObject {
 
     protected void playSoundEffect(String soundEffectName) {
         sfx.get(soundEffectName).play();
-    }
-
-    protected void setSoundEffects() {
-
     }
 
     public void update() {

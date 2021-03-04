@@ -56,4 +56,9 @@ public class MrPotatoGuy extends NPC {
         return new DialogBox("Welcome",
                 "Mr.PotatoGuy: Welcome to the land of the pottu");
     }
+
+    @Override
+    protected void setSoundEffects() {
+
+    }
 }

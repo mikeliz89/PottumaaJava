@@ -51,7 +51,7 @@ public class Player extends Entity.Character {
 	private MapPoint mapPointForLevelChange;
 	private NPC npcToTalkTo;
 
-	private ISaveManager saveManager;
+	private final ISaveManager saveManager;
 
 	public Player(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles) {
 		this(tileMaps, obstacles, new SaveManager());
@@ -114,6 +114,10 @@ public class Player extends Entity.Character {
 
 	public void setCurrentLevel(int level) {
 		currentLevel = level;
+	}
+
+	public int getCurrentLevel() {
+		return this.currentLevel;
 	}
 
 	public void saveGame() {
@@ -201,7 +205,6 @@ public class Player extends Entity.Character {
 
 	@Override
 	protected void setSoundEffects() {
-		super.setSoundEffects();
 		sfx.put("jump", new AudioPlayer("/SFX/jump.wav"));
 		sfx.put("scratch", new AudioPlayer("/SFX/scratch.wav"));
 		sfx.put("fireball", new AudioPlayer("/SFX/fireball.wav"));
