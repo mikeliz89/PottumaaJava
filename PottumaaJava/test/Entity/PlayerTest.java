@@ -9,7 +9,6 @@ import TileMap.TileMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
@@ -18,7 +17,7 @@ public class PlayerTest {
     private ISaveManager saveManager;
     private final ArrayList<TileMap> myTileMaps;
     private final ArrayList<Obstacle> myObstacles;
-    Player myPlayer;
+    private Player myPlayer;
 
     public PlayerTest() {
         myTileMaps = new ArrayList<>();
@@ -79,6 +78,12 @@ public class PlayerTest {
         assertEquals(oldMana, newMana);
     }
 
+    @Test
+    void getMaxMana_ShouldHaveStartingMaxMana() {
+        var maxMana = myPlayer.getMaxMana();
+        assertEquals(PlayerSettings.PLAYER_START_MANA, maxMana);
+    }
+
     @Test()
     void decreaseMana_ShouldRemoveManaPoints() {
         var oldMana = myPlayer.getMana();
@@ -107,6 +112,60 @@ public class PlayerTest {
     void getName_ShouldReturnNull() {
         var name = myPlayer.getName();
         assertNull(name);
+    }
+
+    @Test
+    void getNPCToTalkTo_ShouldReturnNull() {
+        var npc = myPlayer.getNPCToTalkTo();
+        assertNull(npc);
+    }
+
+    @Test
+    void setScratching() {
+        myPlayer.setScratching();
+    }
+
+    @Test
+    void getFiring_ShouldReturnFalse() {
+        var firing = myPlayer.getFiring();
+        assertFalse(firing);
+    }
+
+    @Test
+    void getFiring_after_setFiring_ShouldReturnTrue() {
+        myPlayer.setFiring();
+        var firing = myPlayer.getFiring();
+        assertTrue(firing);
+    }
+
+    @Test
+    void getCurrentAction() {
+        var currentAction = myPlayer.getCurrentAction();
+        assertEquals(0, currentAction);
+    }
+
+    @Test
+    void getMoneyInWallet() {
+        var moneyInWallet = myPlayer.getMoneyInWallet();
+        assertEquals(0, moneyInWallet);
+    }
+
+    @Test
+    void addMoney_getMoney_ShouldReturnMoney() {
+        var addedMoney = 5;
+        var moneyInWalletOriginally = myPlayer.getMoneyInWallet();
+        myPlayer.addMoney(addedMoney);
+        var moneyInWallet = myPlayer.getMoneyInWallet();
+        assertEquals(moneyInWallet, moneyInWalletOriginally + addedMoney);
+    }
+
+    @Test
+    void addExperience_PlayerShouldHaveExperience() {
+        var addedExperience = 5;
+        var experienceOriginally = myPlayer.getExperience();
+        myPlayer.addExperience(addedExperience);
+        var experienceNow = myPlayer.getExperience();
+        assertEquals(experienceNow, experienceOriginally + addedExperience);
     }
 
 }

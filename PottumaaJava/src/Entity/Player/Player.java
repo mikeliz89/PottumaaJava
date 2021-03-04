@@ -73,7 +73,7 @@ public class Player extends Entity.Character {
 		experience = PlayerSettings.PLAYER_START_EXP;
 		fireBallDamage = PlayerSettings.PLAYER_START_FIREBALL_DAMAGE;
 		scratchDamage = PlayerSettings.PLAYER_START_SCRATCH_DAMAGE;
-		mana = maxMana = PlayerSettings.PLAYER_START_FIRE;
+		mana = maxMana = PlayerSettings.PLAYER_START_MANA;
 		fireballManaCost = PlayerSettings.MAGIC_FIREBALL_MANA_COST;
 		scratchRange = 40;
 		//size

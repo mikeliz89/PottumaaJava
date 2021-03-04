@@ -63,4 +63,16 @@ public class EnemyTest {
         assertTrue(myEnemy.isDead());
     }
 
+    @Test
+    public void getMoneyGainedWhenKilled_slugger() {
+        var moneyGained = myEnemy.getMoneyGainedWhenKilled();
+        assertEquals(EnemySettings.SLUGGER_MONEY_GAINED_WHEN_KILLED, moneyGained);
+    }
+
+    @Test
+    public void getExperienceGainedWhenKilled_slugger() {
+        var experienceGained = myEnemy.getExperienceGainedWhenKilled();
+        assertEquals(EnemySettings.SLUGGER_EXP_GAINED_WHEN_KILLED, experienceGained);
+    }
+
 }
