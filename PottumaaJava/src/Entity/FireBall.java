@@ -71,7 +71,6 @@ public class FireBall extends MapObject {
 			animation = new Animation();
 			animation.setFrames(sprites);
 			animation.setDelay(70);
-
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -111,21 +110,3 @@ public class FireBall extends MapObject {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

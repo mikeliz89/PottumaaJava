@@ -72,11 +72,11 @@ public abstract class BaseLevel extends GameState  {
 
         initExplosions();
 
+        initItems();
+
         initEnemies();
 
         initMapPoints();
-
-        initItems();
 
         keyboardController = new KeyboardController(gsm, player, hud, npcHandler, mapPointHandler);
     }
@@ -92,7 +92,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void initItems() {
-        itemHandler = new ItemHandler(player);
+        itemHandler = new ItemHandler(player, tileMapHandler.getTileMaps());
         populateItems();
     }
 
@@ -103,7 +103,7 @@ public abstract class BaseLevel extends GameState  {
     }
 
     private void initEnemies() {
-        enemyHandler = new EnemyHandler(player, explosionHandler, questLog);
+        enemyHandler = new EnemyHandler(player, explosionHandler, questLog, itemHandler);
         populateEnemies();
     }
 
@@ -230,6 +230,16 @@ public abstract class BaseLevel extends GameState  {
         drawInLevelZoneText(g);
 
         drawTalkToNPCText(g);
+
+        drawTakeItem(g);
+    }
+
+    private void drawTakeItem(Graphics2D g) {
+        g.setColor(Color.CYAN);
+        if(itemHandler.playerIsCloseEnoughToTakeItem())
+            g.drawString("Loot",
+                    player.getX() + (int) player.getXMap(),
+                    player.getY() + (int) player.getYMap());
     }
 
     private void drawTalkToNPCText(Graphics2D g) {

@@ -3,6 +3,7 @@ package Entity.Player;
 import Audio.AudioPlayer;
 import Entity.*;
 import Entity.Enemies.Enemy;
+import Entity.Items.Item;
 import Entity.NPCs.NPC;
 import Entity.Obstacles.Obstacle;
 import Entity.Player.Magic.FireBallHandler;
@@ -50,6 +51,7 @@ public class Player extends Entity.Character {
 	private int currentLevel;
 	private MapPoint mapPointForLevelChange;
 	private NPC npcToTalkTo;
+	private Item itemToTake;
 
 	private final ISaveManager saveManager;
 
@@ -239,6 +241,8 @@ public class Player extends Entity.Character {
 	public void setMapPointForLevelChange(MapPoint mapPointForLevelChange) {
 		this.mapPointForLevelChange = mapPointForLevelChange;
 	}
+
+	public void setItemToTake(Item itemToTake) { this.itemToTake = itemToTake; }
 
 	public void setNPCToTalkTo(NPC npcToTalkTo) {
 		this.npcToTalkTo = npcToTalkTo;

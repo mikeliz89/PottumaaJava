@@ -2,7 +2,6 @@ package GameState.Levels;
 
 import Entity.Enemies.EnemyFactory;
 import Entity.Enemies.EnemySettings;
-import Entity.Items.Item;
 import Entity.NPCs.MrPotatoGuy;
 import Entity.Obstacles.Obstacle;
 import GameState.*;
@@ -115,10 +114,6 @@ public class Level1State extends BaseLevel {
 
 	@Override
 	protected void populateItems() {
-		var banana =  new Item("Banana",
-				"/Images/Items/banana.png");
-		banana.setPosition(new Point(300, 300));
-		addItem(banana);
 	}
 
 }

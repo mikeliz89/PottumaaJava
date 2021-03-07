@@ -1,21 +1,37 @@
 package Entity.Items;
 
+import Entity.MapObject;
+import TileMap.TileMap;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-public class Item  {
+public class Item extends MapObject {
 
     BufferedImage image;
-    private Point point;
     private String name;
     private String imageName;
 
-    public Item(String name, String imageName) {
+    public Item(String name, String imageName, ArrayList<TileMap> tileMaps) {
+        this.tileMaps = tileMaps;
         this.name = name;
         this.imageName = imageName;
+        init();
+    }
+
+    private void init() {
+        collisionBoxWidth = 14;
+        collisionBoxHeight = 14;
+        setWidth(14);
+        setHeight(14);
+        getImage();
+    }
+
+    private void getImage() {
         try {
             image = ImageIO.read(
                     getClass().getResourceAsStream(imageName)
@@ -24,13 +40,6 @@ public class Item  {
         catch(Exception e) {
             e.printStackTrace();
         }
-
-        point = new Point();
-    }
-
-    public void setPosition(Point point) {
-        this.point.x = point.x;
-        this.point.x = point.y;
     }
 
     public void draw(Graphics2D g) {
@@ -40,24 +49,22 @@ public class Item  {
         int h = before.getHeight();
         BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         AffineTransform at = new AffineTransform();
-        at.scale(0.5, 0.5);
+        at.scale(0.2, 0.2);
         AffineTransformOp scaleOp =
                 new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         after = scaleOp.filter(before, after);
 
         g.drawImage(
                 after,
-                point.x,
-                point.y,
+                getX(),
+                getY(),
                 null
         );
     }
 
-    public int getX() {
-        return point.x;
+    @Override
+    protected void updatePosition() {
+
     }
 
-    public int getY() {
-        return point.y;
-    }
 }

@@ -15,11 +15,14 @@ public class EnemyHandler extends BaseHandler {
     private ArrayList<Enemy> enemies;
     private Player player;
     private ExplosionHandler explosionHandler;
+    private ItemHandler itemHandler;
     private QuestLog questLog;
 
-    public EnemyHandler(Player player, ExplosionHandler explosionHandler, QuestLog questLog) {
+    public EnemyHandler(Player player, ExplosionHandler explosionHandler, QuestLog questLog,
+                        ItemHandler itemHandler) {
         this.player = player;
         this.explosionHandler = explosionHandler;
+        this.itemHandler = itemHandler;
         this.questLog = questLog;
         enemies = new ArrayList<>();
     }
@@ -45,8 +48,9 @@ public class EnemyHandler extends BaseHandler {
             Enemy e = enemies.get(i);
             e.update();
             if(e.isDead()) {
-                killOneEnemy(e.getEnemyType());
+                updateKillQuests(e.getEnemyType());
                 givePlayerRewardForKillingEnemy(e);
+                spawnItemFromEnemy(e);
                 enemies.remove(i);
                 i--;
                 explosionHandler.addExplosion(new Explosion(e.getX(), e.getY()));
@@ -54,12 +58,16 @@ public class EnemyHandler extends BaseHandler {
         }
     }
 
+    private void spawnItemFromEnemy(Enemy e) {
+        itemHandler.spawnNewItemFromEnemy(e);
+    }
+
     private void givePlayerRewardForKillingEnemy(Enemy e) {
         player.addExperience(e.getExperienceGainedWhenKilled());
         player.addMoney(e.getMoneyGainedWhenKilled());
     }
 
-    private void killOneEnemy(int EnemyType) {
+    private void updateKillQuests(int EnemyType) {
         for(Quest quest : questLog.getKillQuests()) {
             if(quest instanceof KillQuest) {
                 var killQuest = (KillQuest)quest;
