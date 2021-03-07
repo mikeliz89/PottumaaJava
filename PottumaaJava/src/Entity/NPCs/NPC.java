@@ -9,17 +9,18 @@ import java.util.ArrayList;
 
 public abstract class NPC extends Entity.Character {
 
+	public abstract DialogBox getDialogBox();
+
 	protected int damage;
 	protected String name;
 	protected String profession;
 
 	private final int WALKING = 0;
 
-	public NPC(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles, int maxHealth, String spriteSheetName,
+	public NPC(ArrayList<TileMap> tileMaps, ArrayList<Obstacle> obstacles,
+			   int maxHealth, String spriteSheetName,
 			   int width, int height) {
-
 		super(tileMaps, obstacles, maxHealth, spriteSheetName, width, height);
-
 		init();
 	}
 
@@ -55,6 +56,8 @@ public abstract class NPC extends Entity.Character {
 		}
 	}
 
-	public abstract DialogBox getDialogBox();
+	public void talk() {
+		playSoundEffect("talk");
+	}
 
 }

@@ -76,6 +76,7 @@ public class KeyboardController {
             if(k == KeyEvent.VK_E) {
                 var npc = player.getNPCToTalkTo();
                 var dialogBox = npc.getDialogBox();
+                npc.talk();
                 hud.setDialogBox(dialogBox);
                 hud.toggleDialogBox();
             }

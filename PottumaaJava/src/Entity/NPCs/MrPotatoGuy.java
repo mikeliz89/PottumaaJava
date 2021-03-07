@@ -1,5 +1,6 @@
 package Entity.NPCs;
 
+import Audio.AudioPlayer;
 import Entity.HUD.DialogBox;
 import Entity.Obstacles.Obstacle;
 import TileMap.TileMap;
@@ -59,6 +60,6 @@ public class MrPotatoGuy extends NPC {
 
     @Override
     protected void setSoundEffects() {
-
+        sfx.put("talk", new AudioPlayer("/SFX/mrPotatoguyTalk.wav"));
     }
 }
